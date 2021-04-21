@@ -6,6 +6,8 @@ import javax.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
 @Entity
 @Table(name="user")
@@ -26,4 +28,11 @@ public class User
     @Size(min = 5, max = 12, message = "username debe tener entre cinco y doce caracteres")
     @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String password;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
+
+
+
 }
