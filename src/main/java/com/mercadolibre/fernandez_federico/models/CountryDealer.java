@@ -35,4 +35,7 @@ public class CountryDealer
 
     @OneToMany(mappedBy ="countryDealer" )
     private List<Subsidiary> subsidiaries;
+
+    //@OneToMany(mappedBy ="countryDealer" )
+    //private List<Order> orders;
 }
