@@ -25,6 +25,6 @@ public class UserRole {
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "id"))
-    private List<Privileges> privileges;
+    private List<Privilege> privileges;
 
 }

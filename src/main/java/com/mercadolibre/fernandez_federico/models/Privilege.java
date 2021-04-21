@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name="privileges")
-public class Privileges {
+public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
