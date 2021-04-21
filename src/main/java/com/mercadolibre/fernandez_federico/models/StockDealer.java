@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="stock")
+@Table(name="stock_dealer")
 public class StockDealer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,4 +16,7 @@ public class StockDealer {
     private Integer quantity;
     private Integer minStock;
 
+    @ManyToOne
+    @JoinColumn(name="idCountryDealer", nullable = false)
+    private CountryDealer countryDealer;
 }
