@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="stock")
+@Table(name="user_rol")
 public class UserRol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
