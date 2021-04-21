@@ -44,24 +44,6 @@ public class Part
     private Integer quantity;*/
 
     @Column(nullable = false)
-    @NotNull(message = "discountType no puede ser Nulo")
-    @Size(min = 3, max=3, message = "discountType debe tener 3 caracteres")
-    @Pattern(regexp="^[a-zA-Z]{1}\\d{2}$",message="discountType debe tener 1 caracter alfabetico y 2 caracteres numericos")
-    private String discountType;
-
-    @Column(nullable = false)
-    @NotNull(message = "normalPrice no puede ser Nulo")
-    @Size(min = 4, max=9, message = "normalPrice debe tener 3 caracteres")
-    @Pattern(regexp="^(\\d{1,6})+(\\.\\d{1,2})$",message= "normalPrice debe tener 6 caracteres numericos y 2 decimales")
-    private Double normalPrice;
-
-    @Column(nullable = false)
-    @NotNull(message = "urgentPrice no puede ser Nulo")
-    @Size(min = 4, max=9, message = "urgentPrice debe tener 3 caracteres")
-    @Pattern(regexp="^(\\d{1,6})+(\\.\\d{1,2})$",message= "urgentPrice debe tener 6 caracteres numericos y 2 decimales")
-    private Double urgentPrice;
-
-    @Column(nullable = false)
     @NotNull(message = "netWeight no puede ser Nulo")
     @Size(min = 1, max=5, message = "netWeight debe tener 5 caracteres")
     @Pattern(regexp="^(\\d{1,5})+$",message= "netWeight debe tener 5 caracteres numericos")
@@ -84,9 +66,4 @@ public class Part
     @Size(min = 1, max=4, message = "tallDimension debe tener 4 caracteres")
     @Pattern(regexp="^(\\d{1,4})+$",message= "tallDimension debe tener 4 caracteres numericos")
     private Integer tallDimension;
-
-    @Column(nullable = false)
-    @NotNull(message = "lastModification no puede ser Nulo")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date lastModification;
 }

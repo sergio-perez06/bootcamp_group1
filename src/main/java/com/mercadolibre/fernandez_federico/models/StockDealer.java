@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+<<<<<<< HEAD
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +18,7 @@ public class StockDealer {
     private Integer minStock;
 
 
+=======
+public class StockDealer {
+>>>>>>> 3aa5f7e2601ca8550c812adf9614bbb0812d5bd1
 }
