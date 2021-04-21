@@ -33,4 +33,6 @@ public class CountryDealer
     @OneToMany(mappedBy ="countryDealer" )
     private List<StockDealer> stockDealers;
 
+    @OneToMany(mappedBy ="countryDealer" )
+    private List<Subsidiary> subsidiaries;
 }
