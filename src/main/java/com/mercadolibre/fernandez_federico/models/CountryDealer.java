@@ -30,7 +30,7 @@ public class CountryDealer
     @Pattern(regexp="^[a-zA-Z]+$",message="country debe tener letras.")
     private String country;
 
-    @OneToMany(mappedBy ="stockDealer" )
+    @OneToMany(mappedBy ="countryDealer" )
     private List<StockDealer> stockDealers;
 
 }
