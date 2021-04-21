@@ -16,7 +16,7 @@ import java.util.Date;
 public class Part {
 
 
-    @Column(name = "ID_PART", nullable = false)
+    @Column(name = "idPart", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPart;

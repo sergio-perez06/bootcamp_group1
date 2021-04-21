@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 public class Stock {
-    @Column(name = "ID_STOCK", nullable = false)
+    @Column(name = "idStock", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idStock;
