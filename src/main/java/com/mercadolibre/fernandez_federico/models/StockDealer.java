@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -13,7 +14,9 @@ public class StockDealer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idStockDealer;
+    @NotNull(message = "La cantidad no puede ser nula")
     private Integer quantity;
+    //@NotNull(message = "El stock mínimo no puede ser nula")
     private Integer minStock;
 
     @ManyToOne
