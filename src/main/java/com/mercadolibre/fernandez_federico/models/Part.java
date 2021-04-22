@@ -17,7 +17,7 @@ public class Part
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPart;
+    private Long idPart;
 
     @Column(nullable = false, length = 8)
     @NotNull(message = "partCode no puede ser Nulo")

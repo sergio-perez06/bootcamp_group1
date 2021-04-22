@@ -13,7 +13,8 @@ import javax.validation.constraints.NotNull;
 public class StockDealer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idStockDealer;
+
+    private Long idStockDealer;
     @NotNull(message = "La cantidad no puede ser nula")
     private Integer quantity;
     //@NotNull(message = "El stock mínimo no puede ser nula")

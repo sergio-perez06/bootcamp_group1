@@ -15,7 +15,7 @@ public class User
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUser;
+    private Long idUser;
 
     @Column(nullable = false, length = 12)
     @NotNull(message = "username no puede ser nulo")
@@ -33,6 +33,6 @@ public class User
     private List<Order> orders;
 
     @ManyToOne
-    @JoinColumn(name="id_user_rol", nullable = false)
+    @JoinColumn(name="idUserRol", nullable = false)
     private UserRole roles;
 }
