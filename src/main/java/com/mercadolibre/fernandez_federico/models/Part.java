@@ -7,12 +7,14 @@ import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
 @Entity
 @Table(name="part")
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Part
 {
     @Id
