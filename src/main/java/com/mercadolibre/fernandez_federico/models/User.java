@@ -29,4 +29,8 @@ public class User
     @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String password;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idRole",nullable = false)
+    private Role role;
+
 }
