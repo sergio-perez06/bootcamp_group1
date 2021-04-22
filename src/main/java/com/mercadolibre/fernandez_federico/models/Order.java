@@ -27,12 +27,4 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
     private Date emitedDate;
 
-    @Column(nullable = false)
-    @NotNull(message = "El no total no puede ser Nulo")
-    private double total;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user", nullable = false)
-    private User user;
-
 }
