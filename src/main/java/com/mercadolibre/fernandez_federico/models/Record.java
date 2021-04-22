@@ -11,6 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
