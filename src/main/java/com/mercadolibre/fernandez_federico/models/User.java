@@ -29,10 +29,4 @@ public class User
     @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String password;
 
-
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders;
-
-
-
 }

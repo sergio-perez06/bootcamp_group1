@@ -17,14 +17,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*@OneToMany()
-    *   private long
-     * */
 
+    private String orderNumber;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
-    private Date emitedDate;
+    private Date orderDate;
+
+    @Column(nullable = false)
+    @NotNull(message = "Fecha de envío no puede ser Nula")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
+    private Date deliveryDate;
+
+    private  Integer daysDelay;
+
+    private String deliveryStatus;
+
+
+
+
 
 }

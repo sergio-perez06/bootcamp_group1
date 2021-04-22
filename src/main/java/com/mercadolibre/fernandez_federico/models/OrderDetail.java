@@ -13,4 +13,10 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String accountType;
+
+    private Integer quantity;
+
+    private String reason;
 }

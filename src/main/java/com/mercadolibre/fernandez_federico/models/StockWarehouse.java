@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 @Entity
@@ -12,4 +13,8 @@ import javax.persistence.*;
 public class StockWarehouse {
     @Id
     private Part part;
+
+    @Column(nullable = false)
+    @NotNull(message = "El tamaño no puede ser nulo")
+    private Integer quantity;
 }
