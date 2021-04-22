@@ -26,6 +26,6 @@ public class Maker {
     private String name;
 
     @OneToMany(mappedBy = "maker")
-    private List<PartPk> partpks;
+    private List<Part> part;
 
 }
