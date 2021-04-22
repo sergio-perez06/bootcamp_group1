@@ -15,16 +15,8 @@ public class UserRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idUserRol;
     private String name;
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy ="user_role" )
     private List<User> users;
 
-    @ManyToMany
-    @JoinTable(
-            name = "roles_privileges",
-            joinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "privilege_id", referencedColumnName = "id"))
-    private List<Privilege> privileges;
 
 }

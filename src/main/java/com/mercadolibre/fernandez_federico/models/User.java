@@ -29,16 +29,10 @@ public class User
     @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "id_user"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "id_user_role"))
-    private List<UserRole> roles;
-
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
+    @ManyToOne
+    @JoinColumn(name="id_user_rol", nullable = false)
+    private UserRole roles;
 }
