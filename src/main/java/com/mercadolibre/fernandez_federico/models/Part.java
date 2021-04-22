@@ -1,6 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -34,18 +35,6 @@ public class Part
     private String description;
 
     @Column(nullable = false)
-    @NotNull(message = "maker no puede ser Nulo")
-    @Size(min = 2, max=100, message = "maker debe tener entre 2 y 100 caracteres")
-    @Pattern(regexp="^[a-zA-Z0-9 ]+$",message="maker debe tener caracteres alfanumericos")
-    private String maker;
-
-/*    @Column(nullable = false, length = 8)
-    @NotNull(message = "La cantidad no puede ser Nulo")
-    @Size(min = 8, max=8, message = "La cantidad debe tener ocho caracteres")
-    @Pattern(regexp="^[0-9]{8}$",message="La cantidad debe poseer 8 caracteres numericos")
-    private Integer quantity;*/
-
-    @Column(nullable = false)
     @NotNull(message = "netWeight no puede ser Nulo")
     @Size(min = 1, max=5, message = "netWeight debe tener 5 caracteres")
     @Pattern(regexp="^(\\d{1,5})+$",message= "netWeight debe tener 5 caracteres numericos")
@@ -68,4 +57,13 @@ public class Part
     @Size(min = 1, max=4, message = "tallDimension debe tener 4 caracteres")
     @Pattern(regexp="^(\\d{1,4})+$",message= "tallDimension debe tener 4 caracteres numericos")
     private Integer tallDimension;
+
+ //   @NotNull
+ //   @ManyToOne(cascade = CascadeType.ALL)
+ //   @JoinColumn(name="idMaker", nullable = false)
+ //   private Maker maker;
+
+    @NotNull
+    @OneToMany(mappedBy = "part")
+    private List<Record> records;
 }

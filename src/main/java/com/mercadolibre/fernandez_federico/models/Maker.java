@@ -9,10 +9,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Entity
-@Getter
-@Setter
-@Table(name="MAKER")
+//@Entity
+//@Getter
+//@Setter
+//@Table(name="maker")
 public class Maker {
 
     @Id
@@ -25,7 +25,6 @@ public class Maker {
     @Pattern(regexp="^[a-zA-Z0-9 ]+$",message="maker debe tener caracteres alfanumericos")
     private String name;
 
-    @OneToMany(mappedBy = "maker")
-    private List<Part> part;
-
+  //  @OneToMany(mappedBy = "maker")
+  //  private List<Part> parts;
 }

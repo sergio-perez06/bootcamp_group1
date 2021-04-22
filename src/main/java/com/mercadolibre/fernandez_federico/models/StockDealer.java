@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 public class StockDealer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long idStockDealer;
 
     @Column(nullable = false)
