@@ -15,13 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/parts")
 public class PartController {
 
-    @Autowired
-    private IStockService stockService;
+    private final IStockService stockService;
+
+    public PartController(IStockService stockService)
+    {
+        this.stockService=stockService;
+    }
 
     @GetMapping("/list")
-    public List<PartDTO> getList(
-        HashMap<String, String> params    
-    ) {
+    public List<PartDTO> getList(HashMap<String, String> params)
+    {
         return stockService.getParts(params);
+
     }
 }
