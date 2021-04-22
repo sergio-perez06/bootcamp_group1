@@ -8,10 +8,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="user_rol")
-public class UserRol {
+@Table(name="order_detail")
+public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUserRol;
-
+    private Long id;
 }

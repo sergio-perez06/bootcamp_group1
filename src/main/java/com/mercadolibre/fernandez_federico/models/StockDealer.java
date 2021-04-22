@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class StockDealer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idStockDealer;
+    private Long idStockDealer;
     private Integer quantity;
     private Integer minStock;
 

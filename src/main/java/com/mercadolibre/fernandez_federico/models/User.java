@@ -15,7 +15,7 @@ public class User
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUser;
+    private long idUser;
 
     @Column(nullable = false, length = 12)
     @NotNull(message = "username no puede ser nulo")
