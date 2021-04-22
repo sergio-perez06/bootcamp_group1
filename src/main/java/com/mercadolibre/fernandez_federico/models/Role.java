@@ -13,10 +13,10 @@ import java.util.List;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRol;
+    private Long idRole;
 
     private String name;
-    @OneToMany(mappedBy ="role")
+    @OneToMany(mappedBy = "role")
     private List<User> users;
 
 }

@@ -8,15 +8,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Table(name = "SUBSIDIARY")
+@Table(name = "subsidiary")
 @Entity
 @Getter
 @Setter
 public class Subsidiary {
-    @Column(name = "ID_SUBSIDIARY", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idSubsidiary;
 
 
     @Column(nullable = false)
@@ -31,6 +30,4 @@ public class Subsidiary {
     @ManyToOne
     @JoinColumn(name="idCountryDealer", nullable = false)
     private CountryDealer countryDealer;
-
-
 }

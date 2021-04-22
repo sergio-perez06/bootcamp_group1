@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.util.Date;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idOrder;
 
 
     private String orderNumber;
@@ -34,5 +35,6 @@ public class Order {
 
     private String deliveryStatus;
 
-
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
 }

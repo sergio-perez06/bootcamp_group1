@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Getter@Setter
+@Getter @Setter
 @Entity
 @Table(name="country_dealer")
 public class CountryDealer
@@ -35,6 +35,9 @@ public class CountryDealer
 
     @OneToMany(mappedBy ="countryDealer" )
     private List<Subsidiary> subsidiaries;
+
+    @OneToMany(mappedBy = "countryDealer")
+    private List<User> users;
 
     //@OneToMany(mappedBy ="countryDealer" )
     //private List<Order> orders;
