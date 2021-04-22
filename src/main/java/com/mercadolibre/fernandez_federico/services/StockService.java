@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class StockService implements IStockService {
     
-    private IStockRepository stockRepository;
-    private ModelMapperConfig modelMapper;
+    private final IStockRepository stockRepository;
+    private final ModelMapperConfig modelMapper;
 
     public StockService(
         IStockRepository stockRepository,
