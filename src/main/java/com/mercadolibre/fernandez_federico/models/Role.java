@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-
 @Table(name="role")
 public class Role {
     @Id
@@ -17,5 +16,7 @@ public class Role {
     private Long idRol;
 
     private String name;
+    @OneToMany(mappedBy ="role")
+    private List<User> users;
 
 }

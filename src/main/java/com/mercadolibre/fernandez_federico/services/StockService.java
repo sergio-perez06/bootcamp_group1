@@ -16,12 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class StockService implements IStockService {
 
+
     private IPartRepository partRepository;
     private final ModelMapper modelMapper;
 
     public StockService(IPartRepository partRepository, ModelMapper modelMapper)
     {
         this.partRepository = partRepository;
+
         this.modelMapper = modelMapper;
     }
 

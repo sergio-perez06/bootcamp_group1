@@ -31,6 +31,6 @@ public class StockSubsidiary {
 
     @Column(nullable = false)
     @NotNull(message = "El tamaño no puede ser nulo")
-    private Long Quantity;
+    private Integer quantity;
 
 }

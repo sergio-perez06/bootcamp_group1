@@ -15,10 +15,10 @@ public class StockDealer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long idStockDealer;
-    @NotNull(message = "La cantidad no puede ser nula")
+
+    @Column(nullable = false)
+    @NotNull(message = "El tamaño no puede ser nulo")
     private Integer quantity;
-    //@NotNull(message = "El stock mínimo no puede ser nula")
-    private Integer minStock;
 
     @ManyToOne
     @JoinColumn(name="idCountryDealer", nullable = false)

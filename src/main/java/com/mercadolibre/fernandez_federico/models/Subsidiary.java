@@ -16,7 +16,7 @@ public class Subsidiary {
     @Column(name = "ID_SUBSIDIARY", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSubsidiary;
+    private Long id;
 
 
     @Column(nullable = false)
