@@ -3,6 +3,7 @@ package com.mercadolibre.fernandez_federico.models;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,8 @@ import java.util.List;
 @Getter @Setter
 @Entity
 @Table(name="user")
-public class User
+@AllArgsConstructor
+public class ApplicationUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
