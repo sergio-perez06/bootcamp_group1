@@ -9,11 +9,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="order_detail")
-public class OrderDetail {
+@Table(name="bill_detail")
+public class BillDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOrderDetail;
+    private Long idBillDetail;
 
     private String accountType;
 
@@ -22,6 +22,10 @@ public class OrderDetail {
     private String reason;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_order", nullable = false)
-    private Order order;
+    @JoinColumn(name = "idBill", referencedColumnName = "idBill", nullable = false)
+    private Bill bill;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idPart", nullable = false)
+    private Part part;
 }
