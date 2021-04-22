@@ -7,16 +7,16 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
-@Table(name = "SUBSIDIARY")
+@Table(name = "subsidiary")
 @Entity
 @Getter
 @Setter
 public class Subsidiary {
-    @Column(name = "ID_SUBSIDIARY", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idSubsidiary;
 
 
     @Column(nullable = false)
@@ -27,10 +27,13 @@ public class Subsidiary {
 
 
     //private List<Order> orders;
+    @OneToMany(mappedBy = "subsidiary")
+    private List<StockSubsidiary> stockSubsidiaries;
 
     @ManyToOne
     @JoinColumn(name="idCountryDealer", nullable = false)
     private CountryDealer countryDealer;
 
-
+    @OneToMany(mappedBy = "subsidiary")
+    private List<Bill> bills;
 }

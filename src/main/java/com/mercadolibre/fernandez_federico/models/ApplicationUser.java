@@ -31,7 +31,10 @@ public class ApplicationUser
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idRole",nullable = false)
+    @JoinColumn(name = "idRole", nullable = false)
     private Role role;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="idCountryDealer", nullable = false)
+    private CountryDealer countryDealer;
 }

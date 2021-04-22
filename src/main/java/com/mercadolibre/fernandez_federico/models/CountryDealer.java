@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Getter@Setter
+@Getter @Setter
 @Entity
 @Table(name="country_dealer")
 public class CountryDealer
@@ -30,12 +30,12 @@ public class CountryDealer
     @Pattern(regexp="^[a-zA-Z]+$",message="country debe tener letras.")
     private String country;
 
-    @OneToMany(mappedBy ="countryDealer" )
+    @OneToMany(mappedBy ="countryDealer")
     private List<StockDealer> stockDealers;
 
-    @OneToMany(mappedBy ="countryDealer" )
+    @OneToMany(mappedBy ="countryDealer")
     private List<Subsidiary> subsidiaries;
 
-    //@OneToMany(mappedBy ="countryDealer" )
-    //private List<Order> orders;
+    @OneToMany(mappedBy = "countryDealer")
+    private List<User> users;
 }
