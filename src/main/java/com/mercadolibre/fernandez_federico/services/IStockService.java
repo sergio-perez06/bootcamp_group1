@@ -6,5 +6,6 @@ import java.util.List;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 
 public interface IStockService {
-    public List<PartDTO> getParts(HashMap<String, String> filters);    
+    //public List<PartDTO> getParts();
+    public List<PartDTO> getParts(HashMap<String, String> filters);
 }

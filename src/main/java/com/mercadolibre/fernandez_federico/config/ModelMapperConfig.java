@@ -3,6 +3,8 @@ package com.mercadolibre.fernandez_federico.config;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
+import com.mercadolibre.fernandez_federico.models.Stock;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -19,10 +21,12 @@ public class ModelMapperConfig
         return modelMapper;
     }
 
-    public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
+
+
+   /* public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source
                 .stream()
                 .map(element -> bean().map(element, targetClass))
                 .collect(Collectors.toList());
-    }
+    }*/
 }
