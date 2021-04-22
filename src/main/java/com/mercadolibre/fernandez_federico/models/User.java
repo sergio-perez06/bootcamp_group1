@@ -6,8 +6,6 @@ import javax.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter @Setter
 @Entity
 @Table(name="user")
@@ -30,10 +28,10 @@ public class User
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idRole", nullable = false)
+    @JoinColumn(name = "idRole", referencedColumnName = "id", nullable = false)
     private Role role;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idCountryDealer", nullable = false)
+    @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
     private CountryDealer countryDealer;
 }

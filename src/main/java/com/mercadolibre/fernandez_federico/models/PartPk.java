@@ -10,6 +10,6 @@ import java.util.List;
 @Embeddable
 public class PartPk implements Serializable {
     @ManyToOne
-    @JoinColumn(name = "idPart", nullable = false)
+    @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
 }

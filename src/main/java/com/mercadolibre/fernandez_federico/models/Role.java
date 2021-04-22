@@ -13,7 +13,7 @@ import java.util.List;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRole;
+    private Long id;
 
     private String name;
     @OneToMany(mappedBy = "role")

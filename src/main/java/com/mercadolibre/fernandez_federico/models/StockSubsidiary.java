@@ -12,19 +12,14 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Table(name="stock_subsidiary")
+@IdClass(PartPk.class)
 public class StockSubsidiary {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idStockSubsidiary;
-
-    @Unique
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idPart", nullable = false)
     private Part part;
 
     @Unique
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idSubsidiary", nullable = false)
+    @JoinColumn(name="idSubsidiary", referencedColumnName = "id", nullable = false)
     private Subsidiary subsidiary;
 
     @Column(nullable = false)

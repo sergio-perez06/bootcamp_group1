@@ -17,7 +17,7 @@ import java.util.Date;
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRecord;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "normalPrice no puede ser Nulo")
@@ -37,10 +37,10 @@ public class Record {
     private Date lastModification;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idPart", nullable = false)
+    @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idDiscountType", nullable = false)
+    @JoinColumn(name = "idDiscountType", referencedColumnName = "id", nullable = false)
     private DiscountType discountType;
 }
