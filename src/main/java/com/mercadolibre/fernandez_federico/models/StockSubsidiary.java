@@ -26,7 +26,7 @@ public class StockSubsidiary {
 
     @Unique
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idSubsidiary", referencedColumnName = "idSubsidiary", nullable = false)
+    @JoinColumn(name="idSubsidiary", referencedColumnName = "ID_SUBSIDIARY", nullable = false)
     private Subsidiary subsidiary;
 
     @Column(nullable = false)

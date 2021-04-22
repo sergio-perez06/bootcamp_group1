@@ -17,7 +17,7 @@ public class ApplicationUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idUser;
+    private Long idUser;
 
     @Column(nullable = false, length = 12)
     @NotNull(message = "username no puede ser nulo")
@@ -30,5 +30,9 @@ public class ApplicationUser
     @Size(min = 5, max = 12, message = "username debe tener entre cinco y doce caracteres")
     @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String password;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idRole",nullable = false)
+    private Role role;
 
 }
