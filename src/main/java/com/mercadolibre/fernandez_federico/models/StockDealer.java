@@ -2,6 +2,7 @@ package com.mercadolibre.fernandez_federico.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,4 +23,9 @@ public class StockDealer {
     @ManyToOne
     @JoinColumn(name="idCountryDealer", nullable = false)
     private CountryDealer countryDealer;
+
+    @Unique
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idPart", nullable = false)
+    private Part part;
 }

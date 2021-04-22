@@ -3,6 +3,7 @@ package com.mercadolibre.fernandez_federico.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,12 +13,11 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name="order")
-public class Order {
+@Table(name="bill")
+public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOrder;
-
+    private Long idBill;
 
     private String orderNumber;
 
@@ -35,6 +35,10 @@ public class Order {
 
     private String deliveryStatus;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderDetail> orderDetails;
+    @OneToMany(mappedBy="bill")
+    private List<BillDetail> billDetails;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idSubsidiary", nullable = false)
+    private Subsidiary subsidiary;
 }

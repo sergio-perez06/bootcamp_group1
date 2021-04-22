@@ -51,7 +51,7 @@ public class StockService implements IStockService {
                 Date d1=dateFormat.parse(date1);
                 String date2= new String("2021-04-20");
                 Date d2=dateFormat.parse(date2);
-                List<PartDTO> partsDTO = partRepository.findDate(d2,d1)
+                List<PartDTO> partsDTO = partRepository.findDate()
                         .stream()
                         .map(parte -> modelMapper.map(parte, PartDTO.class))
                         .collect(Collectors.toList());
