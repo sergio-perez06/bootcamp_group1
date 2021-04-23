@@ -41,6 +41,6 @@ public class StockServiceTest {
 
     @BeforeEach
     public void initialize() {
-        stockService = new StockService(stockRepository, partRepository, modelMapper);
+        //stockService = new StockService(stockRepository, partRepository, modelMapper);
     }
 }

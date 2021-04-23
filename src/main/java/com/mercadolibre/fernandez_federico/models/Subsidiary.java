@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +35,8 @@ public class Subsidiary {
     private Integer subsidiaryNumber;
 
     @ManyToOne
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
     private CountryDealer countryDealer;
 

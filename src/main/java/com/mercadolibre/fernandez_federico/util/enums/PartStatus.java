@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PartStatus {
-    Normal('P'),
+    Normal('N'),
     Demorado('D');
 
     private Character value;

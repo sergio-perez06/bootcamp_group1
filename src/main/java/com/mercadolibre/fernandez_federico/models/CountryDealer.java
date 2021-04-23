@@ -23,6 +23,7 @@ public class CountryDealer
     @Size(min = 4, max=4, message = "dealerNumber debe tener 4 caracteres.")
     private Integer dealerNumber;
 
+
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
     @Size(min = 2, max=100, message = "name debe tener entre 2 y 100 caracteres.")

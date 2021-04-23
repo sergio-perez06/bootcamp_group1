@@ -9,10 +9,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+import com.mercadolibre.fernandez_federico.dtos.responses.OrderStatusResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
+import com.mercadolibre.fernandez_federico.models.CountryDealer;
+import com.mercadolibre.fernandez_federico.models.Subsidiary;
+import com.mercadolibre.fernandez_federico.repositories.ICountryDealerRepository;
 import com.mercadolibre.fernandez_federico.repositories.IPartRepository;
 import com.mercadolibre.fernandez_federico.repositories.IStockRepository;
+import com.mercadolibre.fernandez_federico.repositories.ISubsidiaryRepository;
 import org.hibernate.query.criteria.internal.expression.function.CurrentDateFunction;
 import org.modelmapper.ModelMapper;
 import java.util.Date;
@@ -25,11 +30,19 @@ public class StockService implements IStockService {
 
 
     private IPartRepository partRepository;
+    private ICountryDealerRepository countryDealerRepository;
+    private ISubsidiaryRepository subsidiaryRepository;
     private final ModelMapper modelMapper;
 
-    public StockService(IPartRepository partRepository, ModelMapper modelMapper)
+    public StockService(
+            IPartRepository partRepository,
+            ModelMapper modelMapper,
+            ICountryDealerRepository countryDealerRepository,
+            ISubsidiaryRepository subsidiaryRepository)
     {
         this.partRepository = partRepository;
+        this.countryDealerRepository = countryDealerRepository;
+        this.subsidiaryRepository = subsidiaryRepository;
 
         this.modelMapper = modelMapper;
     }
@@ -63,4 +76,39 @@ public class StockService implements IStockService {
         return null;
     }
 
+
+
+    public OrderStatusResponseDTO getOrderStatus(String orderNumberCM){
+
+
+        String[] splitted = orderNumberCM.split("-");
+
+        Integer subsidiaryNumber = Integer.parseInt(splitted[0]);
+        Integer CountryDealerNumber = Integer.parseInt(splitted[1]);
+        Integer orderNumber = Integer.parseInt(splitted[2]);
+
+
+        CountryDealer countryDelaer = countryDealerRepository.findByDealerNumber(CountryDealerNumber);
+        System.out.println(countryDelaer+"\n");
+
+
+
+        Subsidiary subsidiary  = subsidiaryRepository.findBySubsidiaryNumber(subsidiaryNumber);
+
+        System.out.println(subsidiary+"\n");
+
+
+
+
+        return null;
+
+
+    }
+
+
+    public List<CountryDealer> getAllCountryDealers (){
+
+        System.out.println(countryDealerRepository.count());
+        return countryDealerRepository.findAll();
+    }
 }
