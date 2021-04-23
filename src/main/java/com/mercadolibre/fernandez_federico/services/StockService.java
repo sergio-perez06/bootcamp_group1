@@ -1,7 +1,5 @@
 package com.mercadolibre.fernandez_federico.services;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -9,18 +7,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-import com.mercadolibre.fernandez_federico.dtos.responses.OrderStatusResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.CountryDealer;
 import com.mercadolibre.fernandez_federico.models.Subsidiary;
 import com.mercadolibre.fernandez_federico.repositories.ICountryDealerRepository;
 import com.mercadolibre.fernandez_federico.repositories.IPartRepository;
-import com.mercadolibre.fernandez_federico.repositories.IStockRepository;
 import com.mercadolibre.fernandez_federico.repositories.ISubsidiaryRepository;
-import org.hibernate.query.criteria.internal.expression.function.CurrentDateFunction;
 import org.modelmapper.ModelMapper;
-import java.util.Date;
 
 
 import org.springframework.stereotype.Service;
@@ -77,8 +72,8 @@ public class StockService implements IStockService {
     }
 
 
-
-    public OrderStatusResponseDTO getOrderStatus(String orderNumberCM){
+    // Requirement 3
+    public void getOrderStatus(String orderNumberCM){
 
 
         String[] splitted = orderNumberCM.split("-");
@@ -100,15 +95,29 @@ public class StockService implements IStockService {
 
 
 
-        return null;
-
-
     }
 
 
+    // Utilitary
     public List<CountryDealer> getAllCountryDealers (){
 
         System.out.println(countryDealerRepository.count());
         return countryDealerRepository.findAll();
     }
+
+    //Requirement 2
+    @Override
+    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber) {
+        SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
+
+        Subsidiary s = subsidiaryRepository.findBySubsidiaryNumber(Integer.parseInt(subsidiaryNumber));
+
+        if(s!= null){
+
+        }
+        return null;
+    }
+
+
+
 }

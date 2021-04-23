@@ -6,8 +6,10 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 @Getter @Setter
@@ -59,11 +61,13 @@ public class Part
     private Integer tallDimension;
 
     @NotNull
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idMaker", referencedColumnName = "id", nullable = false)
     private Maker maker;
 
     @NotNull
+    @JsonManagedReference
     @OneToMany(mappedBy = "part")
     private List<Record> records;
 }

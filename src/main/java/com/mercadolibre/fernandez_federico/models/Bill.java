@@ -1,6 +1,8 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
@@ -57,10 +59,11 @@ public class Bill {
     @Enumerated(EnumType.STRING)
     private OrderStatus deliveryStatus;
 
+    @JsonManagedReference
     @OneToMany(mappedBy="bill")
     private List<BillDetail> billDetails;
 
-    @Getter(AccessLevel.NONE)
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idSubsidiary", referencedColumnName = "id", nullable = false)
     private Subsidiary subsidiary;

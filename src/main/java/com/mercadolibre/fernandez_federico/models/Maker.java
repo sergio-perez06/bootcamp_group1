@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Maker {
     @Pattern(regexp="^[a-zA-Z0-9 ]+$",message="maker debe tener caracteres alfanumericos")
     private String name;
 
+    @JsonManagedReference
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "maker")
     private List<Part> parts;

@@ -3,8 +3,8 @@ package com.mercadolibre.fernandez_federico.controller;
 import java.util.HashMap;
 import java.util.List;
 
-import com.mercadolibre.fernandez_federico.dtos.responses.OrderStatusResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
 import com.mercadolibre.fernandez_federico.models.CountryDealer;
 import com.mercadolibre.fernandez_federico.services.IStockService;
 
@@ -27,12 +27,19 @@ public class PartController {
 
     }
 
-
+    //REQUERIMIENTO 2
     @GetMapping("/orders")
-    public OrderStatusResponseDTO orderStatus(@RequestParam String oderNumberCM){
+    public SubsidiaryOrdersByDeliveryStatusDTO orderStatus(
+            @RequestParam String dealerNumber, @RequestParam(required = false) String orderStatus){
 
-        return stockService.getOrderStatus(oderNumberCM);
+        if(dealerNumber.length() != 4){
+            // exception
+        }else{
+            return stockService.getSubsidiaryOrdersByDeliveryStatus(dealerNumber);
+        }
 
+
+        return null;
 
     }
 
