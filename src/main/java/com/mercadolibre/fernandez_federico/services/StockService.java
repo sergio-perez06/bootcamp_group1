@@ -25,46 +25,40 @@ import org.springframework.stereotype.Service;
 public class StockService implements IStockService {
 
 
-    private IPartRepository partRepository;
+    private IStockRepository stockRepository;
     private final ModelMapper modelMapper;
 
-    public StockService(IPartRepository partRepository, ModelMapper modelMapper)
+    public StockService(IStockRepository stockRepository, ModelMapper modelMapper)
     {
-        this.partRepository = partRepository;
+        this.stockRepository = stockRepository;
 
         this.modelMapper = modelMapper;
     }
 
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
-        if(partRepository.findAll().isEmpty())
+        if(stockRepository.findAll().isEmpty())
             throw new ApiException("Not Found","La lista no existe",404 );
         else {
-            List<PartDTO> partsDTO = new ArrayList<>();
-            if (filters.isEmpty() || (filters.get("queryType").equals('C'))) {
-                 partsDTO = partRepository.findAll()
+              List<PartDTO> partsDTO = new ArrayList<>();
+            if (filters.isEmpty() || (filters.get("queryType").equals("C"))) {
+                 partsDTO = stockRepository.findAll()
                         .stream()
-                        .map(parte -> modelMapper.map(parte, PartDTO.class))
+                        .map(stock -> modelMapper.map(stock.getPart(), PartDTO.class))
                         .collect(Collectors.toList());
                 return partsDTO;
-            }
-            if (filters.containsKey("queryType") && (filters.get("queryType").equals('C'))) {
-                partsDTO = partRepository.findAll()
-                        .stream()
-                        .map(parte -> modelMapper.map(parte, PartDTO.class))
-                        .collect(Collectors.toList());
-                return partsDTO;
-            }if (filters.containsKey("queryType") && (filters.get("queryType").equals('P') && filters.containsKey("date")))
+
+            }if (filters.containsKey("queryType") && (filters.get("queryType").equals("P") && filters.containsKey("date")))
             {
                 LocalDate d1 = LocalDate.parse(filters.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                partsDTO = partRepository.findByLastUpdateBetween(d1, LocalDate.now())
+                partsDTO = stockRepository.findByLastUpdateBetween(d1, LocalDate.now())
                         .stream()
-                        .map(parte -> modelMapper.map(parte, PartDTO.class))
+                        .map(stock -> modelMapper.map(stock.getPart(), PartDTO.class))
                         .collect(Collectors.toList());
                 return partsDTO;
-            } if (filters.containsKey("queryType") && (filters.get("queryType").equals('V') && filters.containsKey("date"))){
+            } if (filters.containsKey("queryType") && (filters.get("queryType").equals("V") && filters.containsKey("date"))){
                 LocalDate d1 = LocalDate.parse(filters.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                partsDTO = partRepository.findByLastUpdateBetween(d1, LocalDate.now())
+                partsDTO = stockRepository.findByLastUpdateBetween(d1, LocalDate.now())
                         .stream()
                         .map(parte -> modelMapper.map(parte, PartDTO.class))
                         .collect(Collectors.toList());
