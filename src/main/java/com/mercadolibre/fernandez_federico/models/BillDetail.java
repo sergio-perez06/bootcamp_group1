@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class BillDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBillDetail;
+    private Long id;
 
     private String accountType;
 
@@ -22,11 +22,11 @@ public class BillDetail {
     private String reason;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idBill", referencedColumnName = "idBill", nullable = false)
+    @JoinColumn(name = "idBill", referencedColumnName = "id", nullable = false)
     private Bill bill;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idPart", nullable = false)
+    @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
 
 }

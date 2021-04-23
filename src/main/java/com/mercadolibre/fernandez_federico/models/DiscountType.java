@@ -14,7 +14,7 @@ import java.util.List;
 public class DiscountType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idDiscountType;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "type no puede ser nulo")

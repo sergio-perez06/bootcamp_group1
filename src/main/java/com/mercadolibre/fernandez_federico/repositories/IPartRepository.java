@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IPartRepository extends JpaRepository<Part,Long>
 {
-    @Query("select p from Part p join Record r on p.idPart=r.part.idPart where r.lastModification between :lastUpdate and :nowDate")
+    @Query("select p from Part p join Record r on p.id=r.part.id where r.lastModification between :lastUpdate and :nowDate")
     List<Part> findByLastUpdateBetween(@Param("lastUpdate") LocalDate lastUpdate, LocalDate nowDate);
 }
 //@Query("select p from Part p join Record r on p.idPart=r.part.idPart where r.lastModification between :publicationTimeStart and :publicationTimeEnd")

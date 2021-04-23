@@ -3,12 +3,14 @@ package com.mercadolibre.fernandez_federico.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import java.time.LocalDate;
-import java.util.Date;
+
+import javax.validation.constraints.Size;
+
 import java.util.List;
 
 @Getter
@@ -18,8 +20,10 @@ import java.util.List;
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBill;
+    private Long id;
 
+    @NotNull
+    @Size(min = 8, max = 8, message = "")
     private String orderNumber;
 
     @Column(nullable = false)
@@ -32,14 +36,16 @@ public class Bill {
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
     private LocalDate deliveryDate;
 
-    private  Integer daysDelay;
+    @NotNull
+    private Integer daysDelay;
 
+    @NotNull
     private String deliveryStatus;
 
     @OneToMany(mappedBy="bill")
     private List<BillDetail> billDetails;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idSubsidiary", nullable = false)
+    @JoinColumn(name = "idSubsidiary", referencedColumnName = "id", nullable = false)
     private Subsidiary subsidiary;
 }

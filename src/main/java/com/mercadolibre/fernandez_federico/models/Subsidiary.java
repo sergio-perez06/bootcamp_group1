@@ -16,8 +16,7 @@ import java.util.List;
 public class Subsidiary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSubsidiary;
-
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
@@ -25,13 +24,12 @@ public class Subsidiary {
     @Pattern(regexp="^[a-zA-Z]+$",message="name debe tener letras.")
     private String name;
 
-
     //private List<Order> orders;
     @OneToMany(mappedBy = "subsidiary")
     private List<StockSubsidiary> stockSubsidiaries;
 
     @ManyToOne
-    @JoinColumn(name="idCountryDealer", nullable = false)
+    @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
     private CountryDealer countryDealer;
 
     @OneToMany(mappedBy = "subsidiary")

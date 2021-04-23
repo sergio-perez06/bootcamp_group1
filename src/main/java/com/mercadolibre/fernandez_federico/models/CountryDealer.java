@@ -16,7 +16,7 @@ public class CountryDealer
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCountryDealer;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
