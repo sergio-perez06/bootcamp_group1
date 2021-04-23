@@ -1,5 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.mercadolibre.fernandez_federico.util.enums.AccountType;
+import com.mercadolibre.fernandez_federico.util.enums.PartStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.aspectj.weaver.ast.Or;
@@ -15,11 +17,19 @@ public class BillDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String accountType;
+    private String description;
 
     private Integer quantity;
 
+    @Column(length = 1)
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
+
     private String reason;
+
+    @Column(length = 1)
+    @Enumerated(EnumType.STRING)
+    private PartStatus partStatus;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idBill", referencedColumnName = "id", nullable = false)

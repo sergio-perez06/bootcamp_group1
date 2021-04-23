@@ -1,6 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,13 @@ public class Bill {
     @Size(min = 8, max = 8, message = "")
     private String orderNumber;
 
+
+    // preguntar si este numero se contstruye al momento de dar respuesta o si se almacena
+    @Column(nullable = false,length = 4)
+    @NotNull(message = "subsidiaryNumber no puede ser Nulo.")
+    @Size(min = 4, max=4, message = "subsidiaryNumber debe tener 4 caracteres.")
+    private Integer CMorderNumber;
+
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
@@ -40,7 +48,9 @@ public class Bill {
     private Integer daysDelay;
 
     @NotNull
-    private String deliveryStatus;
+    @Column(length = 1)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus deliveryStatus;
 
     @OneToMany(mappedBy="bill")
     private List<BillDetail> billDetails;
