@@ -2,6 +2,8 @@ package com.mercadolibre.fernandez_federico.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,13 +47,9 @@ public class StockService implements IStockService {
                 return partsDTO;
             } else if (filters.containsKey("queryType") && filters.containsKey("date"))
             {
-                String patt="yyyy-MM-dd";
-                SimpleDateFormat dateFormat= new SimpleDateFormat (patt);
-                String date1= new String("2021-04-22");
-                Date d1=dateFormat.parse(date1);
-                String date2= new String("2021-04-20");
-                Date d2=dateFormat.parse(date2);
-                List<PartDTO> partsDTO = partRepository.findDate()
+                LocalDate d1 = LocalDate.parse("2021-04-20", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate d2 = LocalDate.parse("2021-04-23", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                List<PartDTO> partsDTO = partRepository.findByLastUpdateBetween(d1,d2)
                         .stream()
                         .map(parte -> modelMapper.map(parte, PartDTO.class))
                         .collect(Collectors.toList());

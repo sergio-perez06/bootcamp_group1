@@ -37,5 +37,5 @@ public class CountryDealer
     private List<Subsidiary> subsidiaries;
 
     @OneToMany(mappedBy = "countryDealer")
-    private List<User> users;
+    private List<ApplicationUser> applicationUsers;
 }

@@ -7,6 +7,7 @@ import org.checkerframework.checker.units.qual.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +25,12 @@ public class Bill {
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
-    private Date orderDate;
+    private LocalDate orderDate;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de envío no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
-    private Date deliveryDate;
+    private LocalDate deliveryDate;
 
     private  Integer daysDelay;
 

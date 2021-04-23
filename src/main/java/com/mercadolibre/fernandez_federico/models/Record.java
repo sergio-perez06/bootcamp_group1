@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -34,7 +34,7 @@ public class Record {
     @Column(nullable = false)
     @NotNull(message = "lastModification no puede ser Nulo")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date lastModification;
+    private LocalDate lastModification;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idPart", nullable = false)
