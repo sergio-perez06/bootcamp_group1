@@ -33,7 +33,7 @@ public class Subsidiary {
     @Column(nullable = false,length = 4)
     @NotNull(message = "subsidiaryNumber no puede ser Nulo.")
     @Size(min = 4, max=4, message = "subsidiaryNumber debe tener 4 caracteres.")
-    private Integer subsidiaryNumber;
+    private String subsidiaryNumber;
 
     @ManyToOne
     @JsonBackReference
