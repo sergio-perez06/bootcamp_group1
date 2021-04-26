@@ -37,3 +37,7 @@ INSERT INTO BILL_DETAIL VALUES (3, "Repuesto", "Compra faroles", "Demorado", 4, 
 
 
 
+--- create user
+
+INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina",1, "Argentina Country Dealer");
+INSERT INTO role VALUES (1, "admin");
