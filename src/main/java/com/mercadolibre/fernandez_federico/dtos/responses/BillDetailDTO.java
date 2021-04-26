@@ -10,4 +10,5 @@ public class BillDetailDTO {
     private Integer quantity;
     private AccountType accountType;
     private String reason;
+    private String partStatus;
 }
