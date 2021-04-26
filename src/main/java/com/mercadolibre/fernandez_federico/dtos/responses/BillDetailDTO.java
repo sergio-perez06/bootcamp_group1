@@ -1,6 +1,7 @@
 package com.mercadolibre.fernandez_federico.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mercadolibre.fernandez_federico.util.enums.AccountType;
 import lombok.Data;
 
