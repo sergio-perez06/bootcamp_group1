@@ -89,12 +89,12 @@ INSERT INTO STOCK_WAREHOUSE VALUES (1750, 3);
 INSERT INTO STOCK_WAREHOUSE VALUES (125, 4);
 
 -- Bills de subsidiaria Automotriz Alto Palermo
-INSERT INTO BILL VALUES (1, 0, 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);
-INSERT INTO BILL VALUES (2, 0, 5, "2021-03-20", "Demorado", "2021-03-10", "00000002", 1);
+INSERT INTO BILL VALUES (1, 0001-0001-00000001, 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);
+INSERT INTO BILL VALUES (2, 0001-0001-00000002, 5, "2021-03-20", "Demorado", "2021-03-10", "00000002", 1);
 
 -- Bills de subsidiaria Automotriz Prado Mdeo
-INSERT INTO BILL VALUES (3, 0, 2, "2021-02-10", "Demorado", "2021-02-18", "00000001", 3);
-INSERT INTO BILL VALUES (4, 0, 0, "2021-02-22", "Procesando", "2021-02-24", "00000002", 3);
+INSERT INTO BILL VALUES (3, 0002-0001-00000001, 2, "2021-02-10", "Demorado", "2021-02-18", "00000001", 3);
+INSERT INTO BILL VALUES (4, 0002-0001-00000002, 0, "2021-02-22", "Procesando", "2021-02-24", "00000002", 3);
 
 -- Bill details de Bill 1 y 2 de Automotriz Alto Palermo
 INSERT INTO BILL_DETAIL VALUES (1, "Repuesto", "Compra paragolpe frontal", "Normal", 1, "Sin motivo", 1, 3);

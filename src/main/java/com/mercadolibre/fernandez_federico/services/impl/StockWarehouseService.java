@@ -63,8 +63,6 @@ public class StockWarehouseService implements IStockWarehouseService {
                     .stream()
                     .map(record -> modelMapper.map(record, Record.class))
                     .collect(Collectors.toList());
-            // ToDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
-            // p y v elimine filas.
 
             if (filters.isEmpty() || (filters.get("queryType").equals("C"))) {
                 for(int i=0; i<stockWarehouses.size(); i++){
@@ -137,7 +135,6 @@ public class StockWarehouseService implements IStockWarehouseService {
 
                 //return partsDTO;
 
-                //toDO: aún no hicimos el tercer filtro, se hará en el transcurso del finde o principios de lunes.
             } if (filters.containsKey("queryType") && (filters.get("queryType").equals("V") && filters.containsKey("date"))){
                 HashMap<Long, Double> partHashMap = new HashMap<>();
                 for(int f=0; f<records.size(); f++){

@@ -29,12 +29,13 @@ public class Bill {
 
     @NotNull
     @Size(min = 8, max = 8, message = "")
+    @Column(name = "order_number")
     private String orderNumber;
 
-    @Column(nullable = false)
-    @NotNull(message = "CMorderNumber no puede ser Nulo.")
-    @Size(message = "CMorderNumber debe tener 16 caracteres.")
-    private String CMorderNumber;
+    @Column(nullable = false, name = "cm_order_number")
+    @NotNull(message = "CMOrderNumber no puede ser Nulo.")
+    @Size(message = "CMOrderNumber debe tener 16 caracteres.")
+    private String CMOrderNumber;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
