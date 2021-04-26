@@ -17,14 +17,14 @@ INSERT INTO DISCOUNT_TYPE VALUES (1, 3, "Cliente VIP");
 INSERT INTO DISCOUNT_TYPE VALUES (2, 5, "Compra al mayor");
 
 -- Part record
-INSERT INTO RECORD VALUES (1, "2021-01-20", 100, 120, null, 1);
-INSERT INTO RECORD VALUES (2, "2021-02-25", 110, 135, null, 1);
-INSERT INTO RECORD VALUES (3, "2021-01-05", 175, 200, null, 2);
-INSERT INTO RECORD VALUES (4, "2021-02-21", 160, 175, null, 3);
-INSERT INTO RECORD VALUES (5, "2020-09-12", 145, 165, null, 4);
-INSERT INTO RECORD VALUES (6, "2020-11-20", 145, 170, null, 4);
-INSERT INTO RECORD VALUES (7, "2020-12-28", 155, 175, null, 4);
-INSERT INTO RECORD VALUES (8, "2021-01-15", 140, 160, null, 4);
+INSERT INTO RECORD VALUES (1, "2021-01-20", 100, 120, 1, 1);
+INSERT INTO RECORD VALUES (2, "2021-02-25", 110, 135, 1, 1);
+INSERT INTO RECORD VALUES (3, "2021-01-05", 175, 200, 1, 2);
+INSERT INTO RECORD VALUES (4, "2021-02-21", 160, 175, 1, 3);
+INSERT INTO RECORD VALUES (5, "2020-09-12", 145, 165, 1, 4);
+INSERT INTO RECORD VALUES (6, "2020-11-20", 145, 170, 1, 4);
+INSERT INTO RECORD VALUES (7, "2020-12-28", 155, 175, 1, 4);
+INSERT INTO RECORD VALUES (8, "2021-01-15", 140, 160, 1, 4);
 
 -- Country Dealers
 INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina", 1, "Argentina Country Dealer");
@@ -103,3 +103,9 @@ INSERT INTO BILL_DETAIL VALUES (5, "Repuesto", "Compra paragolpe trasero", "Norm
 INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "Sin motivo", 3, 4);
 INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
 INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
+
+-- Insert de Storewarehouse stock
+INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('10', '1');
+INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('20', '2');
+INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('5', '3');
+INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('1', '4');
