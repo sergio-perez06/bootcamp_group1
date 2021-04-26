@@ -8,16 +8,16 @@ import java.util.Map;
 
 public enum OrderStatus {
 
-    Procesando('P'),
-    Demorado('D'),
-    Finalizado('F'),
-    Cancelado('C');
+    Procesando("Procesando"),
+    Demorado("Demorado"),
+    Finalizado("Finalizando"),
+    Cancelado("Cancelado");
 
-    private Character value;
+    private String value;
     private static Map mapita = new HashMap<>();
 
 
-    OrderStatus (Character c){
+    OrderStatus (String c){
         this.value = c;
     }
 
@@ -28,12 +28,11 @@ public enum OrderStatus {
         }
     }
 
-    public static OrderStatus valueOf(Character status) {
+    public static OrderStatus valueOfEnum(String status) {
         return (OrderStatus) mapita.get(status);
     }
 
-    @JsonValue
-    public Character getValue() {
+    public String getValue() {
         return value;
     }
 

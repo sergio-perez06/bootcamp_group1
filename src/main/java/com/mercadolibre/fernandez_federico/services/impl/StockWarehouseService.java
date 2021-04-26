@@ -205,10 +205,11 @@ public class StockWarehouseService implements IStockWarehouseService {
     }
 
     @Override
-    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String countryName, String deliveryStatus) {
+    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String countryName, String deliveryStatus, String order) {
         SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
-
+        System.out.println("Country name " + countryName);
         CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
+
         Optional<Subsidiary> subsidiaryOptional = countryDealer.getSubsidiaries().stream().filter(x -> x.getSubsidiaryNumber().equals(subsidiaryNumber)).findFirst();
 
         if (subsidiaryOptional.isPresent()) {
@@ -216,9 +217,23 @@ public class StockWarehouseService implements IStockWarehouseService {
             List<Bill> bills = subsidiary.getBills();
 
             if (deliveryStatus != null) {
-                bills = bills.stream().filter(x -> x.getDeliveryStatus().equals(deliveryStatus)).collect(Collectors.toList());
+                bills = bills.stream().filter(x -> x.getDeliveryStatus().getValue().equals(deliveryStatus)).collect(Collectors.toList());
             }
+            if (order != null) {
+                switch (order) {
+                    case "1": {
+                        bills.sort(Comparator.comparing(Bill::getOrderDate));
+                        break;
+                    }
 
+                    case "2": {
+                        bills.sort(Comparator.comparing(Bill::getOrderDate).reversed());
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
             List<BillDTO> billsResponse = bills.stream().map(x -> modelMapper.map(x, BillDTO.class)).collect(Collectors.toList());
 
             response.setSubsidiaryNumber(subsidiaryNumber);

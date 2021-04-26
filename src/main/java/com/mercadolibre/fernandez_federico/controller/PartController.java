@@ -45,6 +45,7 @@ public class PartController {
     public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(
             @RequestParam String subsidiaryNumber,
             @RequestParam(required = false) String deliveryStatus,
+            @RequestParam(required = false) String order,
             @RequestHeader("Authorization") String token) {
 
         Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
@@ -52,7 +53,7 @@ public class PartController {
         if (subsidiaryNumber.length() != 4) {
             // exception
         } else {
-            return stockService.getSubsidiaryOrdersByDeliveryStatus(subsidiaryNumber, claims.get("country").toString(), deliveryStatus);
+            return stockService.getSubsidiaryOrdersByDeliveryStatus(subsidiaryNumber, claims.get("country").toString(), deliveryStatus,order);
         }
 
         return null;
