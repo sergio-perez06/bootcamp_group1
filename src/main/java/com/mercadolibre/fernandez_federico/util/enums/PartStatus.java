@@ -1,5 +1,7 @@
 package com.mercadolibre.fernandez_federico.util.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ public enum PartStatus {
         return (PartStatus) mapita.get(status);
     }
 
+    @JsonValue
     public Character getValue() {
         return value;
     }

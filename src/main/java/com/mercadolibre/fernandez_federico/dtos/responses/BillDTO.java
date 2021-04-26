@@ -23,6 +23,7 @@ public class BillDTO {
     private LocalDate deliveryDate;
 
     private Integer daysDelayed;
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private OrderStatus deliveryStatus;
     private List<BillDetailDTO> orderDetails;
 }
