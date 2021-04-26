@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,10 +37,10 @@ public class Record {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastModification;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
-
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idDiscountType", referencedColumnName = "id", nullable = false)

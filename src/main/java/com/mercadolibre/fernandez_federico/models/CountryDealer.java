@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ public class CountryDealer
     @Size(min = 4, max=4, message = "dealerNumber debe tener 4 caracteres.")
     private Integer dealerNumber;
 
+
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
     @Size(min = 2, max=100, message = "name debe tener entre 2 y 100 caracteres.")
@@ -38,6 +40,7 @@ public class CountryDealer
     @OneToMany(mappedBy ="countryDealer")
     private List<StockDealer> stockDealers;
 
+    @JsonManagedReference
     @OneToMany(mappedBy ="countryDealer")
     private List<Subsidiary> subsidiaries;
 

@@ -1,5 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,9 +36,11 @@ public class Subsidiary {
     private Integer subsidiaryNumber;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
     private CountryDealer countryDealer;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "subsidiary")
     private List<Bill> bills;
 }

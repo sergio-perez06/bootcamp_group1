@@ -19,8 +19,12 @@ public class StockServiceTest {
 
     IStockWarehouseService stockService;
 
+
 //    @BeforeEach
 //    public void initialize() {
 //        stockService = new StockWarehouseWarehouseService(stockRepository, partRepository, modelMapper);
 //    }
+ //   @BeforeEach
+ //   public void initialize() {
+
 }

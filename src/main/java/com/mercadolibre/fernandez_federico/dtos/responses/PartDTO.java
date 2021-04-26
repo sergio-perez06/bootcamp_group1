@@ -26,6 +26,5 @@ public class PartDTO {
     private Integer longDimension;
     private Integer widthDimension;
     private Integer tallDimension;
-    //@JsonFormat(pattern = "yyyy-MM-dd")
     private String lastModification;
 }
