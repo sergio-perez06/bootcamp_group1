@@ -1,4 +1,4 @@
-package com.mercadolibre.fernandez_federico.services;
+package com.mercadolibre.fernandez_federico.services.impl;
 
 import com.mercadolibre.fernandez_federico.models.ApplicationUser;
 import com.mercadolibre.fernandez_federico.repositories.IUserRepository;
@@ -15,14 +15,13 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 
 @Service
-public class ApplicationUserDetailsService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     private IUserRepository applicationUserRepository;
 
-    private List<ApplicationUser> users;
 
-    public ApplicationUserDetailsService(IUserRepository applicationUserRepository) {
+    public UserService(IUserRepository applicationUserRepository) {
         this.applicationUserRepository = applicationUserRepository;
-        this.users = new ArrayList<>();
+
     }
 
     @Override
@@ -35,8 +34,10 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     }
 
     public void saveUser(ApplicationUser applicationUser) {
-        this.users.add(applicationUser);
-        System.out.println(this.users.toString());
+
+        System.out.println("Persist"+applicationUser.getCountryDealer().toString() + " ----"+applicationUser.getCountryDealer().toString());
+        applicationUserRepository.save(applicationUser);
+
     }
 
     public ApplicationUser findByUsername(String username) throws UsernameNotFoundException {

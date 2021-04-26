@@ -31,11 +31,11 @@ public class ApplicationUser
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idRole", referencedColumnName = "id")
+    @JoinColumn(name = "idRole", referencedColumnName = "id",nullable = false)
     private Role role;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idCountryDealer", referencedColumnName = "id")
+    @JoinColumn(name="idCountryDealer", referencedColumnName = "id",nullable = false)
     @JsonBackReference
     private CountryDealer countryDealer;
 }

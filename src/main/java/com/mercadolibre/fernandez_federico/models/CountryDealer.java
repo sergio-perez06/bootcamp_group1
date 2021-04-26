@@ -3,6 +3,7 @@ package com.mercadolibre.fernandez_federico.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter @Setter
 @Entity
+@ToString
 @Table(name="country_dealer")
 public class CountryDealer
 {

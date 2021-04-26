@@ -1,4 +1,4 @@
-package com.mercadolibre.fernandez_federico.services;
+package com.mercadolibre.fernandez_federico.services.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +15,7 @@ import com.mercadolibre.fernandez_federico.models.Subsidiary;
 import com.mercadolibre.fernandez_federico.repositories.ICountryDealerRepository;
 import com.mercadolibre.fernandez_federico.repositories.IPartRepository;
 import com.mercadolibre.fernandez_federico.repositories.ISubsidiaryRepository;
+import com.mercadolibre.fernandez_federico.services.IStockService;
 import org.modelmapper.ModelMapper;
 
 

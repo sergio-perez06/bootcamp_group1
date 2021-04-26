@@ -12,4 +12,6 @@ public interface ICountryDealerRepository extends JpaRepository<CountryDealer, L
     List<CountryDealer> findAll();
 
     CountryDealer findByDealerNumber(Integer dealerNumber);
+
+    CountryDealer findByCountry(String country);
 }
