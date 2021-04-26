@@ -24,7 +24,7 @@ public class CountryDealer
     @Column(nullable = false,length = 4)
     @NotNull(message = "dealerNumber no puede ser Nulo.")
     @Size(min = 4, max=4, message = "dealerNumber debe tener 4 caracteres.")
-    private Integer dealerNumber;
+    private String dealerNumber;
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")

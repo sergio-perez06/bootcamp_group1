@@ -27,13 +27,11 @@ INSERT INTO RECORD VALUES (7, "2020-12-28", 155, 175, 1, 4);
 INSERT INTO RECORD VALUES (8, "2021-01-15", 140, 160, 1, 4);
 
 -- Country Dealers
-INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina", 1, "Argentina Country Dealer");
-INSERT INTO COUNTRY_DEALER VALUES (2, "Uruguay", 2, "Uruguay Country Dealer");
+INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina", "0001", "Argentina Country Dealer");
+INSERT INTO COUNTRY_DEALER VALUES (2, "Uruguay", "0002", "Uruguay Country Dealer");
 
 -- Roles
 INSERT INTO `role` VALUES (1, "Country Dealer");
-INSERT INTO `role` VALUES (2, "admin");
-
 
 -- Users
 INSERT INTO APPLICATION_USER VALUES (1, "a", "cd_argentina", 1, 1);
@@ -51,12 +49,12 @@ INSERT INTO STOCK_DEALER VALUES (24, 2, 3);
 INSERT INTO STOCK_DEALER VALUES (5, 2, 4);
 
 -- Subisidiarias
-INSERT INTO SUBSIDIARY VALUES (1, "Automotriz Alto Palermo BsAs", 1, 1); -- Subsidiarias de Argentina
-INSERT INTO SUBSIDIARY VALUES (2, "Automotriz La Boca BsAs", 2, 1);
+INSERT INTO SUBSIDIARY VALUES (1, "Automotriz Alto Palermo BsAs", "0001", 1); -- Subsidiarias de Argentina
+INSERT INTO SUBSIDIARY VALUES (2, "Automotriz La Boca BsAs", "0002", 1);
 
-INSERT INTO SUBSIDIARY VALUES (3, "Automotriz Prado Mdeo", 1, 2); -- Subisidiarias de Uruguay
-INSERT INTO SUBSIDIARY VALUES (4, "Automotriz Centro Mdeo", 2, 2);
-INSERT INTO SUBSIDIARY VALUES (5, "Automotriz Pocitos Mdeo", 3, 2);
+INSERT INTO SUBSIDIARY VALUES (3, "Automotriz Prado Mdeo", "0001", 2); -- Subisidiarias de Uruguay
+INSERT INTO SUBSIDIARY VALUES (4, "Automotriz Centro Mdeo", "0002", 2);
+INSERT INTO SUBSIDIARY VALUES (5, "Automotriz Pocitos Mdeo", "0003", 2);
 
 -- Stock subsidiarias
 INSERT INTO STOCK_SUBSIDIARY VALUES (10, 1, 1); -- Subsidiary Alto Palermo
@@ -83,6 +81,12 @@ INSERT INTO STOCK_SUBSIDIARY VALUES (6, 5, 1); -- Subsidiary Centro
 INSERT INTO STOCK_SUBSIDIARY VALUES (2, 5, 2);
 INSERT INTO STOCK_SUBSIDIARY VALUES (1, 5, 3);
 INSERT INTO STOCK_SUBSIDIARY VALUES (1, 5, 4);
+
+-- Stock warehouse
+INSERT INTO STOCK_WAREHOUSE VALUES (2500, 1);
+INSERT INTO STOCK_WAREHOUSE VALUES (1500, 2);
+INSERT INTO STOCK_WAREHOUSE VALUES (1750, 3);
+INSERT INTO STOCK_WAREHOUSE VALUES (125, 4);
 
 -- Bills de subsidiaria Automotriz Alto Palermo
 INSERT INTO BILL VALUES (1, 0, 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);

@@ -63,18 +63,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Date exp = new Date(System.currentTimeMillis() + EXPIRATION_TIME);
         Key key = Keys.hmacShaKeyFor(KEY.getBytes());
 
-
        /* Claims claims = Jwts.claims().setSubject(((User) auth.getPrincipal()).getUsername());
-        String token = Jwts.builder().setClaims(claims).signWith(key, SignatureAlgorithm.HS512).setExpiration(exp).compact();
-*/
+        String token = Jwts.builder().setClaims(claims).signWith(key, SignatureAlgorithm.HS512).setExpiration(exp).compact();*/
+
         String userName = ((User) auth.getPrincipal()).getUsername();
 
         ApplicationUser u = userService.findByUsername(userName);
 
         Map<String,String> claims = new HashMap<>();
-        claims.put("country",u.getCountryDealer().getCountry());
-        claims.put("role",u.getRole().getName());
-
+        claims.put("country", u.getCountryDealer().getCountry());
+        claims.put("role", u.getRole().getName());
 
         String token = Jwts.builder()
                 .setSubject(((User) auth.getPrincipal()).getUsername())
@@ -84,10 +82,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(exp)
                 .compact();
 
-
         res.addHeader("token", token);
-
-
     }
 
 
