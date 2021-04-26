@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import java.util.Date;
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRecord;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "normalPrice no puede ser Nulo")
@@ -34,13 +35,14 @@ public class Record {
     @Column(nullable = false)
     @NotNull(message = "lastModification no puede ser Nulo")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date lastModification;
+    private LocalDate lastModification;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idPart", nullable = false)
+    @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idDiscountType", nullable = false)
+    @JoinColumn(name = "idDiscountType", referencedColumnName = "id", nullable = false)
     private DiscountType discountType;
 }

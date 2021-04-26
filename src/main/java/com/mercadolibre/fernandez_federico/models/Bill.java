@@ -1,13 +1,22 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.Size;
+
 import java.util.List;
 
 @Getter
@@ -17,28 +26,45 @@ import java.util.List;
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBill;
+    private Long id;
 
-    private String orderNumber;
+    @NotNull
+    @Size(min = 8, max = 8, message = "")
+    private Integer orderNumber;
+
+
+    // preguntar si este numero se contstruye al momento de dar respuesta o si se almacena
+    @Column(nullable = false,length = 4)
+    @NotNull(message = "subsidiaryNumber no puede ser Nulo.")
+    @Size(min = 4, max=4, message = "subsidiaryNumber debe tener 4 caracteres.")
+    private Integer CMorderNumber;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
-    private Date orderDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate orderDate;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de envío no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
-    private Date deliveryDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate deliveryDate;
 
-    private  Integer daysDelay;
+    @NotNull
+    private Integer daysDelay;
 
-    private String deliveryStatus;
+    @NotNull
+    @Column(length = 50)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus deliveryStatus;
 
+    @JsonManagedReference
     @OneToMany(mappedBy="bill")
     private List<BillDetail> billDetails;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idSubsidiary", nullable = false)
+    @JoinColumn(name = "idSubsidiary", referencedColumnName = "id", nullable = false)
     private Subsidiary subsidiary;
 }

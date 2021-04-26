@@ -6,8 +6,10 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 @Getter @Setter
@@ -20,7 +22,7 @@ public class Part
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPart;
+    private Long id;
 
     @Column(nullable = false, length = 8)
     @NotNull(message = "partCode no puede ser Nulo")
@@ -58,12 +60,14 @@ public class Part
     @Pattern(regexp="^(\\d{1,4})+$",message= "tallDimension debe tener 4 caracteres numericos")
     private Integer tallDimension;
 
- //   @NotNull
- //   @ManyToOne(cascade = CascadeType.ALL)
- //   @JoinColumn(name="idMaker", nullable = false)
- //   private Maker maker;
+    @NotNull
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="idMaker", referencedColumnName = "id", nullable = false)
+    private Maker maker;
 
     @NotNull
+    @JsonManagedReference
     @OneToMany(mappedBy = "part")
     private List<Record> records;
 }

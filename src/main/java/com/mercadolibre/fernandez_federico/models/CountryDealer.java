@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,13 @@ public class CountryDealer
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCountryDealer;
+    private Long id;
+
+    @Column(nullable = false,length = 4)
+    @NotNull(message = "dealerNumber no puede ser Nulo.")
+    @Size(min = 4, max=4, message = "dealerNumber debe tener 4 caracteres.")
+    private Integer dealerNumber;
+
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
@@ -33,9 +40,10 @@ public class CountryDealer
     @OneToMany(mappedBy ="countryDealer")
     private List<StockDealer> stockDealers;
 
+    @JsonManagedReference
     @OneToMany(mappedBy ="countryDealer")
     private List<Subsidiary> subsidiaries;
 
     @OneToMany(mappedBy = "countryDealer")
-    private List<ApplicationUser> users;
+    private List<ApplicationUser> applicationUsers;
 }

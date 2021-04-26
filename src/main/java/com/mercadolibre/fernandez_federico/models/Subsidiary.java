@@ -1,5 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +18,7 @@ import java.util.List;
 public class Subsidiary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSubsidiary;
-
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
@@ -25,15 +26,21 @@ public class Subsidiary {
     @Pattern(regexp="^[a-zA-Z]+$",message="name debe tener letras.")
     private String name;
 
-
     //private List<Order> orders;
     @OneToMany(mappedBy = "subsidiary")
     private List<StockSubsidiary> stockSubsidiaries;
 
+    @Column(nullable = false,length = 4)
+    @NotNull(message = "subsidiaryNumber no puede ser Nulo.")
+    @Size(min = 4, max=4, message = "subsidiaryNumber debe tener 4 caracteres.")
+    private Integer subsidiaryNumber;
+
     @ManyToOne
-    @JoinColumn(name="idCountryDealer", nullable = false)
+    @JsonBackReference
+    @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
     private CountryDealer countryDealer;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "subsidiary")
     private List<Bill> bills;
 }
