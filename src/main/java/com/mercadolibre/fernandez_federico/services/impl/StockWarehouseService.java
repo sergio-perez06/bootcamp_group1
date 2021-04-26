@@ -36,6 +36,8 @@ public class StockWarehouseService implements IStockWarehouseService {
         this.makerRepository = makerRepository;
         this.recordRepository = recordRepository;
         this.modelMapper = modelMapper;
+        this.countryDealerRepository = countryDealerRepository;
+        this.subsidiaryRepository = subsidiaryRepository;
     }
 
     @Override
