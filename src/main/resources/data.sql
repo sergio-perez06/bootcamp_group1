@@ -32,6 +32,8 @@ INSERT INTO COUNTRY_DEALER VALUES (2, "Uruguay", 2, "Uruguay Country Dealer");
 
 -- Roles
 INSERT INTO `role` VALUES (1, "Country Dealer");
+INSERT INTO `role` VALUES (2, "admin");
+
 
 -- Users
 INSERT INTO APPLICATION_USER VALUES (1, "a", "cd_argentina", 1, 1);
@@ -101,6 +103,3 @@ INSERT INTO BILL_DETAIL VALUES (5, "Repuesto", "Compra paragolpe trasero", "Norm
 INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "Sin motivo", 3, 4);
 INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
 INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
-
-INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina",1, "Argentina Country Dealer");
-INSERT INTO role VALUES (1, "admin");
