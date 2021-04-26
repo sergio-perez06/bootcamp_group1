@@ -9,8 +9,8 @@ import lombok.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApplicationUser
 @Table(name="application_user")
+public class ApplicationUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,10 @@ public class ApplicationUser
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idRole", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "idRole", referencedColumnName = "id")
     private Role role;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="idCountryDealer", referencedColumnName = "id")
     private CountryDealer countryDealer;
 }

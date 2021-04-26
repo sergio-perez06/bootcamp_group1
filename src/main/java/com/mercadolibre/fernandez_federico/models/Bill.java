@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 

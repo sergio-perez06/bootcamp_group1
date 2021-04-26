@@ -60,8 +60,8 @@ public class Part
     @Pattern(regexp="^(\\d{1,4})+$",message= "tallDimension debe tener 4 caracteres numericos")
     private Integer tallDimension;
 
-    @NotNull
     @JsonBackReference
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idMaker", referencedColumnName = "id", nullable = false)
     private Maker maker;
