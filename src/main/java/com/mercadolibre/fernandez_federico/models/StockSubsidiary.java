@@ -3,7 +3,6 @@ package com.mercadolibre.fernandez_federico.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Table(name="stock_subsidiary")
-@IdClass(SubsidiariaPartPk.class)
+@IdClass(SubsidiaryPartPk.class)
 public class StockSubsidiary {
     @Id
     private Part part;

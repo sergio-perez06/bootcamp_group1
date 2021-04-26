@@ -34,28 +34,25 @@ public class PartController {
 
     }
 
-    //REQUERIMIENTO 2
-    @GetMapping("/orders")
-    public SubsidiaryOrdersByDeliveryStatusDTO orderStatus(
-            @RequestParam String dealerNumber, @RequestParam(required = false) String orderStatus){
+    // REQUERIMIENTO 2
+    @GetMapping("/orders/{dealerNumber}")
+    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(
+            @PathVariable String dealerNumber,
+            @RequestParam String subsidiaryNumber,
+            @RequestParam(required = false) String deliveryStatus) {
 
-        if(dealerNumber.length() != 4){
+        if(subsidiaryNumber.length() != 4) {
             // exception
-        }else{
-            return stockService.getSubsidiaryOrdersByDeliveryStatus(dealerNumber);
+        } else {
+            return stockService.getSubsidiaryOrdersByDeliveryStatus(subsidiaryNumber, dealerNumber, deliveryStatus);
         }
 
-
         return null;
-
     }
 
     @GetMapping("/allCountryDealers")
     public List<CountryDealer> countryDealers(){
-
         return stockService.getAllCountryDealers();
-
-
     }
 
 

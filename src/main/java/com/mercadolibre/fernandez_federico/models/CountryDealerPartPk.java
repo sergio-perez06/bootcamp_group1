@@ -6,12 +6,12 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
-public class SubsidiariaPartPk implements Serializable {
+public class CountryDealerPartPk implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
 
     @ManyToOne
-    @JoinColumn(name = "idSubsidiary", referencedColumnName = "id", nullable = false)
-    private Subsidiary subsidiary;
+    @JoinColumn(name = "idCountryDealer", referencedColumnName = "id", nullable = false)
+    private CountryDealer countryDealer;
 }

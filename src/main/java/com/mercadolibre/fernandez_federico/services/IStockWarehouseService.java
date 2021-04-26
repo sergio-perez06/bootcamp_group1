@@ -16,5 +16,5 @@ public interface IStockWarehouseService {
 
     public List<CountryDealer> getAllCountryDealers ();
 
-    SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String dealerNumber);
+    SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String dealerNumber, String deliveryStatus);
 }

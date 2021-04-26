@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 public class BillDetailDTO {
-
-    private Integer partCode;
+    private String partCode;
     private String description;
     private Integer quantity;
     private AccountType accountType;

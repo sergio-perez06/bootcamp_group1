@@ -29,14 +29,12 @@ public class Bill {
 
     @NotNull
     @Size(min = 8, max = 8, message = "")
-    private Integer orderNumber;
+    private String orderNumber;
 
-
-    // preguntar si este numero se contstruye al momento de dar respuesta o si se almacena
-    @Column(nullable = false,length = 4)
-    @NotNull(message = "subsidiaryNumber no puede ser Nulo.")
-    @Size(min = 4, max=4, message = "subsidiaryNumber debe tener 4 caracteres.")
-    private Integer CMorderNumber;
+    @Column(nullable = false)
+    @NotNull(message = "CMorderNumber no puede ser Nulo.")
+    @Size(message = "CMorderNumber debe tener 16 caracteres.")
+    private String CMorderNumber;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
@@ -51,7 +49,7 @@ public class Bill {
     private LocalDate deliveryDate;
 
     @NotNull
-    private Integer daysDelay;
+    private Integer daysDelayed;
 
     @NotNull
     @Column(length = 50)

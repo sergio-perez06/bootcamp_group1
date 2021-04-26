@@ -43,6 +43,6 @@ public class Record {
     private Part part;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idDiscountType", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "idDiscountType", referencedColumnName = "id")
     private DiscountType discountType;
 }
