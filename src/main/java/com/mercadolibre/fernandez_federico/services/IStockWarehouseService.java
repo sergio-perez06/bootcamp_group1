@@ -8,7 +8,7 @@ import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
 import com.mercadolibre.fernandez_federico.models.CountryDealer;
 
-public interface IStockService {
+public interface IStockWarehouseService {
     //public List<PartDTO> getParts();
     public List<PartDTO> getParts(HashMap<String, String> filters) throws ParseException, Exception;
 

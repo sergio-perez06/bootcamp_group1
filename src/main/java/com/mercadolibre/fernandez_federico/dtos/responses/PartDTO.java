@@ -1,24 +1,30 @@
 package com.mercadolibre.fernandez_federico.dtos.responses;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 @Data
+@Getter
+@Setter
 public class PartDTO {
-    private Long idPart;
     private Integer partCode;
     private String description;
     private String maker;
-    //private String discountType;
-    //private Double normalPrice;
-    //private Double urgentPrice;
+    private Integer quantity;
+    private String discountType;
+    private Double normalPrice;
+    private Double urgentPrice;
     private Integer netWeight;
     private Integer longDimension;
     private Integer widthDimension;
     private Integer tallDimension;
-    //private Date lastModification;
-    //private Integer quantity;
+    private String lastModification;
 }
