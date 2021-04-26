@@ -32,10 +32,8 @@ INSERT INTO COUNTRY_DEALER VALUES (2, "Uruguay", "0002", "Uruguay Country Dealer
 
 -- Roles
 INSERT INTO `role` VALUES (1, "Country Dealer");
+INSERT INTO `role` VALUES (2, "Admin");
 
--- Users
-INSERT INTO APPLICATION_USER VALUES (1, "a", "cd_argentina", 1, 1);
-INSERT INTO APPLICATION_USER VALUES (2, "a", "cd_uruguay", 2, 1);
 
 -- Stock Country Dealers
 INSERT INTO STOCK_DEALER VALUES (150, 1, 1); -- Country Dealer Argentina
@@ -88,6 +86,7 @@ INSERT INTO STOCK_WAREHOUSE VALUES (1500, 2);
 INSERT INTO STOCK_WAREHOUSE VALUES (1750, 3);
 INSERT INTO STOCK_WAREHOUSE VALUES (125, 4);
 
+
 -- Bills de subsidiaria Automotriz Alto Palermo
 INSERT INTO BILL VALUES (1, 0, 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);
 INSERT INTO BILL VALUES (2, 0, 5, "2021-03-20", "Demorado", "2021-03-10", "00000002", 1);
@@ -107,9 +106,3 @@ INSERT INTO BILL_DETAIL VALUES (5, "Repuesto", "Compra paragolpe trasero", "Norm
 INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "Sin motivo", 3, 4);
 INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
 INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
-
--- Insert de Storewarehouse stock
-INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('10', '1');
-INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('20', '2');
-INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('5', '3');
-INSERT INTO STOCK_WAREHOUSE (`quantity`, `id_part`) VALUES ('1', '4');

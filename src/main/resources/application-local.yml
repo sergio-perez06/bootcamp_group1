@@ -6,6 +6,7 @@ spring:
     url: jdbc:mysql://localhost:3306/warehouse?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&jdbcCompliantTruncation=false
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASS}
+    initialization-mode: always
   jpa:
     show-sql: true
     hibernate:
