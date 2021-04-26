@@ -102,7 +102,5 @@ INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "S
 INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
 INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
 
---- create user
-
 INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina",1, "Argentina Country Dealer");
 INSERT INTO role VALUES (1, "admin");

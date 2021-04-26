@@ -2,13 +2,10 @@ package com.mercadolibre.fernandez_federico.services.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import java.util.Comparator;
-
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
@@ -64,8 +61,9 @@ public class StockWarehouseService implements IStockWarehouseService {
                     .stream()
                     .map(record -> modelMapper.map(record, Record.class))
                     .collect(Collectors.toList());
-            //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
+            // ToDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
             // p y v elimine filas.
+
             if (filters.isEmpty() || (filters.get("queryType").equals("C"))) {
                 for(int i=0; i<stockWarehouses.size(); i++){
                     PartDTO part = new PartDTO();
@@ -185,50 +183,53 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     }
 
-
-
-
     // Requirement 3
     public void getOrderStatus(String orderNumberCM){
-
-
         String[] splitted = orderNumberCM.split("-");
 
         Integer subsidiaryNumber = Integer.parseInt(splitted[0]);
         Integer CountryDealerNumber = Integer.parseInt(splitted[1]);
         Integer orderNumber = Integer.parseInt(splitted[2]);
 
-
         CountryDealer countryDelaer = countryDealerRepository.findByDealerNumber(CountryDealerNumber);
         System.out.println(countryDelaer+"\n");
-
-
 
         Subsidiary subsidiary  = subsidiaryRepository.findBySubsidiaryNumber(subsidiaryNumber);
 
         System.out.println(subsidiary+"\n");
-
-
     }
-
 
     // Utilitary
     public List<CountryDealer> getAllCountryDealers (){
-
         System.out.println(countryDealerRepository.count());
         return countryDealerRepository.findAll();
     }
 
-    //Requirement 2
     @Override
-    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber) {
+    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String dealerNumber, String deliveryStatus) {
         SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
 
-        Subsidiary s = subsidiaryRepository.findBySubsidiaryNumber(Integer.parseInt(subsidiaryNumber));
+        CountryDealer countryDealer = countryDealerRepository.findByDealerNumber(Integer.parseInt(dealerNumber));
+        Optional<Subsidiary> subsidiaryOptional = countryDealer.getSubsidiaries().stream().filter(x -> x.getSubsidiaryNumber().equals(Integer.parseInt(subsidiaryNumber))).findFirst();
 
-        if(s!= null){
+        if (subsidiaryOptional.isPresent()) {
+            Subsidiary subsidiary = subsidiaryOptional.get();
+            List<Bill> bills = subsidiary.getBills();
 
+            if (deliveryStatus != null) {
+                bills = bills.stream().filter(x -> x.getDeliveryStatus().equals(deliveryStatus)).collect(Collectors.toList());
+            }
+
+            List<BillDTO> billsResponse = bills.stream().map(x -> modelMapper.map(x, BillDTO.class)).collect(Collectors.toList());
+
+            billsResponse.forEach(x -> System.out.println("numero orden " + x.getOrderNumber()));
+
+            response.setSubsidiaryNumber(subsidiaryNumber);
+            response.setOrders(billsResponse);
+
+            return response;
+        } else {
+            throw new ApiException("Not found", String.format("No existe subsidiaria con numero %s", subsidiaryNumber), 404);
         }
-        return null;
     }
 }
