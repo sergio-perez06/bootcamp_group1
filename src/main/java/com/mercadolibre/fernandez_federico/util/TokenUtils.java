@@ -12,15 +12,16 @@ public class TokenUtils {
     public Claims getAllClaimsFromToken(String token) {
         Claims claims;
 
-        try {
+        try
+        {
             claims = Jwts.parser()
                     .setSigningKey(Keys.hmacShaKeyFor(KEY.getBytes()))
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-
             claims = null;
         }
+
         return claims;
     }
 }

@@ -206,11 +206,11 @@ public class StockWarehouseService implements IStockWarehouseService {
     }
 
     @Override
-    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String dealerNumber, String deliveryStatus) {
+    public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String countryName, String deliveryStatus) {
         SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
 
-        CountryDealer countryDealer = countryDealerRepository.findByDealerNumber(Integer.parseInt(dealerNumber));
-        Optional<Subsidiary> subsidiaryOptional = countryDealer.getSubsidiaries().stream().filter(x -> x.getSubsidiaryNumber().equals(Integer.parseInt(subsidiaryNumber))).findFirst();
+        CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
+        Optional<Subsidiary> subsidiaryOptional = countryDealer.getSubsidiaries().stream().filter(x -> x.getSubsidiaryNumber().equals(subsidiaryNumber)).findFirst();
 
         if (subsidiaryOptional.isPresent()) {
             Subsidiary subsidiary = subsidiaryOptional.get();
@@ -221,8 +221,6 @@ public class StockWarehouseService implements IStockWarehouseService {
             }
 
             List<BillDTO> billsResponse = bills.stream().map(x -> modelMapper.map(x, BillDTO.class)).collect(Collectors.toList());
-
-            billsResponse.forEach(x -> System.out.println("numero orden " + x.getOrderNumber()));
 
             response.setSubsidiaryNumber(subsidiaryNumber);
             response.setOrders(billsResponse);

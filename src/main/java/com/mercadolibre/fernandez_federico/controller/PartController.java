@@ -2,10 +2,13 @@ package com.mercadolibre.fernandez_federico.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 
+import com.mercadolibre.fernandez_federico.util.TokenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,9 @@ public class PartController {
 
     private final IStockWarehouseService stockService;
 
+    @Autowired
+    private TokenUtils tokenUtils;
+
     public PartController(IStockWarehouseService stockService)
     {
         this.stockService=stockService;
@@ -35,16 +41,18 @@ public class PartController {
     }
 
     // REQUERIMIENTO 2
-    @GetMapping("/orders/{dealerNumber}")
+    @GetMapping("/orders")
     public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(
-            @PathVariable String dealerNumber,
             @RequestParam String subsidiaryNumber,
-            @RequestParam(required = false) String deliveryStatus) {
+            @RequestParam(required = false) String deliveryStatus,
+            @RequestHeader("Authorization") String token) {
 
-        if(subsidiaryNumber.length() != 4) {
+        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
+
+        if (subsidiaryNumber.length() != 4) {
             // exception
         } else {
-            return stockService.getSubsidiaryOrdersByDeliveryStatus(subsidiaryNumber, dealerNumber, deliveryStatus);
+            return stockService.getSubsidiaryOrdersByDeliveryStatus(subsidiaryNumber, claims.get("country").toString(), deliveryStatus);
         }
 
         return null;

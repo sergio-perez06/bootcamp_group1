@@ -14,9 +14,8 @@ public class PingController {
 	@Autowired
 	private TokenUtils tokenUtils;
 
-
 	@GetMapping("/ping")
-	public String ping(@RequestHeader("Authorization") String token ) {
+	public String ping(@RequestHeader("Authorization") String token) {
 		NewRelic.ignoreTransaction();
 
 		System.out.println(token);
