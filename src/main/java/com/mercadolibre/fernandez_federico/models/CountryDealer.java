@@ -45,5 +45,6 @@ public class CountryDealer
     private List<Subsidiary> subsidiaries;
 
     @OneToMany(mappedBy = "countryDealer")
+    @JsonManagedReference
     private List<ApplicationUser> applicationUsers;
 }

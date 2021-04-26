@@ -3,12 +3,14 @@ package com.mercadolibre.fernandez_federico.models;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @Getter @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name="application_user")
 public class ApplicationUser
 {
@@ -16,7 +18,7 @@ public class ApplicationUser
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idApplicationUser;
 
-    @Column(nullable = false, length = 12)
+    @Column(nullable = false, length = 12, unique = true)
     @NotNull(message = "username no puede ser nulo")
     @Size(min = 5, max = 12, message = "username debe tener entre cinco y doce caracteres")
     @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
@@ -34,5 +36,6 @@ public class ApplicationUser
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idCountryDealer", referencedColumnName = "id")
+    @JsonBackReference
     private CountryDealer countryDealer;
 }

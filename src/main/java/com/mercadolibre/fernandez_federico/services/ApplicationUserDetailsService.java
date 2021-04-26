@@ -38,4 +38,13 @@ public class ApplicationUserDetailsService implements UserDetailsService {
         this.users.add(applicationUser);
         System.out.println(this.users.toString());
     }
+
+    public ApplicationUser findByUsername(String username) throws UsernameNotFoundException {
+        ApplicationUser applicationUser = applicationUserRepository.findByUsername(username);
+        if (applicationUser == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return applicationUser;
+    }
+
 }
