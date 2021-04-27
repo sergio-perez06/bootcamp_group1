@@ -14,7 +14,7 @@ import java.util.List;
 public class BillController {
     private BillService billService;
 
-    @GetMapping("/orders")
+    @GetMapping("/orders/list")
     public List<BillDTO> getOrderDetails(@RequestParam String oNum){
         return billService.getBillDetails(oNum);
     }

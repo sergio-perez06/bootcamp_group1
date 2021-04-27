@@ -30,7 +30,7 @@ public class BillService implements IBillService {
     }
 
     public List<BillDTO> getBillDetails(String oNum){
-        if(billRepository.findAll().isEmpty())
+        if(billRepository.findBillByCMOrderNumber(oNum)==null)
             throw new ApiException("Not Found","La orden no existe",404 );
         else{
             BillDTO finalBill = new BillDTO();
@@ -38,25 +38,21 @@ public class BillService implements IBillService {
                     .stream()
                     .map(stock -> modelMapper.map(stock, StockWarehouse.class))
                     .collect(Collectors.toList());
-            List<Bill> bills = billRepository.findAll()
-                    .stream()
-                    .map(bill -> modelMapper.map(bill, Bill.class))
-                    .collect(Collectors.toList());
+            Bill bills = billRepository.findBillByCMOrderNumber(oNum);
             List<BillDetail> billsDetail = billDetailRepository.findAll()
                     .stream()
                     .map(billDetail -> modelMapper.map(billDetail, BillDetail.class))
                     .collect(Collectors.toList());
-            for(int i=0; i<bills.size(); i++){
-                if(bills.get(i).getCMOrderNumber().equals(oNum)){
+                if(bills.getCMOrderNumber().equals(oNum)){
                     //toDo: Cortar el string del order number
-                    finalBill.setOrderNumber(bills.get(i).getCMOrderNumber());
-                    finalBill.setOrderDate(bills.get(i).getOrderDate());
-                    finalBill.setDeliveryStatus(bills.get(i).getDeliveryStatus());
+                    finalBill.setOrderNumber(bills.getCMOrderNumber());
+                    finalBill.setOrderDate(bills.getOrderDate());
+                    finalBill.setDeliveryStatus(bills.getDeliveryStatus());
                     //toDo: For para iterar por los billsDetails para cargarlos y agregarlos a la lista. Luego ver de conseguir el código de parte desde las partes.
                 }
             }
-
-        }
         return null;
+        }
+
     }
-}
+
