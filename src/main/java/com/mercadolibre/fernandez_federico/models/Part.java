@@ -24,7 +24,7 @@ public class Part
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 8, unique = true)
     @NotNull(message = "partCode no puede ser Nulo")
     @Size(min = 8, max = 8, message = "partCode debe tener ocho caracteres")
     @Pattern(regexp = "^[0-9]{8}$", message = "partCode debe poseer 8 caracteres numericos")
