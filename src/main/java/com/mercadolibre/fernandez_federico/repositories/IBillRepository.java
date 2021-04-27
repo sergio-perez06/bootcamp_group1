@@ -4,5 +4,5 @@ import com.mercadolibre.fernandez_federico.models.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IBillRepository extends JpaRepository<Bill, Long> {
-    Bill findByCmOrdernumber(String cmOrdernumber);
+    Bill findByCmOrdernumberWarehouse(String cmOrdernumber);
 }

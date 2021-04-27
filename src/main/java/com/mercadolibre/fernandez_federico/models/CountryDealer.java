@@ -21,21 +21,21 @@ public class CountryDealer
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,length = 4)
+    @Column(nullable = false, length = 4)
     @NotNull(message = "dealerNumber no puede ser Nulo.")
-    @Size(min = 4, max=4, message = "dealerNumber debe tener 4 caracteres.")
+    @Size(min = 4, max = 4, message = "dealerNumber debe tener 4 caracteres.")
     private String dealerNumber;
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
-    @Size(min = 2, max=100, message = "name debe tener entre 2 y 100 caracteres.")
-    @Pattern(regexp="^[a-zA-Z]+$",message="name debe tener letras.")
+    @Size(min = 2, max = 100, message = "name debe tener entre 2 y 100 caracteres.")
+    @Pattern(regexp = "^[a-zA-Z]+$",message = "name debe tener letras.")
     private String name;
 
     @Column(nullable = false)
     @NotNull(message = "country no puede ser Nulo.")
-    @Size(min = 2, max=100, message = "country debe tener entre 2 y 100 caracteres.")
-    @Pattern(regexp="^[a-zA-Z]+$",message="country debe tener letras.")
+    @Size(min = 2, max = 100, message = "country debe tener entre 2 y 100 caracteres.")
+    @Pattern(regexp = "^[a-zA-Z]+$",message = "country debe tener letras.")
     private String country;
 
     @OneToMany(mappedBy ="countryDealer")

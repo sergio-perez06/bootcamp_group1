@@ -5,7 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
@@ -26,10 +28,12 @@ public class StockWarehouseService implements IStockWarehouseService {
     private IMakerRepository makerRepository;
     private IRecordRepository recordRepository;
     private ModelMapper modelMapper;
+    private IStockCountryDealerRepository stockCountryDealerRepository;
+    private IPartRepository partRepository;
 
     public StockWarehouseService(IStockWarehouseRepository stockWarehouseRepository, ModelMapper modelMapper, IDiscountTypeRepository discountTypeRepository,
                                  ICountryDealerRepository countryDealerRepository, ISubsidiaryRepository subsidiaryRepository,IMakerRepository makerRepository,
-                                 IRecordRepository recordRepository)
+                                 IRecordRepository recordRepository, IStockCountryDealerRepository stockCountryDealerRepository, IPartRepository partRepository)
     {
         this.stockWarehouseRepository = stockWarehouseRepository;
         this.discountTypeRepository = discountTypeRepository;
@@ -38,6 +42,8 @@ public class StockWarehouseService implements IStockWarehouseService {
         this.modelMapper = modelMapper;
         this.countryDealerRepository = countryDealerRepository;
         this.subsidiaryRepository = subsidiaryRepository;
+        this.stockCountryDealerRepository = stockCountryDealerRepository;
+        this.partRepository = partRepository;
     }
 
     @Override
@@ -207,7 +213,6 @@ public class StockWarehouseService implements IStockWarehouseService {
     @Override
     public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String countryName, String deliveryStatus, String order) {
         SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
-        System.out.println("Country name " + countryName);
         CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
 
         Optional<Subsidiary> subsidiaryOptional = countryDealer.getSubsidiaries().stream().filter(x -> x.getSubsidiaryNumber().equals(subsidiaryNumber)).findFirst();
@@ -243,5 +248,57 @@ public class StockWarehouseService implements IStockWarehouseService {
         } else {
             throw new ApiException("Not found", String.format("No existe subsidiaria con numero %s", subsidiaryNumber), 404);
         }
+    }
+
+    @Override
+    public CountryDealerStockResponseDTO addStockToCountryDealer(CountryDealerStockDTO countryDealerStock, String countryName) {
+        CountryDealerStockResponseDTO countryDealerStockResponse = new CountryDealerStockResponseDTO();
+
+        CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
+        StockDealer result = new StockDealer();
+
+        List<StockDealer> stockDealerList = countryDealer.getStockDealers();
+
+        if(stockDealerList.isEmpty()) {
+            throw new ApiException("Not Found", "La lista no existe", 404);
+        }
+        else{
+            Optional<StockDealer> stockDealer = stockDealerList.stream()
+                    .filter(StockDealer -> StockDealer.getPart().getPartCode().equals(countryDealerStock.getPartCode()))
+                    .findFirst();
+
+            if (stockDealer.isPresent()){
+                result = stockDealer.get();
+                result.setQuantity(result.getQuantity() + countryDealerStock.getQuantity());
+                //seteo el repo de stock
+                countryDealerRepository.save(countryDealer); //seteo el repo de paises
+                PartDTO partDTO = modelMapper.map(result,PartDTO.class);
+
+                countryDealerStockResponse.setPart(partDTO);
+            }
+            else{
+                StockDealer newStock = new StockDealer();
+                Part partFound = partRepository.findByPartCode(countryDealerStock.getPartCode());
+
+                if (partFound != null ){
+                    newStock.setQuantity(countryDealerStock.getQuantity());
+                    newStock.setPart(partFound);
+                    newStock.setCountryDealer(countryDealer);
+
+                    stockDealerList.add(newStock);
+                    countryDealerRepository.save(countryDealer);
+
+                    PartDTO partDTO = modelMapper.map(newStock,PartDTO.class);
+                    countryDealerStockResponse.setPart(partDTO);
+                }
+                else{
+                    throw new ApiException("Not Found","La parte no existe",404 );
+                }
+
+            }
+
+        }
+
+        return countryDealerStockResponse;
     }
 }

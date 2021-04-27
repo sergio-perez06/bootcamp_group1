@@ -22,14 +22,14 @@ public class Record {
 
     @Column(nullable = false)
     @NotNull(message = "normalPrice no puede ser Nulo")
-    @Size(min = 4, max=9, message = "normalPrice debe tener 3 caracteres")
-    @Pattern(regexp="^(\\d{1,6})+(\\.\\d{1,2})$",message= "normalPrice debe tener 6 caracteres numericos y 2 decimales")
+    @Size(min = 4, max = 9, message = "normalPrice debe tener 3 caracteres")
+    @Pattern(regexp="^(\\d{1,6})+(\\.\\d{1,2})$", message= "normalPrice debe tener 6 caracteres numericos y 2 decimales")
     private Double normalPrice;
 
     @Column(nullable = false)
     @NotNull(message = "urgentPrice no puede ser Nulo")
-    @Size(min = 4, max=9, message = "urgentPrice debe tener 3 caracteres")
-    @Pattern(regexp="^(\\d{1,6})+(\\.\\d{1,2})$",message= "urgentPrice debe tener 6 caracteres numericos y 2 decimales")
+    @Size(min = 4, max = 9, message = "urgentPrice debe tener 3 caracteres")
+    @Pattern(regexp = "^(\\d{1,6})+(\\.\\d{1,2})$", message = "urgentPrice debe tener 6 caracteres numericos y 2 decimales")
     private Double urgentPrice;
 
     @Column(nullable = false)

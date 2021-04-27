@@ -1,4 +1,3 @@
-
 -- Maker
 INSERT INTO MAKER VALUES (1, "CHEVROLET");
 INSERT INTO MAKER VALUES (2, "FIAT");
@@ -7,10 +6,11 @@ INSERT INTO MAKER VALUES (4, "VOLKSWAGEN");
 INSERT INTO MAKER VALUES (5, "NISSAN");
 
 -- Parts
-INSERT INTO PART VALUES (1, "Farol Chevrolet Spark", 30, 1000, "00000001", 50, 60, 1);
-INSERT INTO PART VALUES (2, "Paragolpe trasero Ford Fiesta", 130, 2500, "00000002", 50, 40, 3);
-INSERT INTO PART VALUES (3, "Paragolpe frontal Fiat Uno", 130, 2500, "00000003", 50, 40, 3);
-INSERT INTO PART VALUES (4, "Volante original de Fiat 127", 60, 1500, "00000003", 50, 40, 3);
+INSERT INTO PART VALUES (1, "Farol genérico de Chevrolet Spark", 30, 1000, "00000001", 50, 60, 1);
+INSERT INTO PART VALUES (2, "Paragolpe trasero de Ford Fiesta", 130, 2500, "00000002", 50, 40, 3);
+INSERT INTO PART VALUES (3, "Paragolpe frontal de Fiat Uno", 130, 2500, "00000003", 50, 40, 3);
+INSERT INTO PART VALUES (4, "Volante original de Fiat 127", 60, 1500, "00000004", 50, 40, 3);
+INSERT INTO PART VALUES (5, "Tablero de Nissan March", 130, 2500, "00000005", 50, 40, 5); -- No hay stock en dealer ni en subsidiarios
 
 -- Discount type
 INSERT INTO DISCOUNT_TYPE VALUES (1, 3, "Cliente VIP");
@@ -25,6 +25,7 @@ INSERT INTO RECORD VALUES (5, "2020-09-12", 145, 165, 1, 4);
 INSERT INTO RECORD VALUES (6, "2020-11-20", 145, 170, 1, 4);
 INSERT INTO RECORD VALUES (7, "2020-12-28", 155, 175, 1, 4);
 INSERT INTO RECORD VALUES (8, "2021-01-15", 140, 160, 1, 4);
+INSERT INTO RECORD VALUES (9, "2020-05-25", 235, 265, 1, 5);
 
 -- Country Dealers
 INSERT INTO COUNTRY_DEALER VALUES (1, "Argentina", "0001", "Argentina Country Dealer");
@@ -33,7 +34,6 @@ INSERT INTO COUNTRY_DEALER VALUES (2, "Uruguay", "0002", "Uruguay Country Dealer
 -- Roles
 INSERT INTO `role` VALUES (1, "Country Dealer");
 INSERT INTO `role` VALUES (2, "Admin");
-
 
 -- Stock Country Dealers
 INSERT INTO STOCK_DEALER VALUES (150, 1, 1); -- Country Dealer Argentina
@@ -85,15 +85,18 @@ INSERT INTO STOCK_WAREHOUSE VALUES (2500, 1);
 INSERT INTO STOCK_WAREHOUSE VALUES (1500, 2);
 INSERT INTO STOCK_WAREHOUSE VALUES (1750, 3);
 INSERT INTO STOCK_WAREHOUSE VALUES (125, 4);
-
+INSERT INTO STOCK_WAREHOUSE VALUES (475, 5);
 
 -- Bills de subsidiaria Automotriz Alto Palermo
+
 INSERT INTO BILL VALUES (1, "0001-0001-00000001", 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);
 INSERT INTO BILL VALUES (2, "0001-0001-00000002", 5, "2021-03-20", "Demorado", "2021-03-10", "00000002", 1);
 
 -- Bills de subsidiaria Automotriz Prado Mdeo
-INSERT INTO BILL VALUES (3, "0002-0001-00000001", 2, "2021-02-10", "Demorado", "2021-02-18", "00000001", 3);
-INSERT INTO BILL VALUES (4, "0002-0001-00000002", 0, "2021-02-22", "Procesando", "2021-02-24", "00000002", 3);
+INSERT INTO BILL VALUES (3, "0002-0001-00000001", 8, "2021-01-18", "Demorado", "2021-02-18", "00000001", 3);
+INSERT INTO BILL VALUES (4, "0002-0001-00000002", 0, "2021-02-24", "Procesando", "2021-02-24", "00000002", 3);
+INSERT INTO BILL VALUES (5, "0002-0001-00000001", 7, "2021-03-02", "Demorado", "2021-02-18", "00000001", 3);
+INSERT INTO BILL VALUES (6, "0002-0001-00000002", 10, "2021-03-10", "Procesando", "2021-02-24", "00000002", 3);
 
 -- Bill details de Bill 1 y 2 de Automotriz Alto Palermo
 INSERT INTO BILL_DETAIL VALUES (1, "Repuesto", "Compra paragolpe frontal", "Normal", 1, "Sin motivo", 1, 3);
@@ -106,3 +109,5 @@ INSERT INTO BILL_DETAIL VALUES (5, "Repuesto", "Compra paragolpe trasero", "Norm
 INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "Sin motivo", 3, 4);
 INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
 INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
+INSERT INTO BILL_DETAIL VALUES (9, "Repuesto", "Compra volante", "Demorado", 1, "Error logistico", 5, 4);
+INSERT INTO BILL_DETAIL VALUES (10, "Repuesto", "Compra volante", "Demorado", 1, "Error logistico", 6, 4);

@@ -35,7 +35,8 @@ public class Bill {
     @Column(nullable = false, name = "cm_order_number")
     @NotNull(message = "CMOrderNumber no puede ser Nulo.")
     @Size(message = "CMOrderNumber debe tener 16 caracteres.")
-    private String cmOrdernumber;
+    private String cmOrdernumberWarehouse;
+
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
@@ -49,7 +50,6 @@ public class Bill {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deliveryDate;
 
-    @NotNull
     private Integer daysDelayed;
 
     @NotNull

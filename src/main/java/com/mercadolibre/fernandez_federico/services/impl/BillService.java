@@ -5,7 +5,7 @@ import com.mercadolibre.fernandez_federico.dtos.responses.BillDetailDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.Bill;
 import com.mercadolibre.fernandez_federico.models.BillDetail;
-import com.mercadolibre.fernandez_federico.models.StockWarehouse;
+
 import com.mercadolibre.fernandez_federico.repositories.*;
 import com.mercadolibre.fernandez_federico.services.IBillService;
 import org.modelmapper.ModelMapper;
@@ -36,16 +36,16 @@ public class BillService implements IBillService {
         if(billRepository.findAll().isEmpty())
             throw new ApiException("Not Found","La orden no existe",404 );
         else{
-            Bill bills = billRepository.findByCmOrdernumber(oNum);
+            Bill bills = billRepository.findByCmOrdernumberWarehouse(oNum);
             List<BillDetail> billsDetail = billDetailRepository.findAll()
                     .stream()
                     .map(billDetail -> modelMapper.map(billDetail, BillDetail.class))
                     .collect(Collectors.toList());
-                System.out.println(billRepository.findByCmOrdernumber(oNum).getId());
+                System.out.println(billRepository.findByCmOrdernumberWarehouse(oNum).getId());
 
 
-                if(bills.getCmOrdernumber().equals(oNum)){
-                    String[] ord =bills.getCmOrdernumber().split("-");
+                if(bills.getCmOrdernumberWarehouse().equals(oNum)){
+                    String[] ord =bills.getCmOrdernumberWarehouse().split("-");
                     finalBill.setOrderNumber(ord[1]+"-"+ord[2]);
                     finalBill.setOrderDate(bills.getOrderDate());
                     finalBill.setDeliveryStatus(bills.getDeliveryStatus());

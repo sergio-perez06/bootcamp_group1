@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 
@@ -64,6 +66,12 @@ public class PartController {
         return stockService.getAllCountryDealers();
     }
 
+    @PostMapping()
+    public CountryDealerStockResponseDTO addPartCountryDealerStock(@RequestBody CountryDealerStockDTO countryDealerStock,
+                                                                   @RequestHeader("Authorization") String token){
+        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
 
+        return stockService.addStockToCountryDealer(countryDealerStock,claims.get("country").toString());
+    }
 
 }
