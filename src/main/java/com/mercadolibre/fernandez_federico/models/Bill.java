@@ -31,10 +31,10 @@ public class Bill {
     @Size(min = 8, max = 8, message = "")
     private String orderNumber;
 
-    @Column(nullable = false)
-    @NotNull(message = "CMorderNumber no puede ser Nulo.")
-    @Size(message = "CMorderNumber debe tener 16 caracteres.")
-    private String CMorderNumber;
+    @Column(nullable = false, unique = true)
+    @NotNull(message = "orderNumberWarehouse no puede ser Nulo.")
+    @Size(message = "orderNumberWarehouse debe tener 16 caracteres.")
+    private String orderNumberWarehouse;
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
@@ -48,7 +48,6 @@ public class Bill {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deliveryDate;
 
-    @NotNull
     private Integer daysDelayed;
 
     @NotNull
