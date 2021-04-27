@@ -1,6 +1,7 @@
 package com.mercadolibre.fernandez_federico.controller;
 
 import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
+import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 import com.mercadolibre.fernandez_federico.services.impl.BillService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +15,13 @@ import java.util.List;
 public class BillController {
     private BillService billService;
 
+    public BillController(BillService billService)
+    {
+        this.billService=billService;
+    }
+
     @GetMapping("/orders/list")
-    public List<BillDTO> getOrderDetails(@RequestParam String oNum){
+    public BillDTO getOrderDetails(@RequestParam String oNum){
         return billService.getBillDetails(oNum);
     }
 }

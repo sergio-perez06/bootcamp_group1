@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name="part")
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class Part
     @NotNull(message = "partCode no puede ser Nulo")
     @Size(min = 8, max=8, message = "partCode debe tener ocho caracteres")
     @Pattern(regexp="^[0-9]{8}$",message="partCode debe poseer 8 caracteres numericos")
-    private Integer partCode;
+    private String partCode;
 
     @Column(nullable = false)
     @NotNull(message = "description no puede ser Nula")
@@ -70,4 +71,6 @@ public class Part
     @JsonManagedReference
     @OneToMany(mappedBy = "part")
     private List<Record> records;
+
+
 }

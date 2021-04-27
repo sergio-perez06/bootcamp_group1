@@ -1,6 +1,7 @@
 package com.mercadolibre.fernandez_federico.services.impl;
 
 import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDetailDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.Bill;
 import com.mercadolibre.fernandez_federico.models.BillDetail;
@@ -10,6 +11,7 @@ import com.mercadolibre.fernandez_federico.services.IBillService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,30 +31,43 @@ public class BillService implements IBillService {
 
     }
 
-    public List<BillDTO> getBillDetails(String oNum){
-        if(billRepository.findBillByCMOrderNumber(oNum)==null)
+    public BillDTO getBillDetails(String oNum){
+        BillDTO finalBill = new BillDTO();
+        if(billRepository.findAll().isEmpty())
             throw new ApiException("Not Found","La orden no existe",404 );
         else{
-            BillDTO finalBill = new BillDTO();
-            List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll()
-                    .stream()
-                    .map(stock -> modelMapper.map(stock, StockWarehouse.class))
-                    .collect(Collectors.toList());
-            Bill bills = billRepository.findBillByCMOrderNumber(oNum);
+            Bill bills = billRepository.findByCmOrdernumber(oNum);
             List<BillDetail> billsDetail = billDetailRepository.findAll()
                     .stream()
                     .map(billDetail -> modelMapper.map(billDetail, BillDetail.class))
                     .collect(Collectors.toList());
-                if(bills.getCMOrderNumber().equals(oNum)){
-                    //toDo: Cortar el string del order number
-                    finalBill.setOrderNumber(bills.getCMOrderNumber());
+                System.out.println(billRepository.findByCmOrdernumber(oNum).getId());
+
+
+                if(bills.getCmOrdernumber().equals(oNum)){
+                    String[] ord =bills.getCmOrdernumber().split("-");
+                    finalBill.setOrderNumber(ord[1]+"-"+ord[2]);
                     finalBill.setOrderDate(bills.getOrderDate());
                     finalBill.setDeliveryStatus(bills.getDeliveryStatus());
-                    //toDo: For para iterar por los billsDetails para cargarlos y agregarlos a la lista. Luego ver de conseguir el código de parte desde las partes.
+
+                    List<BillDetailDTO> billDetailDTOS = new ArrayList<>();
+                    BillDetailDTO billDetailDTO = new BillDetailDTO();
+                    for(int i=0; i<billsDetail.size(); i++){
+                        if(bills.getId().equals(billsDetail.get(i).getBill().getId())){
+                            billDetailDTO.setDescription(billsDetail.get(i).getDescription());
+                            billDetailDTO.setQuantity(billsDetail.get(i).getQuantity());
+                            billDetailDTO.setAccountType(billsDetail.get(i).getAccountType());
+                            billDetailDTO.setReason(billsDetail.get(i).getReason());
+                            billDetailDTO.setPartStatus(billsDetail.get(i).getPartStatus().name());
+                            billDetailDTO.setPartCode(billsDetail.get(i).getPart().getPartCode());
+
+                            billDetailDTOS.add(billDetailDTO);
+                        }
+                    }
+                    finalBill.setOrderDetails(billDetailDTOS);
                 }
             }
-        return null;
-        }
 
+        return finalBill;
     }
-
+}

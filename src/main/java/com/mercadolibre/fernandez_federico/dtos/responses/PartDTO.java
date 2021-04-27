@@ -15,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 public class PartDTO {
-    private Integer partCode;
+    private String partCode;
     private String description;
     private String maker;
     private Integer quantity;
