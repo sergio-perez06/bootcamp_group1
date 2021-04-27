@@ -66,8 +66,8 @@ public class PartController {
         return stockService.getAllCountryDealers();
     }
 
-    @PostMapping("/parts")
-    public CountryDealerStockResponseDTO addPartCountryDealerStock(CountryDealerStockDTO countryDealerStock,
+    @PostMapping()
+    public CountryDealerStockResponseDTO addPartCountryDealerStock(@RequestBody CountryDealerStockDTO countryDealerStock,
                                                                    @RequestHeader("Authorization") String token){
         Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
 

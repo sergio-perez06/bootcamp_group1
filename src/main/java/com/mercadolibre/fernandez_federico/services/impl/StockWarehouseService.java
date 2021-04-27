@@ -275,12 +275,13 @@ public class StockWarehouseService implements IStockWarehouseService {
                 result.setQuantity(result.getQuantity() + countryDealerStock.getQuantity());
                 //seteo el repo de stock
                 countryDealerRepository.save(countryDealer); //seteo el repo de paises
+                PartDTO partDTO = modelMapper.map(result,PartDTO.class);
+
+                countryDealerStockResponse.setPart(partDTO);
             }
             else{
                 StockDealer newStock = new StockDealer();
                 Part partFound = partRepository.findByPartCode(countryDealerStock.getPartCode());
-
-
 
                 if (partFound != null ){
                     newStock.setQuantity(countryDealerStock.getQuantity());
@@ -289,6 +290,9 @@ public class StockWarehouseService implements IStockWarehouseService {
 
                     stockDealerList.add(newStock);
                     countryDealerRepository.save(countryDealer);
+
+                    PartDTO partDTO = modelMapper.map(newStock,PartDTO.class);
+                    countryDealerStockResponse.setPart(partDTO);
                 }
                 else{
                     throw new ApiException("Not Found","La parte no existe",404 );
@@ -296,9 +300,8 @@ public class StockWarehouseService implements IStockWarehouseService {
 
             }
 
-            //buscar por partCode
-            //actualizar stock
         }
-        return null;
+
+        return countryDealerStockResponse;
     }
 }
