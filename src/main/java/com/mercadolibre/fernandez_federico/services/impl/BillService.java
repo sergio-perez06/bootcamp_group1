@@ -28,7 +28,6 @@ public class BillService implements IBillService {
         this.billDetailRepository = billDetailRepository;
         this.stockWarehouseRepository = stockWarehouseRepository;
         this.modelMapper = modelMapper;
-
     }
 
     public BillDTO getBillDetails(String oNum){

@@ -51,23 +51,11 @@ public class StockWarehouseService implements IStockWarehouseService {
             throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
         else {
             //Se cargan los repositorios por separado trayendo lista entera
-              List<PartDTO> partsDTO = new ArrayList<>();
-              List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll()
-                      .stream()
-                      .map(stock -> modelMapper.map(stock, StockWarehouse.class))
-                      .collect(Collectors.toList());
-            List<Maker> makers = makerRepository.findAll()
-                    .stream()
-                    .map(maker -> modelMapper.map(maker, Maker.class))
-                    .collect(Collectors.toList());
-            List<DiscountType> discountTypes = discountTypeRepository.findAll()
-                    .stream()
-                    .map(discountType -> modelMapper.map(discountType, DiscountType.class))
-                    .collect(Collectors.toList());
-            List<Record> records = recordRepository.findAll()
-                    .stream()
-                    .map(record -> modelMapper.map(record, Record.class))
-                    .collect(Collectors.toList());
+            List<PartDTO> partsDTO = new ArrayList<>();
+            List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
+            List<Maker> makers = makerRepository.findAll();
+            List<DiscountType> discountTypes = discountTypeRepository.findAll();
+            List<Record> records = recordRepository.findAll();
             //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
             // p y v elimine filas.
             if (filters.isEmpty() || (filters.get("queryType").equals("C"))) {
@@ -153,7 +141,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                         if (stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())
                                 && partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())
                                 && !partHashMap.get(stockWarehouses.get(i).getPart().getId()).equals(records.get(f).getNormalPrice())) {
-                            part.setDescription(stockWarehouses.get(i).getPart().getDescription());
+                            part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
                             part.setNormalPrice(records.get(f).getNormalPrice());
                             part.setUrgentPrice(records.get(f).getUrgentPrice());
                             part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
