@@ -22,17 +22,16 @@ public class Subsidiary {
 
     @Column(nullable = false)
     @NotNull(message = "name no puede ser Nulo.")
-    @Size(min = 2, max=100, message = "name debe tener entre 2 y 100 caracteres.")
-    @Pattern(regexp="^[a-zA-Z]+$",message="name debe tener letras.")
+    @Size(min = 2, max = 100, message = "name debe tener entre 2 y 100 caracteres.")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "name debe tener letras.")
     private String name;
 
-    //private List<Order> orders;
     @OneToMany(mappedBy = "subsidiary")
     private List<StockSubsidiary> stockSubsidiaries;
 
     @Column(nullable = false,length = 4)
     @NotNull(message = "subsidiaryNumber no puede ser Nulo.")
-    @Size(min = 4, max=4, message = "subsidiaryNumber debe tener 4 caracteres.")
+    @Size(min = 4, max = 4, message = "subsidiaryNumber debe tener 4 caracteres.")
     private String subsidiaryNumber;
 
     @ManyToOne

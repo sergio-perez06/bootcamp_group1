@@ -7,10 +7,10 @@ INSERT INTO MAKER VALUES (4, "VOLKSWAGEN");
 INSERT INTO MAKER VALUES (5, "NISSAN");
 
 -- Parts
-INSERT INTO PART VALUES (1, "Farol Chevrolet Spark", 30, 1000, "00000001", 50, 60, 1);
-INSERT INTO PART VALUES (2, "Paragolpe trasero Ford Fiesta", 130, 2500, "00000002", 50, 40, 3);
-INSERT INTO PART VALUES (3, "Paragolpe frontal Fiat Uno", 130, 2500, "00000003", 50, 40, 3);
-INSERT INTO PART VALUES (4, "Volante original de Fiat 127", 60, 1500, "00000003", 50, 40, 3);
+INSERT INTO PART VALUES (1, "Farol Chevrolet Spark", 30, 1000, 1, 50, 60, 1);
+INSERT INTO PART VALUES (2, "Paragolpe trasero Ford Fiesta", 130, 2500, 2, 50, 40, 3);
+INSERT INTO PART VALUES (3, "Paragolpe frontal Fiat Uno", 130, 2500, 3, 50, 40, 3);
+INSERT INTO PART VALUES (4, "Volante original de Fiat 127", 60, 1500, 4, 50, 40, 3);
 
 -- Discount type
 INSERT INTO DISCOUNT_TYPE VALUES (1, 3, "Cliente VIP");
@@ -86,14 +86,15 @@ INSERT INTO STOCK_WAREHOUSE VALUES (1500, 2);
 INSERT INTO STOCK_WAREHOUSE VALUES (1750, 3);
 INSERT INTO STOCK_WAREHOUSE VALUES (125, 4);
 
-
 -- Bills de subsidiaria Automotriz Alto Palermo
-INSERT INTO BILL VALUES (1, 0, 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);
-INSERT INTO BILL VALUES (2, 0, 5, "2021-03-20", "Demorado", "2021-03-10", "00000002", 1);
+INSERT INTO BILL VALUES (1, 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", "0001-0001-00000001", 1);
+INSERT INTO BILL VALUES (2, 10, "2021-03-20", "Demorado", "2021-03-10", "00000002", "0001-0001-00000002", 1);
 
 -- Bills de subsidiaria Automotriz Prado Mdeo
-INSERT INTO BILL VALUES (3, 0, 2, "2021-02-10", "Demorado", "2021-02-18", "00000001", 3);
-INSERT INTO BILL VALUES (4, 0, 0, "2021-02-22", "Procesando", "2021-02-24", "00000002", 3);
+INSERT INTO BILL VALUES (3, 8, "2021-01-18", "Demorado", "2021-02-10", "00000001", "0002-0001-00000001", 1);
+INSERT INTO BILL VALUES (4, 0, "2021-02-24", "Procesado", "2021-02-22", "00000002", "0002-0001-00000002", 1);
+INSERT INTO BILL VALUES (5, 7, "2021-03-02", "Demorado", "2021-02-25", "00000003", "0002-0001-00000003", 3);
+INSERT INTO BILL VALUES (6, 10, "2021-03-10", "Demorado", "2021-02-28", "00000004", "0002-0001-00000004", 3);
 
 -- Bill details de Bill 1 y 2 de Automotriz Alto Palermo
 INSERT INTO BILL_DETAIL VALUES (1, "Repuesto", "Compra paragolpe frontal", "Normal", 1, "Sin motivo", 1, 3);
@@ -106,3 +107,5 @@ INSERT INTO BILL_DETAIL VALUES (5, "Repuesto", "Compra paragolpe trasero", "Norm
 INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "Sin motivo", 3, 4);
 INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
 INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
+INSERT INTO BILL_DETAIL VALUES (9, "Repuesto", "Compra volante", "Demorado", 1, "Error logistico", 5, 4);
+INSERT INTO BILL_DETAIL VALUES (10, "Repuesto", "Compra volante", "Demorado", 1, "Error logistico", 6, 4);
