@@ -8,8 +8,8 @@ INSERT INTO MAKER VALUES (5, "NISSAN");
 -- Parts
 INSERT INTO PART VALUES (1, "Farol genérico de Chevrolet Spark", 30, 1000, "00000001", 50, 60, 1);
 INSERT INTO PART VALUES (2, "Paragolpe trasero de Ford Fiesta", 130, 2500, "00000002", 50, 40, 3);
-INSERT INTO PART VALUES (3, "Paragolpe frontal de Fiat Uno", 130, 2500, "00000003", 50, 40, 3);
-INSERT INTO PART VALUES (4, "Volante original de Fiat 127", 60, 1500, "00000004", 50, 40, 3);
+INSERT INTO PART VALUES (3, "Paragolpe frontal de Fiat Uno", 130, 2500, "00000003", 50, 40, 2);
+INSERT INTO PART VALUES (4, "Volante original de Fiat 127", 60, 1500, "00000004", 50, 40, 2);
 INSERT INTO PART VALUES (5, "Tablero de Nissan March", 130, 2500, "00000005", 50, 40, 5); -- No hay stock en dealer ni en subsidiarios
 
 -- Discount type

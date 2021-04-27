@@ -48,9 +48,10 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
-        if(stockWarehouseRepository.findAll().isEmpty())
+        if (stockWarehouseRepository.findAll().isEmpty())
             throw new ApiException("Not Found","La lista no existe",404 );
-        else {
+        else
+        {
             //Se cargan los repositorios por separado trayendo lista entera
               List<PartDTO> partsDTO = new ArrayList<>();
               List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll()
@@ -69,6 +70,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                     .stream()
                     .map(record -> modelMapper.map(record, Record.class))
                     .collect(Collectors.toList());
+
             // ToDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
             // p y v elimine filas.
 
@@ -103,7 +105,9 @@ public class StockWarehouseService implements IStockWarehouseService {
                 }
                 // return partsDTO;
 
-            }if (filters.containsKey("queryType") && (filters.get("queryType").equals("P") && filters.containsKey("date")))
+            }
+
+            if (filters.containsKey("queryType") && (filters.get("queryType").equals("P") && filters.containsKey("date")))
             {
                 for(int f=0; f<records.size(); f++){
 
@@ -227,6 +231,7 @@ public class StockWarehouseService implements IStockWarehouseService {
             if (deliveryStatus != null) {
                 bills = bills.stream().filter(x -> x.getDeliveryStatus().getValue().equals(deliveryStatus)).collect(Collectors.toList());
             }
+
             if (order != null) {
                 switch (order) {
                     case "1": {
@@ -238,10 +243,12 @@ public class StockWarehouseService implements IStockWarehouseService {
                         bills.sort(Comparator.comparing(Bill::getOrderDate).reversed());
                         break;
                     }
+
                     default:
                         break;
                 }
             }
+
             List<BillDTO> billsResponse = bills.stream().map(x -> modelMapper.map(x, BillDTO.class)).collect(Collectors.toList());
 
             response.setSubsidiaryNumber(subsidiaryNumber);
@@ -262,10 +269,11 @@ public class StockWarehouseService implements IStockWarehouseService {
 
         List<StockDealer> stockDealerList = countryDealer.getStockDealers();
 
-        if(stockDealerList.isEmpty()) {
+        if (stockDealerList.isEmpty()) {
             throw new ApiException("Not Found", "La lista no existe", 404);
         }
-        else{
+        else
+        {
             Optional<StockDealer> stockDealer = stockDealerList.stream()
                     .filter(StockDealer -> StockDealer.getPart().getPartCode().equals(countryDealerStock.getPartCode()))
                     .findFirst();
@@ -273,17 +281,18 @@ public class StockWarehouseService implements IStockWarehouseService {
             if (stockDealer.isPresent()){
                 result = stockDealer.get();
                 result.setQuantity(result.getQuantity() + countryDealerStock.getQuantity());
-                //seteo el repo de stock
                 countryDealerRepository.save(countryDealer); //seteo el repo de paises
                 PartDTO partDTO = modelMapper.map(result,PartDTO.class);
 
                 countryDealerStockResponse.setPart(partDTO);
             }
-            else{
+            else
+            {
                 StockDealer newStock = new StockDealer();
                 Part partFound = partRepository.findByPartCode(countryDealerStock.getPartCode());
 
-                if (partFound != null ){
+                if (partFound != null )
+                {
                     newStock.setQuantity(countryDealerStock.getQuantity());
                     newStock.setPart(partFound);
                     newStock.setCountryDealer(countryDealer);
@@ -294,12 +303,11 @@ public class StockWarehouseService implements IStockWarehouseService {
                     PartDTO partDTO = modelMapper.map(newStock,PartDTO.class);
                     countryDealerStockResponse.setPart(partDTO);
                 }
-                else{
+                else
+                {
                     throw new ApiException("Not Found","La parte no existe",404 );
                 }
-
             }
-
         }
 
         return countryDealerStockResponse;
