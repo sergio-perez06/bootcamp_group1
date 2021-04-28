@@ -5,16 +5,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
-import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
-import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
-import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
-import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.*;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.*;
 import com.mercadolibre.fernandez_federico.repositories.*;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 import lombok.RequiredArgsConstructor;
+import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.http.HttpStatus;
@@ -279,5 +278,95 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
 
         return countryDealerStockResponse;
+    }
+
+    @Override
+    public BillDTO addBillToCountryDealer(BillRequestDTO billRequestDTO, String countryName) {
+        BillDTO billDTO = new BillDTO();
+
+        if (validateBillRequest(billRequestDTO)){
+            CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
+
+            Optional<Subsidiary> subsidiary = countryDealer.getSubsidiaries().stream()
+                    .filter(Subsidiary -> Subsidiary.getSubsidiaryNumber().equals(billRequestDTO.getSubsidiaryNumber()))
+                    .findFirst();
+
+            Set<String> setPartCode = billRequestDTO
+                                .getBillDetails()
+                                .stream()
+                                .map(x -> x.getPartCode())
+                                .collect(Collectors.toSet());
+
+            List<Part> partList = setPartCode.stream()
+                    .map(partCode-> partRepository.findByPartCode(partCode))
+                    .collect(Collectors.toList());
+
+
+            if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
+                Subsidiary result = subsidiary.get();
+
+                Bill bill = modelMapper.map(billRequestDTO, Bill.class);
+                List<BillDetail> billDetails = billRequestDTO.getBillDetails()
+                        .stream()
+                        .map(x -> getMappingBillDetail(x,partList))
+                        .collect(Collectors.toList());
+
+                bill.setBillDetails(billDetails);
+                bill.setOrderDate(LocalDate.now());
+                bill.setDeliveryStatus(OrderStatus.Procesando);
+                bill.setOrderNumber(getLastOrderNumber(result));
+                bill.setCmOrdernumberWarehouse(countryDealer.getDealerNumber() + "-"
+                    + result.getSubsidiaryNumber() + "-"
+                    + bill.getOrderNumber());
+
+                result.getBills().add(bill);
+                subsidiaryRepository.save(result);
+
+                billDTO = modelMapper.map(bill, BillDTO.class);
+
+                List<BillDetailDTO> billDetailDTOList = bill.getBillDetails()
+                        .stream()
+                        .map(billDetail -> modelMapper.map(billDetail,BillDetailDTO.class))
+                        .collect(Collectors.toList());
+
+                billDTO.setOrderDetails(billDetailDTOList);
+                return billDTO;
+            }
+            else{
+                throw new ApiException("Not Found","La subsidiaria no fue encontrada",404 );
+            }
+        }
+        else{
+            throw new ApiException("Bad Request","La fecha es incorrecta",400 );
+        }
+    }
+
+    private BillDetail getMappingBillDetail(BillDetailDTO x ,List<Part> partList) {
+        BillDetail billDetail = modelMapper.map(x,BillDetail.class);
+        billDetail.setPart(partList.stream()
+                .filter(part -> part.getPartCode().equals(x.getPartCode()))
+                .findFirst().get());
+
+        return billDetail;
+    }
+
+    private String getLastOrderNumber(Subsidiary result) {
+        Optional<Bill> filteredBill = result.getBills().stream().max(Comparator.comparing(Bill::getOrderNumber));
+        if (filteredBill.isPresent()){
+            return filteredBill.get().getOrderNumber();
+
+        }
+        else{
+            return "00000001";
+        }
+    }
+
+    private boolean validateBillRequest(BillRequestDTO billRequestDTO) {
+        LocalDate today = LocalDate.now();
+        Boolean status = true;
+        if (today.isAfter(billRequestDTO.getDeliveryDate())){
+            status = false;
+        }
+        return status;
     }
 }

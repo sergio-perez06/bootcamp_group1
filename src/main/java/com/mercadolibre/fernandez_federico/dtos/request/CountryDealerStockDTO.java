@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CountryDealerStockDTO {
-    private Integer partCode;
+    private String partCode;
     private Integer quantity;
 }
