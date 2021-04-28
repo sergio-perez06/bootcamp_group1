@@ -13,5 +13,5 @@ public class BillRequestDTO {
     private String subsidiaryNumber;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deliveryDate;
-    private List<BillDetailDTO> billDetails;
+    private List<PostBillDetailDTO> billDetails;
 }

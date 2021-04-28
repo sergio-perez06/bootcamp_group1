@@ -7,15 +7,19 @@ import java.util.stream.Collectors;
 
 import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.PostBillDetailDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.*;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.*;
 import com.mercadolibre.fernandez_federico.repositories.*;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
+import com.mercadolibre.fernandez_federico.util.Utils;
+import com.mercadolibre.fernandez_federico.util.enums.PartStatus;
 import lombok.RequiredArgsConstructor;
 import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
 import org.modelmapper.ModelMapper;
 
+import org.modelmapper.PropertyMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -305,7 +309,9 @@ public class StockWarehouseService implements IStockWarehouseService {
             if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
                 Subsidiary result = subsidiary.get();
 
-                Bill bill = modelMapper.map(billRequestDTO, Bill.class);
+                Bill bill = new Bill();
+                bill.setDeliveryDate(billRequestDTO.getDeliveryDate());
+
                 List<BillDetail> billDetails = billRequestDTO.getBillDetails()
                         .stream()
                         .map(x -> getMappingBillDetail(x,partList))
@@ -316,8 +322,9 @@ public class StockWarehouseService implements IStockWarehouseService {
                 bill.setDeliveryStatus(OrderStatus.Procesando);
                 bill.setOrderNumber(getLastOrderNumber(result));
                 bill.setCmOrdernumberWarehouse(countryDealer.getDealerNumber() + "-"
-                        + result.getSubsidiaryNumber() + "-"
-                        + bill.getOrderNumber());
+                    + result.getSubsidiaryNumber() + "-"
+                    + bill.getOrderNumber());
+                bill.setSubsidiary(result);
 
                 result.getBills().add(bill);
                 subsidiaryRepository.save(result);
@@ -341,20 +348,23 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
     }
 
-    private BillDetail getMappingBillDetail(BillDetailDTO x ,List<Part> partList) {
+    private BillDetail getMappingBillDetail(PostBillDetailDTO x , List<Part> partList) {
         BillDetail billDetail = modelMapper.map(x,BillDetail.class);
         billDetail.setPart(partList.stream()
                 .filter(part -> part.getPartCode().equals(x.getPartCode()))
                 .findFirst().get());
 
+        billDetail.setDescription(billDetail.getPart().getDescription());
+        billDetail.setReason("");
+        billDetail.setPartStatus(PartStatus.Normal);
         return billDetail;
     }
 
     private String getLastOrderNumber(Subsidiary result) {
         Optional<Bill> filteredBill = result.getBills().stream().max(Comparator.comparing(Bill::getOrderNumber));
         if (filteredBill.isPresent()){
-            return filteredBill.get().getOrderNumber();
-
+            Integer lastOrder = Integer.parseInt(filteredBill.get().getOrderNumber()) + 1;
+            return Utils.padLeftZeros(String.valueOf(lastOrder),8);
         }
         else{
             return "00000001";

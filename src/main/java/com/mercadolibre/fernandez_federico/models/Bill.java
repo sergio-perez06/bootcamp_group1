@@ -32,7 +32,7 @@ public class Bill {
     @Column(name = "order_number")
     private String orderNumber;
 
-    @Column(nullable = false, name = "cm_order_number")
+    @Column(nullable = false, name = "cm_order_number", unique = true)
     @NotNull(message = "CMOrderNumber no puede ser Nulo.")
     @Size(message = "CMOrderNumber debe tener 16 caracteres.")
     private String cmOrdernumberWarehouse;
