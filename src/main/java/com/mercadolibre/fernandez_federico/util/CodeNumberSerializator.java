@@ -25,5 +25,4 @@ public class CodeNumberSerializator extends StdSerializer<String> {
         jsonGenerator.writeString(Utils.padLeftZeros(s, this.leadingZeros));
     }
 
-
 }

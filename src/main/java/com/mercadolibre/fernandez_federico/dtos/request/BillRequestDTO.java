@@ -11,7 +11,9 @@ import java.util.List;
 @Data
 public class BillRequestDTO {
     private String subsidiaryNumber;
+
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deliveryDate;
+
     private List<PostBillDetailDTO> billDetails;
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
+import com.mercadolibre.fernandez_federico.util.enums.converters.OrderStatusConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,7 +38,6 @@ public class Bill {
     @Size(message = "CMOrderNumber debe tener 16 caracteres.")
     private String cmOrdernumberWarehouse;
 
-
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
@@ -54,7 +54,7 @@ public class Bill {
 
     @NotNull
     @Column(length = 50)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = OrderStatusConverter.class)
     private OrderStatus deliveryStatus;
 
     @JsonManagedReference

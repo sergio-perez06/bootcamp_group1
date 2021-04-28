@@ -1,41 +1,31 @@
 package com.mercadolibre.fernandez_federico.util.enums;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.HashMap;
-import java.util.Map;
-
-
 public enum OrderStatus {
 
-    Procesando("Procesando"),
-    Demorado("Demorado"),
-    Finalizado("Finalizando"),
-    Cancelado("Cancelado");
+    Procesando("P"),
+    Demorado("D"),
+    Finalizado("F"),
+    Cancelado("C");
 
     private String value;
-    private static Map mapita = new HashMap<>();
 
-
-    OrderStatus (String c){
-        this.value = c;
+    OrderStatus(String value) {
+        this.value = value;
     }
 
+    public String toString() {
+        return this.value;
+    }
 
-    static {
-        for (OrderStatus orderStatus : OrderStatus.values()) {
-            mapita.put(orderStatus.value, orderStatus);
+    public static OrderStatus valueOfKey(String key) {
+        for (OrderStatus specialCharacter : values()) {
+            if (specialCharacter.toString().equals(key)) {
+                return specialCharacter;
+            }
         }
-    }
 
-    public static OrderStatus valueOfEnum(String status) {
-        return (OrderStatus) mapita.get(status);
+        throw new IllegalArgumentException("Illegal key");
     }
-
-    public String getValue() {
-        return value;
-    }
-
 
 }
 

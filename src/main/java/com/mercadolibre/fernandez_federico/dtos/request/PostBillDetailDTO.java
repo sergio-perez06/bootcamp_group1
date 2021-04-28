@@ -8,6 +8,5 @@ import lombok.Data;
 public class PostBillDetailDTO {
     private String partCode;
     private Integer quantity;
-    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private AccountType accountType;
 }

@@ -7,35 +7,26 @@ import java.util.Map;
 
 public enum AccountType {
 
-    Garantia('G'),
-    Repuesto('R'),
-    ;
+    Garantia("G"),
+    Repuesto("R");
 
-    private Character value;
-    private static Map mapita = new HashMap<>();
+    private String value;
 
-
-    AccountType (Character c){
-        this.value = c;
+    AccountType(String value) {
+        this.value = value;
     }
 
+    public String toString() {
+        return this.value;
+    }
 
-    static {
-        for (AccountType a : AccountType.values()) {
-            mapita.put(a.value, a);
+    public static AccountType valueOfKey(String key) {
+        for (AccountType specialCharacter : values()) {
+            if (specialCharacter.toString().equals(key)) {
+                return specialCharacter;
+            }
         }
+
+        throw new IllegalArgumentException("Illegal key");
     }
-
-    public static AccountType valueOf(Character status) {
-        return (AccountType) mapita.get(status);
-    }
-
-    @JsonValue
-    public Character getValue() {
-        return value;
-    }
-
-
-
-
 }

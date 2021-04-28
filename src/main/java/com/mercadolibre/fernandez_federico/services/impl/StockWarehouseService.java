@@ -189,7 +189,7 @@ public class StockWarehouseService implements IStockWarehouseService {
             List<Bill> bills = subsidiary.getBills();
 
             if (deliveryStatus != null) {
-                bills = bills.stream().filter(x -> x.getDeliveryStatus().getValue().equals(deliveryStatus)).collect(Collectors.toList());
+                bills = bills.stream().filter(x -> x.getDeliveryStatus().toString().equals(deliveryStatus)).collect(Collectors.toList());
             }
 
             if (order != null) {

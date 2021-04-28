@@ -6,30 +6,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PartStatus {
-    Normal('N'),
-    Demorado('D');
+    Normal("N"),
+    Demorado("D");
 
-    private Character value;
-    private static Map mapita = new HashMap<>();
+    private String value;
 
-
-    PartStatus (Character c){
-        this.value = c;
+    PartStatus(String value) {
+        this.value = value;
     }
 
+    public String toString() {
+        return this.value;
+    }
 
-    static {
-        for (PartStatus p : PartStatus.values()) {
-            mapita.put(p.value, p);
+    public static PartStatus valueOfKey(String key) {
+        for (PartStatus specialCharacter : values()) {
+            if (specialCharacter.toString().equals(key)) {
+                return specialCharacter;
+            }
         }
-    }
 
-    public static PartStatus valueOf(Character status) {
-        return (PartStatus) mapita.get(status);
-    }
-
-    @JsonValue
-    public Character getValue() {
-        return value;
+        throw new IllegalArgumentException("Illegal key");
     }
 }

@@ -89,25 +89,25 @@ INSERT INTO STOCK_WAREHOUSE VALUES (475, 5);
 
 -- Bills de subsidiaria Automotriz Alto Palermo
 
-INSERT INTO BILL VALUES (1, "0001-0001-00000001", 0, "2021-03-12", "Procesando", "2021-03-10", "00000001", 1);
-INSERT INTO BILL VALUES (2, "0001-0001-00000002", 5, "2021-03-20", "Demorado", "2021-03-10", "00000002", 1);
+INSERT INTO BILL VALUES (1, "0001-0001-00000001", 0, "2021-03-12", "P", "2021-03-10", "00000001", 1);
+INSERT INTO BILL VALUES (2, "0001-0001-00000002", 5, "2021-03-20", "D", "2021-03-10", "00000002", 1);
 
 -- Bills de subsidiaria Automotriz Prado Mdeo
-INSERT INTO BILL VALUES (3, "0002-0001-00000001", 8, "2021-01-18", "Demorado", "2021-02-18", "00000001", 3);
-INSERT INTO BILL VALUES (4, "0002-0001-00000002", 0, "2021-02-24", "Procesando", "2021-02-24", "00000002", 3);
-INSERT INTO BILL VALUES (5, "0002-0001-00000003", 7, "2021-03-02", "Demorado", "2021-02-18", "00000003", 3);
-INSERT INTO BILL VALUES (6, "0002-0001-00000004", 10, "2021-03-10", "Procesando", "2021-02-24", "00000004", 3);
+INSERT INTO BILL VALUES (3, "0002-0001-00000001", 8, "2021-01-18", "D", "2021-02-18", "00000001", 3);
+INSERT INTO BILL VALUES (4, "0002-0001-00000002", 0, "2021-02-24", "P", "2021-02-24", "00000002", 3);
+INSERT INTO BILL VALUES (5, "0002-0001-00000003", 7, "2021-03-02", "D", "2021-02-18", "00000003", 3);
+INSERT INTO BILL VALUES (6, "0002-0001-00000004", 10, "2021-03-10", "P", "2021-02-24", "00000004", 3);
 
 -- Bill details de Bill 1 y 2 de Automotriz Alto Palermo
-INSERT INTO BILL_DETAIL VALUES (1, "Repuesto", "Compra paragolpe frontal", "Normal", 1, "Sin motivo", 1, 3);
-INSERT INTO BILL_DETAIL VALUES (2, "Garantia", "Compra volante", "Normal", 2, "Sin motivo", 1, 4);
-INSERT INTO BILL_DETAIL VALUES (3, "Repuesto", "Compra paragolpe frontal", "Normal", 2, "Sin motivo", 2, 3);
-INSERT INTO BILL_DETAIL VALUES (4, "Repuesto", "Compra faroles", "Demorado", 4, "Error del sistema", 2, 1);
+INSERT INTO BILL_DETAIL VALUES (1, "R", "Compra paragolpe frontal", "N", 1, "Sin motivo", 1, 3);
+INSERT INTO BILL_DETAIL VALUES (2, "G", "Compra volante", "N", 2, "Sin motivo", 1, 4);
+INSERT INTO BILL_DETAIL VALUES (3, "R", "Compra paragolpe frontal", "N", 2, "Sin motivo", 2, 3);
+INSERT INTO BILL_DETAIL VALUES (4, "R", "Compra faroles", "D", 4, "Error del sistema", 2, 1);
 
 -- Bill details de Bill 3 y 4 de Automotriz Prado Mdeo
-INSERT INTO BILL_DETAIL VALUES (5, "Repuesto", "Compra paragolpe trasero", "Normal", 1, "Sin motivo", 3, 2);
-INSERT INTO BILL_DETAIL VALUES (6, "Garantia", "Compra volante", "Normal", 1, "Sin motivo", 3, 4);
-INSERT INTO BILL_DETAIL VALUES (7, "Repuesto", "Compra faroles", "Demorado", 3, "Error logistico", 4, 1);
-INSERT INTO BILL_DETAIL VALUES (8, "Repuesto", "Compra paragolpe frontal", "Demorado", 1, "Error cambio repuesto defectuoso", 4, 3);
-INSERT INTO BILL_DETAIL VALUES (9, "Repuesto", "Compra volante", "Demorado", 1, "Error logistico", 5, 4);
-INSERT INTO BILL_DETAIL VALUES (10, "Repuesto", "Compra volante", "Demorado", 1, "Error logistico", 6, 4);
+INSERT INTO BILL_DETAIL VALUES (5, "R", "Compra paragolpe trasero", "N", 1, "Sin motivo", 3, 2);
+INSERT INTO BILL_DETAIL VALUES (6, "G", "Compra volante", "N", 1, "Sin motivo", 3, 4);
+INSERT INTO BILL_DETAIL VALUES (7, "R", "Compra faroles", "D", 3, "Error logistico", 4, 1);
+INSERT INTO BILL_DETAIL VALUES (8, "R", "Compra paragolpe frontal", "D", 1, "Error cambio repuesto defectuoso", 4, 3);
+INSERT INTO BILL_DETAIL VALUES (9, "R", "Compra volante", "D", 1, "Error logistico", 5, 4);
+INSERT INTO BILL_DETAIL VALUES (10, "R", "Compra volante", "D", 1, "Error logistico", 6, 4);
