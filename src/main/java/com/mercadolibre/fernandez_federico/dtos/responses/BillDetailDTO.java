@@ -3,6 +3,7 @@ package com.mercadolibre.fernandez_federico.dtos.responses;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mercadolibre.fernandez_federico.util.enums.AccountType;
+import com.mercadolibre.fernandez_federico.util.enums.PartStatus;
 import lombok.Data;
 
 @Data
@@ -13,5 +14,6 @@ public class BillDetailDTO {
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private AccountType accountType;
     private String reason;
-    private String partStatus;
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    private PartStatus partStatus;
 }

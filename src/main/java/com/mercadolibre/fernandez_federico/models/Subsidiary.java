@@ -40,6 +40,6 @@ public class Subsidiary {
     private CountryDealer countryDealer;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "subsidiary")
+    @OneToMany(mappedBy = "subsidiary",cascade = CascadeType.ALL)
     private List<Bill> bills;
 }

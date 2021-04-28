@@ -22,19 +22,8 @@ public class CodeNumberSerializator extends StdSerializer<String> {
     @Override
     public void serialize(String s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         System.out.println("value " + s);
-        jsonGenerator.writeString(padLeftZeros(s, this.leadingZeros));
+        jsonGenerator.writeString(Utils.padLeftZeros(s, this.leadingZeros));
     }
 
-    private String padLeftZeros(String inputString, int length) {
-        if (inputString.length() >= length) {
-            return inputString;
-        }
-        StringBuilder sb = new StringBuilder();
-        while (sb.length() < length - inputString.length()) {
-            sb.append('0');
-        }
-        sb.append(inputString);
 
-        return sb.toString();
-    }
 }
