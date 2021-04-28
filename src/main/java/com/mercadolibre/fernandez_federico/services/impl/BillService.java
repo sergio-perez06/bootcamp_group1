@@ -31,36 +31,23 @@ public class BillService implements IBillService {
 
     }
 
-    public BillDTO getBillDetails(String oNum){
+    public BillDTO getBillDetails(String orderNumberCM){
         BillDTO finalBill = new BillDTO();
         if(billRepository.findAll().isEmpty())
             throw new ApiException("Not Found","La orden no existe",404 );
         else{
-            Bill bills = billRepository.findByCmOrdernumberWarehouse(oNum);
-            List<BillDetail> billsDetail = billDetailRepository.findAll()
-                    .stream()
-                    .map(billDetail -> modelMapper.map(billDetail, BillDetail.class))
-                    .collect(Collectors.toList());
-                System.out.println(billRepository.findByCmOrdernumberWarehouse(oNum).getId());
-
-
-                if(bills.getCmOrdernumberWarehouse().equals(oNum)){
+            Bill bills = billRepository.findByCmOrdernumberWarehouse(orderNumberCM);
+            List<BillDetail> billsDetail = billDetailRepository.findAll();
+                if(bills.getCmOrdernumberWarehouse().equals(orderNumberCM)){
                     String[] ord =bills.getCmOrdernumberWarehouse().split("-");
                     finalBill.setOrderNumber(ord[1]+"-"+ord[2]);
                     finalBill.setOrderDate(bills.getOrderDate());
                     finalBill.setDeliveryStatus(bills.getDeliveryStatus());
-
                     List<BillDetailDTO> billDetailDTOS = new ArrayList<>();
                     BillDetailDTO billDetailDTO = new BillDetailDTO();
                     for(int i=0; i<billsDetail.size(); i++){
                         if(bills.getId().equals(billsDetail.get(i).getBill().getId())){
-                            billDetailDTO.setDescription(billsDetail.get(i).getDescription());
-                            billDetailDTO.setQuantity(billsDetail.get(i).getQuantity());
-                            billDetailDTO.setAccountType(billsDetail.get(i).getAccountType());
-                            billDetailDTO.setReason(billsDetail.get(i).getReason());
-                            billDetailDTO.setPartStatus(billsDetail.get(i).getPartStatus().name());
-                            billDetailDTO.setPartCode(billsDetail.get(i).getPart().getPartCode());
-
+                            billDetailDTO = modelMapper.map(billsDetail.get(i), BillDetailDTO.class);
                             billDetailDTOS.add(billDetailDTO);
                         }
                     }
