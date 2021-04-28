@@ -2,14 +2,11 @@ package com.mercadolibre.fernandez_federico.services.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import java.util.Comparator;
-
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
@@ -17,45 +14,38 @@ import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.*;
 import com.mercadolibre.fernandez_federico.repositories.*;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class StockWarehouseService implements IStockWarehouseService {
 
-    private ICountryDealerRepository countryDealerRepository;
-    private ISubsidiaryRepository subsidiaryRepository;
-    private IStockWarehouseRepository stockWarehouseRepository;
-    private IDiscountTypeRepository discountTypeRepository;
-    private IMakerRepository makerRepository;
-    private IRecordRepository recordRepository;
-    private ModelMapper modelMapper;
-    private IUserRepository userRepository;
-
-    public StockWarehouseService(IStockWarehouseRepository stockWarehouseRepository, ModelMapper modelMapper, IDiscountTypeRepository discountTypeRepository,
-                                 ICountryDealerRepository countryDealerRepository, ISubsidiaryRepository subsidiaryRepository,IMakerRepository makerRepository,
-                                 IRecordRepository recordRepository)
-    {
-        this.stockWarehouseRepository = stockWarehouseRepository;
-        this.discountTypeRepository = discountTypeRepository;
-        this.makerRepository = makerRepository;
-        this.recordRepository = recordRepository;
-        this.modelMapper = modelMapper;
-    }
+    private final ICountryDealerRepository countryDealerRepository;
+    private final ISubsidiaryRepository subsidiaryRepository;
+    private final IStockWarehouseRepository stockWarehouseRepository;
+    private final IDiscountTypeRepository discountTypeRepository;
+    private final IMakerRepository makerRepository;
+    private final IRecordRepository recordRepository;
+    private final ModelMapper modelMapper;
+    private final IUserRepository userRepository;
+    private final IPartRepository partRepository;
 
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
-        if(stockWarehouseRepository.findAll().isEmpty())
+        if (stockWarehouseRepository.findAll().isEmpty())
             throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
-        else {
+        else
+        {
             //Se cargan los repositorios por separado trayendo lista entera
-              List<PartDTO> partsDTO = new ArrayList<>();
-              List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll()
-                      .stream()
-                      .map(stock -> modelMapper.map(stock, StockWarehouse.class))
-                      .collect(Collectors.toList());
+            List<PartDTO> partsDTO = new ArrayList<>();
+            List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll()
+                    .stream()
+                    .map(stock -> modelMapper.map(stock, StockWarehouse.class))
+                    .collect(Collectors.toList());
             List<Maker> makers = makerRepository.findAll()
                     .stream()
                     .map(maker -> modelMapper.map(maker, Maker.class))

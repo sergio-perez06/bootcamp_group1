@@ -18,10 +18,8 @@ import static java.util.Collections.emptyList;
 public class UserService implements UserDetailsService {
     private IUserRepository applicationUserRepository;
 
-
     public UserService(IUserRepository applicationUserRepository) {
         this.applicationUserRepository = applicationUserRepository;
-
     }
 
     @Override
