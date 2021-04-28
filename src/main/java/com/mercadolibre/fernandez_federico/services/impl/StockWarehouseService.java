@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 
 import java.util.Comparator;
 
+import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
@@ -209,6 +211,11 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     @Override
     public CountryDealerStockResponseDTO addStockToCountryDealer(CountryDealerStockDTO countryDealerStock, String country) {
+        return null;
+    }
+
+    @Override
+    public BillDTO addBillToCountryDealer(BillRequestDTO billRequestDTO, String countryName) {
         return null;
     }
 

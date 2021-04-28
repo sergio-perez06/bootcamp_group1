@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
-import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
-import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.*;
+import com.mercadolibre.fernandez_federico.models.Bill;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 
 import com.mercadolibre.fernandez_federico.util.TokenUtils;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
 import com.mercadolibre.fernandez_federico.models.CountryDealer;
 
 
@@ -74,4 +74,11 @@ public class PartController {
         return stockService.addStockToCountryDealer(countryDealerStock,claims.get("country").toString());
     }
 
+    @PostMapping("/orders")
+    public BillDTO addBillCountryDealer(@RequestBody BillRequestDTO billRequestDTO,
+                                     @RequestHeader("Authorization") String token){
+        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
+
+        return stockService.addBillToCountryDealer(billRequestDTO,claims.get("country").toString());
+    }
 }
