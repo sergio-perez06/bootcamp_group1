@@ -21,7 +21,7 @@ public class BillController {
     }
 
     @GetMapping("/orders/list")
-    public BillDTO getOrderDetails(@RequestParam String oNum){
-        return billService.getBillDetails(oNum);
+    public BillDTO getOrderDetails(@RequestParam String orderNumberCM){
+        return billService.getBillDetails(orderNumberCM);
     }
 }
