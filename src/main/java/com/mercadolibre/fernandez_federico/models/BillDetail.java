@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mercadolibre.fernandez_federico.util.enums.AccountType;
 import com.mercadolibre.fernandez_federico.util.enums.PartStatus;
-import com.mercadolibre.fernandez_federico.util.enums.converters.AccountTypeConverter;
-import com.mercadolibre.fernandez_federico.util.enums.converters.PartStatusConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,13 +23,11 @@ public class BillDetail {
     private Integer quantity;
 
     @Column(length = 50)
-    @Convert(converter = AccountTypeConverter.class)
     private AccountType accountType;
 
     private String reason;
 
     @Column(length = 50)
-    @Convert(converter = PartStatusConverter.class)
     private PartStatus partStatus;
 
     @JsonBackReference

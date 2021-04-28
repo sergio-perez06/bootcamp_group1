@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
-import com.mercadolibre.fernandez_federico.util.enums.converters.OrderStatusConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,7 +53,6 @@ public class Bill {
 
     @NotNull
     @Column(length = 50)
-    @Convert(converter = OrderStatusConverter.class)
     private OrderStatus deliveryStatus;
 
     @JsonManagedReference
