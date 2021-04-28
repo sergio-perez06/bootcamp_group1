@@ -1,4 +1,4 @@
-package com.mercadolibre.fernandez_federico.unit.services;
+package com.mercadolibre.fernandez_federico.unit.services.impl;
 
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
@@ -14,10 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,7 +60,7 @@ public class StockWarehouseServiceTest {
     }
 
     @Test
-    public void getPartsListWithQueryPDateParamsOK() throws Exception {
+    public void getPartsListWith2ParamsOK1() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
         List<Maker> makers = generateMakersList();
         List<DiscountType> discountTypes = generateDiscountTypeList();
@@ -84,7 +81,7 @@ public class StockWarehouseServiceTest {
     }
 
     @Test
-    public void getPartsListWithQueryVDateParamsOK() throws Exception {
+    public void getPartsListWith2ParamsOK2() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
         List<Maker> makers = generateMakersList();
         List<DiscountType> discountTypes = generateDiscountTypeList();
@@ -101,6 +98,26 @@ public class StockWarehouseServiceTest {
         HashMap<String, String> params = new HashMap<>();
         params.put("date", "2021-01-22");
         params.put("queryType", "V");
+        List<PartDTO> actual = stockWarehouseService.getParts(params);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getPartsListWith3ParamsOK1() throws Exception {
+        List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
+        List<Maker> makers = generateMakersList();
+        List<DiscountType> discountTypes = generateDiscountTypeList();
+        List<Record> records = generateRecordsList();
+        List<PartDTO> expected = generatePartDTOList();
+
+        when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
+        when(makerRepository.findAll()).thenReturn(makers);
+        when(discountTypeRepository.findAll()).thenReturn(discountTypes);
+        when(recordRepository.findAll()).thenReturn(records);
+        when(modelMapper.map(any(), any())).thenReturn(expected.get(0), expected.get(1));
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("order", "1");
         List<PartDTO> actual = stockWarehouseService.getParts(params);
         assertEquals(expected, actual);
     }

@@ -1,13 +1,10 @@
 package com.mercadolibre.fernandez_federico.services.impl;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import java.util.Comparator;
 
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
@@ -49,41 +46,31 @@ public class StockWarehouseService implements IStockWarehouseService {
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
         if(stockWarehouseRepository.findAll().isEmpty())
             throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
-        else {
-            //Se cargan los repositorios por separado trayendo lista entera
-            List<PartDTO> partsDTO = new ArrayList<>();
-            List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
-            List<Maker> makers = makerRepository.findAll();
-            List<DiscountType> discountTypes = discountTypeRepository.findAll();
-            List<Record> records = recordRepository.findAll();
-            //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
-            // p y v elimine filas.
-            if (filters.isEmpty() || (filters.get("queryType").equals("C"))) {
-                for(int i=0; i<stockWarehouses.size(); i++){
-                    PartDTO part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                    for(int f=0; f<records.size(); f++){
-                        if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                            part.setNormalPrice(records.get(f).getNormalPrice());
-                            part.setUrgentPrice(records.get(f).getUrgentPrice());
-                            part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                            for(int g=0; g<discountTypes.size(); g++){
-                                if(records.get(f).getDiscountType().getId().equals(discountTypes.get(g).getId())){
-                                    part.setDiscountType(discountTypes.get(g).getType());
-                                }
-                            }
-                        }
-                    }
-                    for(int f=0; f<makers.size();f++){
-                        if(stockWarehouses.get(i).getPart().getMaker().getId().equals(makers.get(f).getId())){
-                            part.setMaker(makers.get(f).getName());
-                        }
-                    }
-                    partsDTO.add(part);
-                }
-                // return partsDTO;
 
-            }if (filters.containsKey("queryType") && (filters.get("queryType").equals("P") && filters.containsKey("date")))
-            {
+        String queryType = filters.getOrDefault("queryType", "");
+        LocalDate date = filters.containsKey("date") ? LocalDate.parse(filters.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+        Integer order = Integer.parseInt(filters.getOrDefault("order",  "0"));
+
+        boolean p = queryType.equalsIgnoreCase("P") && date == null,
+                q = queryType.equalsIgnoreCase("V") && date == null;
+        if (p && !q
+            || q && !p
+            || order > 3 || order < 0
+            || date != null && date.isAfter(LocalDate.now())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "No se puede continuar con los parámetros dados.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        //Se cargan los repositorios por separado trayendo lista entera
+        List<PartDTO> partsDTO = new ArrayList<>();
+        List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
+        List<Maker> makers = makerRepository.findAll();
+        List<DiscountType> discountTypes = discountTypeRepository.findAll();
+        List<Record> records = recordRepository.findAll();
+        //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
+        // p y v elimine filas.
+
+        switch (queryType) {
+            case "P":
                 for(int f=0; f<records.size(); f++){
                     for(int i=0; i<stockWarehouses.size(); i++){
                         PartDTO part = new PartDTO();
@@ -104,19 +91,13 @@ public class StockWarehouseService implements IStockWarehouseService {
                                         part.setMaker(makers.get(g).getName());
                                     }
                                 }
-                            partsDTO.add(part);
+                                partsDTO.add(part);
                             }
-
                         }
-
                     }
-
                 }
-
-                //return partsDTO;
-
-                //toDO: aún no hicimos el tercer filtro, se hará en el transcurso del finde o principios de lunes.
-            } if (filters.containsKey("queryType") && (filters.get("queryType").equals("V") && filters.containsKey("date"))){
+                break;
+            case "V":
                 HashMap<Long, Double> partHashMap = new HashMap<>();
                 for(int f=0; f<records.size(); f++){
                     for(int i=0; i<stockWarehouses.size(); i++){
@@ -149,18 +130,27 @@ public class StockWarehouseService implements IStockWarehouseService {
                         }
                     }
                 }
-
-            }if(filters.containsKey("order")){
-                if(filters.get("order").equals("1")){
-                    partsDTO.sort(Comparator.comparing(PartDTO::getDescription));}
-                if(filters.get("order").equals("2")){
-                    partsDTO.sort(Comparator.comparing(PartDTO::getDescription).reversed());}
-                if(filters.get("order").equals("3")){
-                    partsDTO.sort(Comparator.comparing(PartDTO::getLastModification));}
-            }
-            return partsDTO;
+                break;
+            default:
+                for(int i=0; i<stockWarehouses.size(); i++) {
+                    partsDTO.add(construct(stockWarehouses.get(i)));
+                }
+                break;
         }
 
+        switch (order) {
+            case 1:
+                partsDTO.sort(Comparator.comparing(PartDTO::getDescription));
+                break;
+            case 2:
+                partsDTO.sort(Comparator.comparing(PartDTO::getDescription).reversed());
+                break;
+            case 3:
+                partsDTO.sort(Comparator.comparing(PartDTO::getLastModification));
+                break;
+        }
+
+        return partsDTO;
     }
 
 
@@ -212,5 +202,16 @@ public class StockWarehouseService implements IStockWarehouseService {
 
         }
         return null;
+    }
+
+    private PartDTO construct(StockWarehouse stockWarehouse) {
+        PartDTO partDTO = modelMapper.map(stockWarehouse, PartDTO.class);
+        Record record = recordRepository.findTopByPartIdOrderByIdDesc(stockWarehouse.getPart().getId());
+        partDTO.setMaker(stockWarehouse.getPart().getMaker().getName());
+        partDTO.setNormalPrice(record.getNormalPrice());
+        partDTO.setUrgentPrice(record.getUrgentPrice());
+        partDTO.setLastModification(record.getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        partDTO.setDiscountType(record.getDiscountType().getType());
+        return partDTO;
     }
 }
