@@ -23,6 +23,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class StockWarehouseService implements IStockWarehouseService {
@@ -40,7 +42,7 @@ public class StockWarehouseService implements IStockWarehouseService {
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
         if (stockWarehouseRepository.findAll().isEmpty())
-            throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
+            throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
 
         String queryType = filters.getOrDefault("queryType", "");
         LocalDate date = filters.containsKey("date") ? LocalDate.parse(filters.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
@@ -48,6 +50,7 @@ public class StockWarehouseService implements IStockWarehouseService {
 
         boolean p = queryType.equalsIgnoreCase("P") && date == null,
                 q = queryType.equalsIgnoreCase("V") && date == null;
+
         if (p && !q
             || q && !p
             || order > 3 || order < 0
@@ -58,76 +61,25 @@ public class StockWarehouseService implements IStockWarehouseService {
         //Se cargan los repositorios por separado trayendo lista entera
         List<PartDTO> partsDTO = new ArrayList<>();
         List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
-        List<Maker> makers = makerRepository.findAll();
-        List<DiscountType> discountTypes = discountTypeRepository.findAll();
-        List<Record> records = recordRepository.findAll();
-        //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
-        // p y v elimine filas.
+        for(int i=stockWarehouses.size()-1; i>=0; i--) {
 
-        switch (queryType) {
-            case "P":
-              for(int f=0; f<records.size(); f++){
-                  for(int i=0; i<stockWarehouses.size(); i++){
-                      PartDTO part = new PartDTO();
-                      //Se filtra por fecha y luego se hace la carga
-                      if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
-                          if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                              part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                              part.setNormalPrice(records.get(f).getNormalPrice());
-                              part.setUrgentPrice(records.get(f).getUrgentPrice());
-                              part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                              for (int g = 0; g < discountTypes.size(); g++) {
-                                  if (records.get(f).getDiscountType().getId().equals(discountTypes.get(g).getId())) {
-                                      part.setDiscountType(discountTypes.get(g).getType());
-                                  }
-                              }
-                              for (int g = 0; g < makers.size(); g++) {
-                                  if (stockWarehouses.get(i).getPart().getMaker().getId().equals(makers.get(g).getId())) {
-                                      part.setMaker(makers.get(g).getName());
-                                  }
-                              }
-                              partsDTO.add(part);
-                          }
-                      }
-                  }
-              }
-              break;
-            case "V":
-              HashMap<Long, Double> partHashMap = new HashMap<>();
-              for(int f=0; f<records.size(); f++){
-                  for(int i=0; i<stockWarehouses.size(); i++){
+            switch (queryType) {
+                case "P":
+                    if(stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size() - 1).getLastModification().isBefore(date))
+                        stockWarehouses.remove(stockWarehouses.get(i));
+                    break;
+                case "V":
+                   if(stockWarehouses.get(i).getPart().getRecords().size()<2
+                           || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getLastModification().isBefore(date)
+                           || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getNormalPrice()==stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-2).getNormalPrice()){
+                            stockWarehouses.remove(stockWarehouses.get(i));
 
-                      //Se filtra por fecha y luego se hace la carga en un hashmap de los primeros codigos de cada pieza en stockwarehouse
-                      if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
-                          if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                              if(!partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())){
-                                  partHashMap.put(stockWarehouses.get(i).getPart().getId(),records.get(f).getNormalPrice());
-                              }
+                    }
+                    break;
+                }
 
-                          }
-
-                      }
-
-                  }
-
-              }
-              for(int f=0; f<records.size(); f++) {
-                  PartDTO part = new PartDTO();
-                  for (int i = 0; i < stockWarehouses.size(); i++) {
-                      if (stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())
-                              && partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())
-                              && !partHashMap.get(stockWarehouses.get(i).getPart().getId()).equals(records.get(f).getNormalPrice())) {
-                          part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                          part.setNormalPrice(records.get(f).getNormalPrice());
-                          part.setUrgentPrice(records.get(f).getUrgentPrice());
-                          part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                          partsDTO.add(part);
-                      }
-                  }
-              }
-              break;
-        }
-
+            }
+        if (stockWarehouses.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
         stockWarehouses.forEach(stockWarehouse -> partsDTO.add(construct(stockWarehouse)));
         switch (order) {
             case 1:
@@ -141,8 +93,8 @@ public class StockWarehouseService implements IStockWarehouseService {
                 break;
         }
 
-        if (partsDTO.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
-        
+        if (partsDTO.isEmpty()) throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
+
         return partsDTO;
     }
 
@@ -211,53 +163,53 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
     }
 
+    // Requirement 4
     @Override
-    public CountryDealerStockResponseDTO addStockToCountryDealer(CountryDealerStockDTO countryDealerStock, String countryName) {
+    public CountryDealerStockResponseDTO addStockToCountryDealer(CountryDealerStockDTO countryDealerStockDto, String countryName) {
         CountryDealerStockResponseDTO countryDealerStockResponse = new CountryDealerStockResponseDTO();
 
         CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
-        StockDealer result = new StockDealer();
+
+        if (countryDealer == null)
+            throw new ApiException(NOT_FOUND.name(), "No existe countryDealer asociado", NOT_FOUND.value());
 
         List<StockDealer> stockDealerList = countryDealer.getStockDealers();
 
-        if (stockDealerList.isEmpty()) {
-            throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe", HttpStatus.NOT_FOUND.value());
+        Optional<StockDealer> stockDealer = stockDealerList.stream()
+                .filter(StockDealer -> StockDealer.getPart().getPartCode().equals(countryDealerStockDto.getPartCode()))
+                .findFirst();
+
+        // Stock with part already exists on dealer
+        if (stockDealer.isPresent()){
+            StockDealer result = stockDealer.get();
+            result.setQuantity(result.getQuantity() + countryDealerStockDto.getQuantity());
+
+            countryDealerRepository.save(countryDealer);
+
+            PartDTO partDTO = modelMapper.map(result, PartDTO.class);
+            countryDealerStockResponse.setPart(partDTO);
         }
-        else
+        else // Stock no exists on dealer, creating new one
         {
-            Optional<StockDealer> stockDealer = stockDealerList.stream()
-                    .filter(StockDealer -> StockDealer.getPart().getPartCode().equals(countryDealerStock.getPartCode()))
-                    .findFirst();
+            StockDealer newStock = new StockDealer();
+            Part partFound = partRepository.findByPartCode(countryDealerStockDto.getPartCode());
 
-            if (stockDealer.isPresent()){
-                result = stockDealer.get();
-                result.setQuantity(result.getQuantity() + countryDealerStock.getQuantity());
-                countryDealerRepository.save(countryDealer); //seteo el repo de paises
-                PartDTO partDTO = modelMapper.map(result,PartDTO.class);
+            // Creating new Stock on dealer with existent part
+            if (partFound != null)
+            {
+                newStock.setQuantity(countryDealerStockDto.getQuantity());
+                newStock.setPart(partFound);
+                newStock.setCountryDealer(countryDealer);
 
+                stockDealerList.add(newStock);
+                countryDealerRepository.save(countryDealer);
+
+                PartDTO partDTO = modelMapper.map(newStock, PartDTO.class);
                 countryDealerStockResponse.setPart(partDTO);
             }
             else
             {
-                StockDealer newStock = new StockDealer();
-                Part partFound = partRepository.findByPartCode(countryDealerStock.getPartCode());
-
-                if (partFound != null )
-                {
-                    newStock.setQuantity(countryDealerStock.getQuantity());
-                    newStock.setPart(partFound);
-                    newStock.setCountryDealer(countryDealer);
-
-                    stockDealerList.add(newStock);
-                    countryDealerRepository.save(countryDealer);
-
-                    PartDTO partDTO = modelMapper.map(newStock,PartDTO.class);
-                    countryDealerStockResponse.setPart(partDTO);
-                }
-                else
-                {
-                    throw new ApiException(HttpStatus.NOT_FOUND.name(), "La parte no existe", HttpStatus.NOT_FOUND.value());
-                }
+                throw new ApiException(NOT_FOUND.name(), String.format("No existe un repuesto con el partCode '%s'", countryDealerStockDto.getPartCode()), NOT_FOUND.value());
             }
         }
 
@@ -285,7 +237,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                     .collect(Collectors.toList());
 
             if (partList.contains(null)) {
-                throw new ApiException(HttpStatus.NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", HttpStatus.NOT_FOUND.value());
+                throw new ApiException(NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", NOT_FOUND.value());
             }
 
             if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
@@ -325,7 +277,7 @@ public class StockWarehouseService implements IStockWarehouseService {
             }
             else
             {
-                throw new ApiException(HttpStatus.NOT_FOUND.name(), "La subsidiaria no fue encontrada", HttpStatus.NOT_FOUND.value());
+                throw new ApiException(NOT_FOUND.name(), "La subsidiaria no fue encontrada", NOT_FOUND.value());
             }
         }
         else
@@ -372,7 +324,7 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     private PartDTO construct(StockWarehouse stockWarehouse) {
         PartDTO partDTO = modelMapper.map(stockWarehouse, PartDTO.class);
-        Record record = recordRepository.findTopByPartIdOrderByIdDesc(stockWarehouse.getPart().getId());
+        Record record = stockWarehouse.getPart().getRecords().get(stockWarehouse.getPart().getRecords().size()-1);
         partDTO.setMaker(stockWarehouse.getPart().getMaker().getName());
         partDTO.setNormalPrice(record.getNormalPrice());
         partDTO.setUrgentPrice(record.getUrgentPrice());
