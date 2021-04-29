@@ -15,15 +15,8 @@ public class PingController {
 	private TokenUtils tokenUtils;
 
 	@GetMapping("/ping")
-	public String ping(@RequestHeader("Authorization") String token) {
+	public String ping() {
 		NewRelic.ignoreTransaction();
-
-		System.out.println(token);
-
-		Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
-
-		System.out.println(claims);
-		System.out.println(claims.get("country"));
 
 		return "pong";
 	}
