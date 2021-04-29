@@ -15,6 +15,10 @@ public class PartControllerTest extends ControllerTest {
 
     @Test
     void getOrderDetailsTest() {
+        AuthControllerTest authTest = new AuthControllerTest();
+        authTest.testRestTemplate = this.testRestTemplate;
+        String token = authTest.getToken();
+        System.out.println(token);
         ApplicationUserDTO user = new ApplicationUserDTO("janet","1234","Uruguay","admin");
 
        // Gson gson = new Gson();
@@ -27,10 +31,10 @@ public class PartControllerTest extends ControllerTest {
 //
        // System.out.println("result: "+result);
 
-       ResponseEntity<String> signUpResponse = this.testRestTemplate.postForObject(
-               "localhost:8080/users/signUp",
-               user,
-               ResponseEntity.class);
+  //     ResponseEntity<String> signUpResponse = this.testRestTemplate.postForObject(
+  //             "localhost:8080/users/signUp",
+  //             user,
+  //             ResponseEntity.class);
 /*
         if (HttpStatus.OK.equals(signUpResponse.getStatusCode())){
 
