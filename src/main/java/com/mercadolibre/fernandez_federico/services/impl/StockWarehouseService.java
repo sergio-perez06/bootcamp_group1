@@ -23,6 +23,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class StockWarehouseService implements IStockWarehouseService {
@@ -40,7 +42,7 @@ public class StockWarehouseService implements IStockWarehouseService {
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
         if (stockWarehouseRepository.findAll().isEmpty())
-            throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
+            throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
 
         String queryType = filters.getOrDefault("queryType", "");
         LocalDate date = filters.containsKey("date") ? LocalDate.parse(filters.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
@@ -48,6 +50,7 @@ public class StockWarehouseService implements IStockWarehouseService {
 
         boolean p = queryType.equalsIgnoreCase("P") && date == null,
                 q = queryType.equalsIgnoreCase("V") && date == null;
+
         if (p && !q
             || q && !p
             || order > 3 || order < 0
@@ -61,6 +64,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         List<Maker> makers = makerRepository.findAll();
         List<DiscountType> discountTypes = discountTypeRepository.findAll();
         List<Record> records = recordRepository.findAll();
+
         //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
         // p y v elimine filas.
 
@@ -141,7 +145,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                 break;
         }
 
-        if (partsDTO.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
+        if (partsDTO.isEmpty()) throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
         
         return partsDTO;
     }
@@ -211,53 +215,53 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
     }
 
+    // Requirement 4
     @Override
-    public CountryDealerStockResponseDTO addStockToCountryDealer(CountryDealerStockDTO countryDealerStock, String countryName) {
+    public CountryDealerStockResponseDTO addStockToCountryDealer(CountryDealerStockDTO countryDealerStockDto, String countryName) {
         CountryDealerStockResponseDTO countryDealerStockResponse = new CountryDealerStockResponseDTO();
 
         CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
-        StockDealer result = new StockDealer();
+
+        if (countryDealer == null)
+            throw new ApiException(NOT_FOUND.name(), "No existe countryDealer asociado", NOT_FOUND.value());
 
         List<StockDealer> stockDealerList = countryDealer.getStockDealers();
 
-        if (stockDealerList.isEmpty()) {
-            throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe", HttpStatus.NOT_FOUND.value());
+        Optional<StockDealer> stockDealer = stockDealerList.stream()
+                .filter(StockDealer -> StockDealer.getPart().getPartCode().equals(countryDealerStockDto.getPartCode()))
+                .findFirst();
+
+        // Stock with part already exists on dealer
+        if (stockDealer.isPresent()){
+            StockDealer result = stockDealer.get();
+            result.setQuantity(result.getQuantity() + countryDealerStockDto.getQuantity());
+
+            countryDealerRepository.save(countryDealer);
+
+            PartDTO partDTO = modelMapper.map(result, PartDTO.class);
+            countryDealerStockResponse.setPart(partDTO);
         }
-        else
+        else // Stock no exists on dealer, creating new one
         {
-            Optional<StockDealer> stockDealer = stockDealerList.stream()
-                    .filter(StockDealer -> StockDealer.getPart().getPartCode().equals(countryDealerStock.getPartCode()))
-                    .findFirst();
+            StockDealer newStock = new StockDealer();
+            Part partFound = partRepository.findByPartCode(countryDealerStockDto.getPartCode());
 
-            if (stockDealer.isPresent()){
-                result = stockDealer.get();
-                result.setQuantity(result.getQuantity() + countryDealerStock.getQuantity());
-                countryDealerRepository.save(countryDealer); //seteo el repo de paises
-                PartDTO partDTO = modelMapper.map(result,PartDTO.class);
+            // Creating new Stock on dealer with existent part
+            if (partFound != null)
+            {
+                newStock.setQuantity(countryDealerStockDto.getQuantity());
+                newStock.setPart(partFound);
+                newStock.setCountryDealer(countryDealer);
 
+                stockDealerList.add(newStock);
+                countryDealerRepository.save(countryDealer);
+
+                PartDTO partDTO = modelMapper.map(newStock, PartDTO.class);
                 countryDealerStockResponse.setPart(partDTO);
             }
             else
             {
-                StockDealer newStock = new StockDealer();
-                Part partFound = partRepository.findByPartCode(countryDealerStock.getPartCode());
-
-                if (partFound != null )
-                {
-                    newStock.setQuantity(countryDealerStock.getQuantity());
-                    newStock.setPart(partFound);
-                    newStock.setCountryDealer(countryDealer);
-
-                    stockDealerList.add(newStock);
-                    countryDealerRepository.save(countryDealer);
-
-                    PartDTO partDTO = modelMapper.map(newStock,PartDTO.class);
-                    countryDealerStockResponse.setPart(partDTO);
-                }
-                else
-                {
-                    throw new ApiException(HttpStatus.NOT_FOUND.name(), "La parte no existe", HttpStatus.NOT_FOUND.value());
-                }
+                throw new ApiException(NOT_FOUND.name(), String.format("No existe un repuesto con el partCode '%s'", countryDealerStockDto.getPartCode()), NOT_FOUND.value());
             }
         }
 
@@ -285,7 +289,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                     .collect(Collectors.toList());
 
             if (partList.contains(null)) {
-                throw new ApiException(HttpStatus.NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", HttpStatus.NOT_FOUND.value());
+                throw new ApiException(NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", NOT_FOUND.value());
             }
 
             if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
@@ -325,7 +329,7 @@ public class StockWarehouseService implements IStockWarehouseService {
             }
             else
             {
-                throw new ApiException(HttpStatus.NOT_FOUND.name(), "La subsidiaria no fue encontrada", HttpStatus.NOT_FOUND.value());
+                throw new ApiException(NOT_FOUND.name(), "La subsidiaria no fue encontrada", NOT_FOUND.value());
             }
         }
         else
