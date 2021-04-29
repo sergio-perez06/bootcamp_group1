@@ -31,7 +31,7 @@ public abstract class ControllerTest extends IntegrationTest {
 		return responseEntity;
 	}
 
-	protected ResponseEntity<Object> Login(String username, String password) {
+	protected ResponseEntity<Object> login(String username, String password) {
 		ApplicationUserDTO login = new ApplicationUserDTO(username, password);
 		ResponseEntity<Object> responseEntity = this.testRestTemplate.exchange("/login", HttpMethod.POST, new HttpEntity<>(login), Object.class);
 		return responseEntity;
