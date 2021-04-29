@@ -19,7 +19,7 @@ public abstract class ControllerTest extends IntegrationTest {
 		ResponseEntity<Object> responseEntity = signUp("admin","test1234","Argentina","ADMIN");
 		boolean OK = responseEntity.getStatusCode() == HttpStatus.OK;
 		if (!OK) return "";
-		responseEntity = Login("admin", "test1234");
+		responseEntity = login("admin", "test1234");
 		OK = responseEntity.getStatusCode() == HttpStatus.OK;
 		if (!OK) return "";
 		return responseEntity.getHeaders().get("token").get(0);
