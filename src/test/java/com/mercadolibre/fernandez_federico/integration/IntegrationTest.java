@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(
-	properties = { "SCOPE_SUFFIX=integration_test", "LOCAL_DB_USER=root", "LOCAL_DB_PASS=asd123456" }
+	properties = { "SCOPE_SUFFIX=integration_test", "LOCAL_DB_USER=root", "LOCAL_DB_PASS=B4X9S7IG5g" }
 )
 public abstract class IntegrationTest {
 

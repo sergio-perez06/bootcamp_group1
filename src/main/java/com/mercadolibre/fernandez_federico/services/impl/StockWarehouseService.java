@@ -120,6 +120,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         return countryDealerRepository.findAll();
     }
 
+    //Requerimiento 2
     @Override
     public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String countryName, String deliveryStatus, String order) {
         SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
@@ -135,15 +136,19 @@ public class StockWarehouseService implements IStockWarehouseService {
                 bills = bills.stream().filter(x -> x.getDeliveryStatus().getValue().equals(deliveryStatus)).collect(Collectors.toList());
             }
 
+
+
+            List<BillDTO> billsResponse = bills.stream().map(x -> modelMapper.map(x, BillDTO.class)).collect(Collectors.toList());
+
             if (order != null) {
                 switch (order) {
                     case "1": {
-                        bills.sort(Comparator.comparing(Bill::getOrderDate));
+                        billsResponse.sort(Comparator.comparing(BillDTO::getOrderDate));
                         break;
                     }
 
                     case "2": {
-                        bills.sort(Comparator.comparing(Bill::getOrderDate).reversed());
+                        billsResponse.sort(Comparator.comparing(BillDTO::getOrderDate).reversed());
                         break;
                     }
 
@@ -151,9 +156,6 @@ public class StockWarehouseService implements IStockWarehouseService {
                         break;
                 }
             }
-
-            List<BillDTO> billsResponse = bills.stream().map(x -> modelMapper.map(x, BillDTO.class)).collect(Collectors.toList());
-
             response.setSubsidiaryNumber(subsidiaryNumber);
             response.setOrders(billsResponse);
 
