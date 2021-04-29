@@ -7,6 +7,7 @@ import java.util.Map;
 import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.*;
+import com.mercadolibre.fernandez_federico.exceptions.GlobalExceptionHandler;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 
 import com.mercadolibre.fernandez_federico.util.TokenUtils;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 

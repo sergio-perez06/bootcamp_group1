@@ -1,4 +1,4 @@
-package com.mercadolibre.fernandez_federico.controller;
+package com.mercadolibre.fernandez_federico.exceptions;
 
 import ch.qos.logback.core.joran.spi.DefaultClass;
 import com.mercadolibre.fernandez_federico.exceptions.ApiError;
