@@ -61,7 +61,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         //Se cargan los repositorios por separado trayendo lista entera
         List<PartDTO> partsDTO = new ArrayList<>();
         List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
-        for(int i=0; i<stockWarehouses.size(); i++) {
+        for(int i=stockWarehouses.size()-1; i>=0; i--) {
 
             switch (queryType) {
                 case "P":
@@ -69,25 +69,11 @@ public class StockWarehouseService implements IStockWarehouseService {
                         stockWarehouses.remove(stockWarehouses.get(i));
                     break;
                 case "V":
-                    List<Record> recordAux = stockWarehouses.get(i).getPart().getRecords().stream()
-                            .filter(record -> record.getLastModification().isAfter(date))
-                            .collect(Collectors.toList());
-                    if(recordAux.size()<2){
-                        stockWarehouses.remove(stockWarehouses.get(i));
-                    }else{
-                        //Si la lista tiene menos de dos records, si la ultima fecha de ultima modificación es antes de la fecha dada, y si no hay al menos dos fechas entra las que comparar
-                        double normalPrice = recordAux.get(recordAux.size()-1).getNormalPrice();
-                        double price = recordAux.stream()
-                                .map(record -> record.getNormalPrice())
-                                .reduce((a, b) -> {
-                                    if (normalPrice != b) {
-                                        a = b;
-                                    }
-                                    return a;
-                                }).get();
-                        if(normalPrice==price) {
+                   if(stockWarehouses.get(i).getPart().getRecords().size()<2
+                           || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getLastModification().isBefore(date)
+                           || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getNormalPrice()==stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-2).getNormalPrice()){
                             stockWarehouses.remove(stockWarehouses.get(i));
-                        }
+
                     }
                     break;
                 }
