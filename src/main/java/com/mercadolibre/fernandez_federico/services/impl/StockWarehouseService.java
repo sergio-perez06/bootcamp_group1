@@ -61,77 +61,39 @@ public class StockWarehouseService implements IStockWarehouseService {
         //Se cargan los repositorios por separado trayendo lista entera
         List<PartDTO> partsDTO = new ArrayList<>();
         List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
-        List<Maker> makers = makerRepository.findAll();
-        List<DiscountType> discountTypes = discountTypeRepository.findAll();
-        List<Record> records = recordRepository.findAll();
+        for(int i=0; i<stockWarehouses.size(); i++) {
 
-        //toDo: La función de abajo podría reformularse para no volverla a hacer en todos los ifs y que en los filtros
-        // p y v elimine filas.
+            switch (queryType) {
+                case "P":
+                    if(stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size() - 1).getLastModification().isBefore(date))
+                        stockWarehouses.remove(stockWarehouses.get(i));
+                    break;
+                case "V":
+                    List<Record> recordAux = stockWarehouses.get(i).getPart().getRecords().stream()
+                            .filter(record -> record.getLastModification().isAfter(date))
+                            .collect(Collectors.toList());
+                    if(recordAux.size()<2){
+                        stockWarehouses.remove(stockWarehouses.get(i));
+                    }else{
+                        //Si la lista tiene menos de dos records, si la ultima fecha de ultima modificación es antes de la fecha dada, y si no hay al menos dos fechas entra las que comparar
+                        double normalPrice = recordAux.get(recordAux.size()-1).getNormalPrice();
+                        double price = recordAux.stream()
+                                .map(record -> record.getNormalPrice())
+                                .reduce((a, b) -> {
+                                    if (normalPrice != b) {
+                                        a = b;
+                                    }
+                                    return a;
+                                }).get();
+                        if(normalPrice==price) {
+                            stockWarehouses.remove(stockWarehouses.get(i));
+                        }
+                    }
+                    break;
+                }
 
-        switch (queryType) {
-            case "P":
-              for(int f=0; f<records.size(); f++){
-                  for(int i=0; i<stockWarehouses.size(); i++){
-                      PartDTO part = new PartDTO();
-                      //Se filtra por fecha y luego se hace la carga
-                      if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
-                          if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                              part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                              part.setNormalPrice(records.get(f).getNormalPrice());
-                              part.setUrgentPrice(records.get(f).getUrgentPrice());
-                              part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                              for (int g = 0; g < discountTypes.size(); g++) {
-                                  if (records.get(f).getDiscountType().getId().equals(discountTypes.get(g).getId())) {
-                                      part.setDiscountType(discountTypes.get(g).getType());
-                                  }
-                              }
-                              for (int g = 0; g < makers.size(); g++) {
-                                  if (stockWarehouses.get(i).getPart().getMaker().getId().equals(makers.get(g).getId())) {
-                                      part.setMaker(makers.get(g).getName());
-                                  }
-                              }
-                              partsDTO.add(part);
-                          }
-                      }
-                  }
-              }
-              break;
-            case "V":
-              HashMap<Long, Double> partHashMap = new HashMap<>();
-              for(int f=0; f<records.size(); f++){
-                  for(int i=0; i<stockWarehouses.size(); i++){
-
-                      //Se filtra por fecha y luego se hace la carga en un hashmap de los primeros codigos de cada pieza en stockwarehouse
-                      if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
-                          if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                              if(!partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())){
-                                  partHashMap.put(stockWarehouses.get(i).getPart().getId(),records.get(f).getNormalPrice());
-                              }
-
-                          }
-
-                      }
-
-                  }
-
-              }
-              for(int f=0; f<records.size(); f++) {
-                  PartDTO part = new PartDTO();
-                  for (int i = 0; i < stockWarehouses.size(); i++) {
-                      if (stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())
-                              && partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())
-                              && !partHashMap.get(stockWarehouses.get(i).getPart().getId()).equals(records.get(f).getNormalPrice())) {
-                          part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                          part.setNormalPrice(records.get(f).getNormalPrice());
-                          part.setUrgentPrice(records.get(f).getUrgentPrice());
-                          part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                          partsDTO.add(part);
-                      }
-                  }
-              }
-              break;
-        }
-
+            }
+        if (stockWarehouses.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
         stockWarehouses.forEach(stockWarehouse -> partsDTO.add(construct(stockWarehouse)));
         switch (order) {
             case 1:
@@ -146,7 +108,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
 
         if (partsDTO.isEmpty()) throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
-        
+
         return partsDTO;
     }
 
@@ -376,7 +338,7 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     private PartDTO construct(StockWarehouse stockWarehouse) {
         PartDTO partDTO = modelMapper.map(stockWarehouse, PartDTO.class);
-        Record record = recordRepository.findTopByPartIdOrderByIdDesc(stockWarehouse.getPart().getId());
+        Record record = stockWarehouse.getPart().getRecords().get(stockWarehouse.getPart().getRecords().size()-1);
         partDTO.setMaker(stockWarehouse.getPart().getMaker().getName());
         partDTO.setNormalPrice(record.getNormalPrice());
         partDTO.setUrgentPrice(record.getUrgentPrice());
