@@ -7,7 +7,6 @@ import java.util.Map;
 import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.*;
-import com.mercadolibre.fernandez_federico.exceptions.GlobalExceptionHandler;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 
 import com.mercadolibre.fernandez_federico.util.TokenUtils;
@@ -30,7 +29,7 @@ import javax.validation.constraints.Size;
 @RestController
 @RequestMapping("/api/v1/parts")
 @Validated
-public class PartController extends GlobalExceptionHandler {
+public class PartController {
 
     private final IStockWarehouseService stockService;
 
