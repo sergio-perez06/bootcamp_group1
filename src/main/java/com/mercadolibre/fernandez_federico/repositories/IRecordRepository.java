@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface IRecordRepository extends JpaRepository<Record, Long> {
     Record findTopByPartIdOrderByIdDesc(long idPart);
-    Record findById(long id);
 }

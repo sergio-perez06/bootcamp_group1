@@ -71,73 +71,71 @@ public class StockWarehouseService implements IStockWarehouseService {
 
         switch (queryType) {
             case "P":
-                for(int f=0; f<records.size(); f++){
-                    for(int i=0; i<stockWarehouses.size(); i++){
-                        PartDTO part = new PartDTO();
-                        //Se filtra por fecha y luego se hace la carga
-                        if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
-                            if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                                part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                                part.setNormalPrice(records.get(f).getNormalPrice());
-                                part.setUrgentPrice(records.get(f).getUrgentPrice());
-                                part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                                for (int g = 0; g < discountTypes.size(); g++) {
-                                    if (records.get(f).getDiscountType().getId().equals(discountTypes.get(g).getId())) {
-                                        part.setDiscountType(discountTypes.get(g).getType());
-                                    }
-                                }
-                                for (int g = 0; g < makers.size(); g++) {
-                                    if (stockWarehouses.get(i).getPart().getMaker().getId().equals(makers.get(g).getId())) {
-                                        part.setMaker(makers.get(g).getName());
-                                    }
-                                }
-                                partsDTO.add(part);
-                            }
-                        }
-                    }
-                }
-                break;
+              for(int f=0; f<records.size(); f++){
+                  for(int i=0; i<stockWarehouses.size(); i++){
+                      PartDTO part = new PartDTO();
+                      //Se filtra por fecha y luego se hace la carga
+                      if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
+                          if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
+                              part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
+                              part.setNormalPrice(records.get(f).getNormalPrice());
+                              part.setUrgentPrice(records.get(f).getUrgentPrice());
+                              part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                              for (int g = 0; g < discountTypes.size(); g++) {
+                                  if (records.get(f).getDiscountType().getId().equals(discountTypes.get(g).getId())) {
+                                      part.setDiscountType(discountTypes.get(g).getType());
+                                  }
+                              }
+                              for (int g = 0; g < makers.size(); g++) {
+                                  if (stockWarehouses.get(i).getPart().getMaker().getId().equals(makers.get(g).getId())) {
+                                      part.setMaker(makers.get(g).getName());
+                                  }
+                              }
+                              partsDTO.add(part);
+                          }
+                      }
+                  }
+              }
+              break;
             case "V":
-                HashMap<Long, Double> partHashMap = new HashMap<>();
-                for(int f=0; f<records.size(); f++){
-                    for(int i=0; i<stockWarehouses.size(); i++){
+              HashMap<Long, Double> partHashMap = new HashMap<>();
+              for(int f=0; f<records.size(); f++){
+                  for(int i=0; i<stockWarehouses.size(); i++){
 
-                        //Se filtra por fecha y luego se hace la carga en un hashmap de los primeros codigos de cada pieza en stockwarehouse
-                        if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
-                            if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
-                                if(!partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())){
-                                    partHashMap.put(stockWarehouses.get(i).getPart().getId(),records.get(f).getNormalPrice());
-                                }
+                      //Se filtra por fecha y luego se hace la carga en un hashmap de los primeros codigos de cada pieza en stockwarehouse
+                      if(records.get(f).getLastModification().compareTo(LocalDate.parse(filters.get("date"),DateTimeFormatter.ofPattern("yyyy-MM-dd")))>=0){
+                          if(stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())){
+                              if(!partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())){
+                                  partHashMap.put(stockWarehouses.get(i).getPart().getId(),records.get(f).getNormalPrice());
+                              }
 
-                            }
+                          }
 
-                        }
+                      }
 
-                    }
+                  }
 
-                }
-                for(int f=0; f<records.size(); f++) {
-                    PartDTO part = new PartDTO();
-                    for (int i = 0; i < stockWarehouses.size(); i++) {
-                        if (stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())
-                                && partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())
-                                && !partHashMap.get(stockWarehouses.get(i).getPart().getId()).equals(records.get(f).getNormalPrice())) {
-                            part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
-                            part.setNormalPrice(records.get(f).getNormalPrice());
-                            part.setUrgentPrice(records.get(f).getUrgentPrice());
-                            part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                            partsDTO.add(part);
-                        }
-                    }
-                }
-                break;
+              }
+              for(int f=0; f<records.size(); f++) {
+                  PartDTO part = new PartDTO();
+                  for (int i = 0; i < stockWarehouses.size(); i++) {
+                      if (stockWarehouses.get(i).getPart().getId().equals(records.get(f).getPart().getId())
+                              && partHashMap.containsKey(stockWarehouses.get(i).getPart().getId())
+                              && !partHashMap.get(stockWarehouses.get(i).getPart().getId()).equals(records.get(f).getNormalPrice())) {
+                          part = modelMapper.map(stockWarehouses.get(i), PartDTO.class);
+                          part.setNormalPrice(records.get(f).getNormalPrice());
+                          part.setUrgentPrice(records.get(f).getUrgentPrice());
+                          part.setLastModification(records.get(f).getLastModification().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                          partsDTO.add(part);
+                      }
+                  }
+              }
+              break;
             default:
-                for(int i=0; i<stockWarehouses.size(); i++) {
-                    partsDTO.add(construct(stockWarehouses.get(i)));
-                }
+
                 break;
         }
-
+        stockWarehouses.forEach(stockWarehouse -> partsDTO.add(construct(stockWarehouse)));
         switch (order) {
             case 1:
                 partsDTO.sort(Comparator.comparing(PartDTO::getDescription));

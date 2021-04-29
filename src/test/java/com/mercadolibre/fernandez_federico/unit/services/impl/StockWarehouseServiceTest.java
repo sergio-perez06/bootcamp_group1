@@ -43,17 +43,10 @@ public class StockWarehouseServiceTest {
     @Test
     public void getPartsListNoParamsOK() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
-        List<Maker> makers = generateMakersList();
-        List<DiscountType> discountTypes = generateDiscountTypeList();
         List<Record> records = generateRecordsList();
         List<PartDTO> expected = generatePartDTOList();
 
         when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
-        when(makerRepository.findAll()).thenReturn(makers);
-        when(discountTypeRepository.findAll()).thenReturn(discountTypes);
-        when(recordRepository.findAll()).thenReturn(records);
-        when(modelMapper.map(any(), any())).thenReturn(expected.get(0), expected.get(1));
-
         HashMap<String, String> params = new HashMap<>();
         List<PartDTO> actual = stockWarehouseService.getParts(params);
         assertEquals(expected, actual);
