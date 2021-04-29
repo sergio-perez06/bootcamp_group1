@@ -23,14 +23,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/api/v1/parts")
 @Validated
-public class PartController extends GlobalExceptionHandler {
+public class PartController {
 
     private final IStockWarehouseService stockService;
 
