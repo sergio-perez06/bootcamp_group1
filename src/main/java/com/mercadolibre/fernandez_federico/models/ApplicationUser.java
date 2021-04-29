@@ -21,13 +21,13 @@ public class ApplicationUser
     @Column(nullable = false, length = 12, unique = true)
     @NotNull(message = "username no puede ser nulo")
     @Size(min = 5, max = 12, message = "username debe tener entre cinco y doce caracteres")
-    @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
+    //@Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String username;
 
     @Column(nullable = false, length = 100)
     @NotNull(message = "username no puede ser nulo")
     @Size(min = 5, max = 100, message = "username debe tener entre cinco y doce caracteres")
-    @Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
+    //@Pattern(regexp = "^[a-zA-Z\\d]{5,12}", message = "username debe tener entre cinco y doce caracteres alfanumericos")
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)

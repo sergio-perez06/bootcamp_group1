@@ -7,11 +7,11 @@ import java.util.Map;
 import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.*;
-import com.mercadolibre.fernandez_federico.models.Bill;
 import com.mercadolibre.fernandez_federico.services.IStockWarehouseService;
 
 import com.mercadolibre.fernandez_federico.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mercadolibre.fernandez_federico.models.CountryDealer;
 
-
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/api/v1/parts")
-public class PartController {
+@Validated
+public class PartController extends GlobalExceptionHandler {
 
     private final IStockWarehouseService stockService;
 
@@ -42,43 +45,40 @@ public class PartController {
 
     }
 
-    // REQUERIMIENTO 2
+    // Requirement 2
     @GetMapping("/orders")
     public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(
             @RequestParam String subsidiaryNumber,
             @RequestParam(required = false) String deliveryStatus,
             @RequestParam(required = false) String order,
             @RequestHeader("Authorization") String token) {
-
         Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
 
-        if (subsidiaryNumber.length() != 4) {
-            // exception
-        } else {
-            return stockService.getSubsidiaryOrdersByDeliveryStatus(subsidiaryNumber, claims.get("country").toString(), deliveryStatus,order);
-        }
+        return stockService.getSubsidiaryOrdersByDeliveryStatus(dealerNumber, claims.get("country").toString(), deliveryStatus,order);
+    }
 
-        return null;
+    // Requirement 4
+    @PostMapping()
+    public CountryDealerStockResponseDTO addPartCountryDealerStock(
+            @RequestBody CountryDealerStockDTO countryDealerStock,
+            @RequestHeader("Authorization") String token) {
+        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
+
+        return stockService.addStockToCountryDealer(countryDealerStock, claims.get("country").toString());
+    }
+
+    // Requirement 5
+    @PostMapping("/orders")
+    public BillDTO addBillCountryDealer(
+            @RequestBody BillRequestDTO billRequestDTO,
+            @RequestHeader("Authorization") String token){
+        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
+
+        return stockService.addBillToCountryDealer(billRequestDTO,claims.get("country").toString());
     }
 
     @GetMapping("/allCountryDealers")
     public List<CountryDealer> countryDealers(){
         return stockService.getAllCountryDealers();
-    }
-
-    @PostMapping()
-    public CountryDealerStockResponseDTO addPartCountryDealerStock(@RequestBody CountryDealerStockDTO countryDealerStock,
-                                                                   @RequestHeader("Authorization") String token){
-        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
-
-        return stockService.addStockToCountryDealer(countryDealerStock,claims.get("country").toString());
-    }
-
-    @PostMapping("/orders")
-    public BillDTO addBillCountryDealer(@RequestBody BillRequestDTO billRequestDTO,
-                                     @RequestHeader("Authorization") String token){
-        Map<String,Object> claims = tokenUtils.getAllClaimsFromToken(token);
-
-        return stockService.addBillToCountryDealer(billRequestDTO,claims.get("country").toString());
     }
 }

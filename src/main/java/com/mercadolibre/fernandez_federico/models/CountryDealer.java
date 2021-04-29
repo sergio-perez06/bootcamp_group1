@@ -38,11 +38,11 @@ public class CountryDealer
     @Pattern(regexp = "^[a-zA-Z]+$",message = "country debe tener letras.")
     private String country;
 
-    @OneToMany(mappedBy ="countryDealer")
+    @OneToMany(mappedBy = "countryDealer", cascade = CascadeType.ALL)
     private List<StockDealer> stockDealers;
 
     @JsonManagedReference
-    @OneToMany(mappedBy ="countryDealer")
+    @OneToMany(mappedBy = "countryDealer")
     private List<Subsidiary> subsidiaries;
 
     @OneToMany(mappedBy = "countryDealer")

@@ -155,6 +155,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                                     }
 
     }
+
     // Requirement 3
     public void getOrderStatus(String orderNumberCM){
         String[] splitted = orderNumberCM.split("-");
@@ -230,7 +231,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         List<StockDealer> stockDealerList = countryDealer.getStockDealers();
 
         if (stockDealerList.isEmpty()) {
-            throw new ApiException("Not Found", "La lista no existe", 404);
+            throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe", HttpStatus.NOT_FOUND.value());
         }
         else
         {
@@ -265,7 +266,7 @@ public class StockWarehouseService implements IStockWarehouseService {
                 }
                 else
                 {
-                    throw new ApiException("Not Found","La parte no existe",404 );
+                    throw new ApiException(HttpStatus.NOT_FOUND.name(), "La parte no existe", HttpStatus.NOT_FOUND.value());
                 }
             }
         }
@@ -275,9 +276,8 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     @Override
     public BillDTO addBillToCountryDealer(BillRequestDTO billRequestDTO, String countryName) {
-        BillDTO billDTO = new BillDTO();
 
-        if (validateBillRequest(billRequestDTO)){
+        if (validateBillRequest(billRequestDTO)) {
             CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
 
             Optional<Subsidiary> subsidiary = countryDealer.getSubsidiaries().stream()
@@ -294,31 +294,36 @@ public class StockWarehouseService implements IStockWarehouseService {
                     .map(partCode-> partRepository.findByPartCode(partCode))
                     .collect(Collectors.toList());
 
+            if (partList.contains(null)) {
+                throw new ApiException(HttpStatus.NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", HttpStatus.NOT_FOUND.value());
+            }
 
             if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
                 Subsidiary result = subsidiary.get();
 
                 Bill bill = new Bill();
+
                 bill.setDeliveryDate(billRequestDTO.getDeliveryDate());
-
-                List<BillDetail> billDetails = billRequestDTO.getBillDetails()
-                        .stream()
-                        .map(x -> getMappingBillDetail(x,partList))
-                        .collect(Collectors.toList());
-
-                bill.setBillDetails(billDetails);
                 bill.setOrderDate(LocalDate.now());
                 bill.setDeliveryStatus(OrderStatus.Procesando);
                 bill.setOrderNumber(getLastOrderNumber(result));
                 bill.setCmOrdernumberWarehouse(countryDealer.getDealerNumber() + "-"
                     + result.getSubsidiaryNumber() + "-"
                     + bill.getOrderNumber());
+
                 bill.setSubsidiary(result);
+
+                List<BillDetail> billDetails = billRequestDTO.getBillDetails()
+                        .stream()
+                        .map(billDetailDTO -> getMappingBillDetail(bill, billDetailDTO, partList))
+                        .collect(Collectors.toList());
+
+                bill.setBillDetails(billDetails);
 
                 result.getBills().add(bill);
                 subsidiaryRepository.save(result);
 
-                billDTO = modelMapper.map(bill, BillDTO.class);
+                BillDTO billDTO = modelMapper.map(bill, BillDTO.class);
 
                 List<BillDetailDTO> billDetailDTOList = bill.getBillDetails()
                         .stream()
@@ -328,24 +333,30 @@ public class StockWarehouseService implements IStockWarehouseService {
                 billDTO.setOrderDetails(billDetailDTOList);
                 return billDTO;
             }
-            else{
-                throw new ApiException("Not Found","La subsidiaria no fue encontrada",404 );
+            else
+            {
+                throw new ApiException(HttpStatus.NOT_FOUND.name(), "La subsidiaria no fue encontrada", HttpStatus.NOT_FOUND.value());
             }
         }
-        else{
-            throw new ApiException("Bad Request","La fecha es incorrecta",400 );
+        else
+        {
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "La fecha es incorrecta", HttpStatus.BAD_REQUEST.value());
         }
     }
 
-    private BillDetail getMappingBillDetail(PostBillDetailDTO x , List<Part> partList) {
-        BillDetail billDetail = modelMapper.map(x,BillDetail.class);
+    private BillDetail getMappingBillDetail(Bill bill, PostBillDetailDTO postBillDetailDTO, List<Part> partList) {
+        BillDetail billDetail = modelMapper.map(postBillDetailDTO,BillDetail.class);
+
         billDetail.setPart(partList.stream()
-                .filter(part -> part.getPartCode().equals(x.getPartCode()))
-                .findFirst().get());
+                .filter(part -> part.getPartCode().equals(postBillDetailDTO.getPartCode()))
+                .findFirst()
+                .get());
 
         billDetail.setDescription(billDetail.getPart().getDescription());
         billDetail.setReason("");
         billDetail.setPartStatus(PartStatus.Normal);
+        billDetail.setBill(bill);
+
         return billDetail;
     }
 

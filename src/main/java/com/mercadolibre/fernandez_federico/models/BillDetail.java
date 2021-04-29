@@ -33,7 +33,7 @@ public class BillDetail {
     private PartStatus partStatus;
 
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "idBill", referencedColumnName = "id", nullable = false)
     private Bill bill;
 

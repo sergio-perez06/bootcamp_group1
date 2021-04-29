@@ -32,4 +32,9 @@ public class Maker {
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "maker")
     private List<Part> parts;
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

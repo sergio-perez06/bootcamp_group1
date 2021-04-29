@@ -37,7 +37,6 @@ public class Bill {
     @Size(message = "CMOrderNumber debe tener 16 caracteres.")
     private String cmOrdernumberWarehouse;
 
-
     @Column(nullable = false)
     @NotNull(message = "Fecha de creación no puede ser Nula")
     @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
@@ -58,7 +57,7 @@ public class Bill {
     private OrderStatus deliveryStatus;
 
     @JsonManagedReference
-    @OneToMany(mappedBy="bill")
+    @OneToMany(mappedBy="bill", cascade = CascadeType.ALL)
     private List<BillDetail> billDetails;
 
     @JsonBackReference
