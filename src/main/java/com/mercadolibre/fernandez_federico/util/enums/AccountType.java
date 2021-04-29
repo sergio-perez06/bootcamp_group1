@@ -8,8 +8,7 @@ import java.util.Map;
 public enum AccountType {
 
     Garantia('G'),
-    Repuesto('R'),
-    ;
+    Repuesto('R');
 
     private Character value;
     private static Map mapita = new HashMap<>();
@@ -18,7 +17,6 @@ public enum AccountType {
     AccountType (Character c){
         this.value = c;
     }
-
 
     static {
         for (AccountType a : AccountType.values()) {
