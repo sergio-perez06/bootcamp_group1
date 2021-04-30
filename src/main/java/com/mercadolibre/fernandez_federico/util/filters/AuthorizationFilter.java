@@ -43,6 +43,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest request) {
         String token = request.getHeader(HEADER_NAME);
+
         if (token != null) {
             Claims user = Jwts.parser()
                     .setSigningKey(Keys.hmacShaKeyFor(KEY.getBytes()))
@@ -51,11 +52,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
             if (user != null) {
                 return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
-            }else{
+            } else {
                 return  null;
             }
-
         }
+
         return null;
     }
 }

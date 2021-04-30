@@ -38,13 +38,11 @@ public class UserController {
         this.modelMapper = modelMapper;
         this.countryDealerService = countryDealerService;
         this.roleService = roleService;
-
     }
 
     @PostMapping("/signUp")
     public void signUp(@RequestBody ApplicationUserDTO applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
-        //this.userService.saveUser(applicationUser);
 
         ApplicationUser toSave = modelMapper.map(applicationUser,ApplicationUser.class);
 

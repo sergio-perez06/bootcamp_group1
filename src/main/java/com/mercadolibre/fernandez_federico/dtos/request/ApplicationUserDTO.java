@@ -13,10 +13,13 @@ public class ApplicationUserDTO {
 
     @NonNull
     private String username;
+
     @NonNull
     private String password;
+
     @JsonProperty("country")
     private String country;
+
     @JsonProperty("role")
     private String role;
 
