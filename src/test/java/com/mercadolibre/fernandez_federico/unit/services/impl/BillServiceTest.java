@@ -2,8 +2,10 @@ package com.mercadolibre.fernandez_federico.unit.services.impl;
 
 import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.BillDetailDTO;
+import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.Bill;
 import com.mercadolibre.fernandez_federico.models.BillDetail;
+import com.mercadolibre.fernandez_federico.models.CountryDealer;
 import com.mercadolibre.fernandez_federico.repositories.IBillDetailRepository;
 import com.mercadolibre.fernandez_federico.repositories.IBillRepository;
 import com.mercadolibre.fernandez_federico.services.IBillService;
@@ -19,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -52,12 +55,23 @@ public class BillServiceTest {
         Bill bills = generateBill();
         BillDTO expected = generateBillDTO();
         List<Bill> newBill = new ArrayList<>(List.of(new Bill()));
+
         when(billRepository.findAll()).thenReturn(newBill);
         when(billRepository.findByCmOrdernumberWarehouse("0001-0001-00000001")).thenReturn(bills);
         when(billDetailRepository.findAll()).thenReturn(billDetails);
         when(modelMapper.map(any(), any())).thenReturn(expected.getOrderDetails().get(0));
+
         BillDTO response = billService.getBillDetails("0001-0001-00000001");
+
         assertEquals(expected,response);
+    }
+
+    @Test
+    public void getBillExpectedInvalid() throws Exception {
+        when(billRepository.findAll()).thenReturn(new ArrayList<>());
+        assertThatThrownBy(() -> {
+            BillDTO response = billService.getBillDetails("0001-0001-00000001");
+        }).isInstanceOf(ApiException.class).hasMessageContaining("No existen ordenes en el sistema");
     }
 
     private Bill generateBill(){
