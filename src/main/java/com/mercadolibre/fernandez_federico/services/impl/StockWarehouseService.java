@@ -220,11 +220,6 @@ public class StockWarehouseService implements IStockWarehouseService {
     @Override
     public BillDTO addBillToCountryDealer(BillRequestDTO billRequestDTO, String countryName) {
         if (LocalDate.now().isBefore(billRequestDTO.getDeliveryDate())) {
-            CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
-
-            Optional<Subsidiary> subsidiary = countryDealer.getSubsidiaries().stream()
-                    .filter(Subsidiary -> Subsidiary.getSubsidiaryNumber().equals(billRequestDTO.getSubsidiaryNumber()))
-                    .findFirst();
 
             Set<String> setPartCode = billRequestDTO
                     .getBillDetails()
@@ -239,6 +234,12 @@ public class StockWarehouseService implements IStockWarehouseService {
             if (partList.contains(null)) {
                 throw new ApiException(NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", NOT_FOUND.value());
             }
+
+            CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
+
+            Optional<Subsidiary> subsidiary = countryDealer.getSubsidiaries().stream()
+                    .filter(Subsidiary -> Subsidiary.getSubsidiaryNumber().equals(billRequestDTO.getSubsidiaryNumber()))
+                    .findFirst();
 
             if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
                 Subsidiary result = subsidiary.get();
