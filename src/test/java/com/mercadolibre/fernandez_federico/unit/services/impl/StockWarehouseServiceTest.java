@@ -1,7 +1,10 @@
 package com.mercadolibre.fernandez_federico.unit.services.impl;
 
-import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.PostBillDetailDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDetailDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.SubsidiaryOrdersByDeliveryStatusDTO;
@@ -521,7 +524,7 @@ public class StockWarehouseServiceTest {
         when(countryDealerRepository.save(cd)).then(returnsFirstArg());
         when(modelMapper.map(any(), any())).thenReturn(partDTO);
 
-        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "0001");
+        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "Uruguay");
 
         assertThat(response.getPart().getPartCode()).isEqualTo("00000001");
         assertThat(response.getPart().getQuantity()).isEqualTo(15);
@@ -549,7 +552,7 @@ public class StockWarehouseServiceTest {
         when(countryDealerRepository.save(cd)).then(returnsFirstArg());
         when(modelMapper.map(any(), any())).thenReturn(partDTO);
 
-        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "0001");
+        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "Uruguay");
 
         assertThat(response.getPart().getPartCode()).isEqualTo("00000001");
         assertThat(response.getPart().getQuantity()).isEqualTo(10);
@@ -570,8 +573,160 @@ public class StockWarehouseServiceTest {
         when(partRepository.findByPartCode(anyString())).thenReturn(null);
 
         assertThatThrownBy(() -> {
-            CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "00000005");
+            CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "Uruguay");
         }).isInstanceOf(ApiException.class).hasMessageContaining("No existe un repuesto con el partCode '00000005'");
+    }
+
+    @Test
+    @DisplayName("Test invalido BillRequestDTO con deliveryDate anterior a la fecha actual")
+    public void addBillToCountryDealerInvalidDate() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.parse("2019-01-01"));
+
+        assertThatThrownBy(() -> {
+            BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+        }).isInstanceOf(ApiException.class).hasMessageContaining("La fecha es incorrecta, el deliveryDate no puede ser anterior a la fecha actual");
+    }
+
+    @Test
+    @DisplayName("Test invalido partList inexistente")
+    public void addBillToCountryDealerInvalidPartCodeSent() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.now().plusDays(1));
+
+        PostBillDetailDTO postA = new PostBillDetailDTO();
+        postA.setPartCode("00000001");
+        PostBillDetailDTO postB = new PostBillDetailDTO();
+        postB.setPartCode("00000002");
+
+        billRequestDTO.setBillDetails(new ArrayList<>(List.of(postA, postB)));
+
+        Part part = new Part();
+        part.setPartCode("00000002");
+
+        when(partRepository.findByPartCode(anyString()))
+                .thenReturn(null)
+                .thenReturn(part);
+
+        assertThatThrownBy(() -> {
+            BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+        }).isInstanceOf(ApiException.class).hasMessageContaining("Uno de los 'partCode' enviados no existe en el sistema");
+    }
+
+    @Test
+    @DisplayName("Test invalido subsidiaria inexistente")
+    public void addBillToCountryDealerInvalidSubsidiaryNotFound() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.now().plusDays(1));
+        billRequestDTO.setSubsidiaryNumber("0002");
+
+        PostBillDetailDTO postA = new PostBillDetailDTO();
+        postA.setPartCode("00000001");
+        billRequestDTO.setBillDetails(new ArrayList<>(List.of(postA)));
+
+        CountryDealer cd = new CountryDealer();
+        cd.setSubsidiaries(new ArrayList<>());
+
+        Part part = new Part();
+        part.setPartCode("00000001");
+
+        when(partRepository.findByPartCode(anyString())).thenReturn(part);
+        when(countryDealerRepository.findByCountry(anyString())).thenReturn(cd);
+
+        assertThatThrownBy(() -> {
+            BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+        }).isInstanceOf(ApiException.class).hasMessageContaining("La subsidiaria no fue encontrada");
+    }
+
+    @Test
+    @DisplayName("Test valido, se agrega Bill a CountryDealer. Subsidiaria con bills existentes")
+    public void addBillToCountryDealerCorrectWithBills() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.now().plusDays(1));
+        billRequestDTO.setSubsidiaryNumber("0001");
+
+        PostBillDetailDTO postA = new PostBillDetailDTO();
+        postA.setPartCode("00000001");
+        billRequestDTO.setBillDetails(new ArrayList<>(List.of(postA)));
+
+        Part part = new Part();
+        part.setPartCode("00000001");
+        part.setDescription("Descripcion");
+
+        Bill bill = new Bill();
+        BillDetail billDetail = new BillDetail();
+        billDetail.setPart(part);
+        bill.setBillDetails(new ArrayList<>(List.of(billDetail)));
+        bill.setOrderNumber("00000001");
+
+        Subsidiary sub = new Subsidiary();
+        sub.setSubsidiaryNumber("0001");
+        sub.setBills(new ArrayList<>(List.of(bill)));
+        CountryDealer cd = new CountryDealer();
+        cd.setSubsidiaries(new ArrayList<>(List.of(sub)));
+
+        BillDTO billDTO = new BillDTO();
+        BillDetailDTO billDetailDTO = new BillDetailDTO();
+        billDetailDTO.setPartCode("00000001");
+        billDTO.setOrderDetails(new ArrayList<>(List.of(billDetailDTO)));
+        billDTO.setOrderNumber("00000002");
+
+        when(partRepository.findByPartCode(anyString())).thenReturn(part);
+        when(countryDealerRepository.findByCountry(anyString())).thenReturn(cd);
+        when(modelMapper.map(any(), any()))
+                .thenReturn(billDetail)
+                .thenReturn(billDTO)
+                .thenReturn(billDetailDTO);
+        when(countryDealerRepository.save(cd)).thenReturn(any());
+
+        BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+
+        assertThat(response.getOrderDetails().size()).isEqualTo(1);
+        assertThat(response.getOrderNumber()).isEqualTo("00000002");
+    }
+
+    @Test
+    @DisplayName("Test valido, se agrega Bill a CountryDealer. Subsidiaria sin bills existentes")
+    public void addBillToCountryDealerCorrectSubsidiaryWithoutBills() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.now().plusDays(1));
+        billRequestDTO.setSubsidiaryNumber("0001");
+
+        PostBillDetailDTO postA = new PostBillDetailDTO();
+        postA.setPartCode("00000001");
+        billRequestDTO.setBillDetails(new ArrayList<>(List.of(postA)));
+
+        Part part = new Part();
+        part.setPartCode("00000001");
+        part.setDescription("Descripcion");
+
+        BillDetail billDetail = new BillDetail();
+        billDetail.setPart(part);
+
+        Subsidiary sub = new Subsidiary();
+        sub.setSubsidiaryNumber("0001");
+        sub.setBills(new ArrayList<>());
+        CountryDealer cd = new CountryDealer();
+        cd.setSubsidiaries(new ArrayList<>(List.of(sub)));
+
+        BillDTO billDTO = new BillDTO();
+        BillDetailDTO billDetailDTO = new BillDetailDTO();
+        billDetailDTO.setPartCode("00000001");
+        billDTO.setOrderDetails(new ArrayList<>(List.of(billDetailDTO)));
+        billDTO.setOrderNumber("00000001");
+
+        when(partRepository.findByPartCode(anyString())).thenReturn(part);
+        when(countryDealerRepository.findByCountry(anyString())).thenReturn(cd);
+        when(modelMapper.map(any(), any()))
+                .thenReturn(billDetail)
+                .thenReturn(billDTO)
+                .thenReturn(billDetailDTO);
+        when(countryDealerRepository.save(cd)).thenReturn(any());
+
+        BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+
+        assertThat(response.getOrderDetails().size()).isEqualTo(1);
+        assertThat(response.getOrderNumber()).isEqualTo("00000001");
     }
 
 }

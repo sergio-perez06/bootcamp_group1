@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -58,7 +59,7 @@ public class StockWarehouseService implements IStockWarehouseService {
             || !queryType.isBlank() && !r
             || order > 3 || order < 0
             || date != null && date.isAfter(LocalDate.now())) {
-                throw new ApiException(HttpStatus.BAD_REQUEST.name(), "No se puede continuar con los parámetros dados.", HttpStatus.BAD_REQUEST.value());
+            throw new ApiException(BAD_REQUEST.name(), "No se puede continuar con los parámetros dados.", BAD_REQUEST.value());
         }
 
         List<PartDTO> partsDTO = new ArrayList<>();
@@ -217,15 +218,10 @@ public class StockWarehouseService implements IStockWarehouseService {
         return countryDealerStockResponse;
     }
 
+    // Requirement 5
     @Override
     public BillDTO addBillToCountryDealer(BillRequestDTO billRequestDTO, String countryName) {
-
-        if (validateBillRequest(billRequestDTO)) {
-            CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
-
-            Optional<Subsidiary> subsidiary = countryDealer.getSubsidiaries().stream()
-                    .filter(Subsidiary -> Subsidiary.getSubsidiaryNumber().equals(billRequestDTO.getSubsidiaryNumber()))
-                    .findFirst();
+        if (LocalDate.now().isBefore(billRequestDTO.getDeliveryDate())) {
 
             Set<String> setPartCode = billRequestDTO
                     .getBillDetails()
@@ -240,6 +236,12 @@ public class StockWarehouseService implements IStockWarehouseService {
             if (partList.contains(null)) {
                 throw new ApiException(NOT_FOUND.name(), "Uno de los 'partCode' enviados no existe en el sistema", NOT_FOUND.value());
             }
+
+            CountryDealer countryDealer = countryDealerRepository.findByCountry(countryName);
+
+            Optional<Subsidiary> subsidiary = countryDealer.getSubsidiaries().stream()
+                    .filter(Subsidiary -> Subsidiary.getSubsidiaryNumber().equals(billRequestDTO.getSubsidiaryNumber()))
+                    .findFirst();
 
             if (subsidiary.isPresent() && (partList.size() == setPartCode.size())){
                 Subsidiary result = subsidiary.get();
@@ -283,7 +285,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
         else
         {
-            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "La fecha es incorrecta", HttpStatus.BAD_REQUEST.value());
+            throw new ApiException(BAD_REQUEST.name(), "La fecha es incorrecta, el deliveryDate no puede ser anterior a la fecha actual", BAD_REQUEST.value());
         }
     }
 
@@ -314,14 +316,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         }
     }
 
-    private boolean validateBillRequest(BillRequestDTO billRequestDTO) {
-        LocalDate today = LocalDate.now();
-        Boolean status = true;
-        if (today.isAfter(billRequestDTO.getDeliveryDate())){
-            status = false;
-        }
-        return status;
-    }
+
 
     private PartDTO construct(StockWarehouse stockWarehouse) {
         PartDTO partDTO = modelMapper.map(stockWarehouse, PartDTO.class);
