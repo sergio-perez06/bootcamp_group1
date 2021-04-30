@@ -40,6 +40,7 @@ public class UserController {
         this.roleService = roleService;
     }
 
+    // FALTA INTEGRATION TEST
     @PostMapping("/signUp")
     public void signUp(@RequestBody ApplicationUserDTO applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));

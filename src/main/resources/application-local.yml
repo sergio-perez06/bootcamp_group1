@@ -8,7 +8,6 @@ spring:
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASS}
     initialization-mode: always
-
   jpa:
     show-sql: true
     hibernate:

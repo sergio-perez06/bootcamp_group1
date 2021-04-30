@@ -2,14 +2,14 @@
 # Overrides application.yml default properties
 spring:
   datasource:
-    host: DB_MYSQL_DESAENV04_WHSERGIO_WHSERGIO_ENDPOINT
-    db: whsergio
-    username: whsergio_WPROD
-    password: DB_MYSQL_DESAENV04_WHSERGIO_WHSERGIO_WPROD
+    host: proxysql.master.meliseginf.com:6612
+    db: whousefede
+    username: ${FURY_DB_USER}
+    password: ${FURY_DB_PASS}
     initialization-mode: always
   jpa:
     show-sql: true
     hibernate:
       sql: debug
-      ddl-auto: none
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.MySQL8Dialect
