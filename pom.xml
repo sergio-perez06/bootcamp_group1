@@ -334,6 +334,11 @@
             <version>0.11.2</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fury</groupId>
+            <artifactId>furyutils</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <!-- DE ACA  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
