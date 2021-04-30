@@ -40,11 +40,7 @@ public class StockWarehouseServiceTest {
     @Mock private ICountryDealerRepository countryDealerRepository;
     @Mock private ISubsidiaryRepository subsidiaryRepository;
     @Mock private IStockWarehouseRepository stockWarehouseRepository;
-    @Mock private IDiscountTypeRepository discountTypeRepository;
-    @Mock private IMakerRepository makerRepository;
-    @Mock private IRecordRepository recordRepository;
     @Mock private ModelMapper modelMapper;
-    @Mock private IUserRepository userRepository;
     @Mock private IPartRepository partRepository;
 
     private IStockWarehouseService stockWarehouseService;

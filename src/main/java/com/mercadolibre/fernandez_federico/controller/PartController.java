@@ -78,9 +78,5 @@ public class PartController {
 
         return stockService.addBillToCountryDealer(billRequestDTO,claims.get("country").toString());
     }
-
-    @GetMapping("/allCountryDealers")
-    public List<CountryDealer> countryDealers(){
-        return stockService.getAllCountryDealers();
-    }
+    
 }
