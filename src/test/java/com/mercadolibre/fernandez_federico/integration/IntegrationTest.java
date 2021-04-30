@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {"SCOPE_SUFFIX=integration_test" })
+@TestPropertySource(properties = { "SCOPE_SUFFIX=integration_test" })
 public abstract class IntegrationTest {
 
 	@AfterEach

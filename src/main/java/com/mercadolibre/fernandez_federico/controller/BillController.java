@@ -20,6 +20,7 @@ public class BillController {
         this.billService=billService;
     }
 
+    // Requerimento 3 - FALTA INTEGRATION TEST
     @GetMapping("/orders/list")
     public BillDTO getOrderDetails(@RequestParam String orderNumberCM){
         return billService.getBillDetails(orderNumberCM);
