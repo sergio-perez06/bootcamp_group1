@@ -55,13 +55,8 @@ public class StockWarehouseServiceTest {
                  countryDealerRepository,
                  subsidiaryRepository,
                  stockWarehouseRepository,
-                 discountTypeRepository,
-                 makerRepository,
-                 recordRepository,
                  modelMapper,
-                 userRepository,
                  partRepository);
-
     }
 
     @Test

@@ -33,13 +33,10 @@ public class StockWarehouseService implements IStockWarehouseService {
     private final ICountryDealerRepository countryDealerRepository;
     private final ISubsidiaryRepository subsidiaryRepository;
     private final IStockWarehouseRepository stockWarehouseRepository;
-    private final IDiscountTypeRepository discountTypeRepository;
-    private final IMakerRepository makerRepository;
-    private final IRecordRepository recordRepository;
     private final ModelMapper modelMapper;
-    private final IUserRepository userRepository;
     private final IPartRepository partRepository;
 
+    // Requirement 1
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
         List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
@@ -98,29 +95,7 @@ public class StockWarehouseService implements IStockWarehouseService {
         return partsDTO;
     }
 
-    // Requirement 3
-    public void getOrderStatus(String orderNumberCM){
-        String[] splitted = orderNumberCM.split("-");
-
-        Integer subsidiaryNumber = Integer.parseInt(splitted[0]);
-        Integer CountryDealerNumber = Integer.parseInt(splitted[1]);
-        Integer orderNumber = Integer.parseInt(splitted[2]);
-
-        CountryDealer countryDelaer = countryDealerRepository.findByDealerNumber(CountryDealerNumber);
-        System.out.println(countryDelaer+"\n");
-
-        Subsidiary subsidiary  = subsidiaryRepository.findBySubsidiaryNumber(subsidiaryNumber);
-
-        System.out.println(subsidiary+"\n");
-    }
-
-    // Utilitary
-    public List<CountryDealer> getAllCountryDealers (){
-        System.out.println(countryDealerRepository.count());
-        return countryDealerRepository.findAll();
-    }
-
-    //Requerimiento 2
+    // Requirement 2
     @Override
     public SubsidiaryOrdersByDeliveryStatusDTO getSubsidiaryOrdersByDeliveryStatus(String subsidiaryNumber, String countryName, String deliveryStatus, String order) {
         SubsidiaryOrdersByDeliveryStatusDTO response = new SubsidiaryOrdersByDeliveryStatusDTO();
@@ -315,8 +290,6 @@ public class StockWarehouseService implements IStockWarehouseService {
             return "00000001";
         }
     }
-
-
 
     private PartDTO construct(StockWarehouse stockWarehouse) {
         PartDTO partDTO = modelMapper.map(stockWarehouse, PartDTO.class);

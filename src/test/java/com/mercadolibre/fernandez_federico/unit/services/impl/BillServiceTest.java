@@ -46,7 +46,7 @@ public class BillServiceTest {
     }
 
     @Test
-    public void getBillExpectedOk() throws Exception{
+    public void getBillExpectedOk() throws Exception {
         List<BillDetail> billDetails = generateBillDetailList();
         Bill bills = generateBill();
         BillDTO expected = generateBillDTO();
