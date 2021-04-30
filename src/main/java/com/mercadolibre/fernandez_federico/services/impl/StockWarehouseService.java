@@ -82,7 +82,7 @@ public class StockWarehouseService implements IStockWarehouseService {
             partsDTO.add(construct(stockWarehouses.get(i)));
         }
 
-        if (stockWarehouses.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
+        if (partsDTO.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
         switch (order) {
             case 1:
                 partsDTO.sort(Comparator.comparing(PartDTO::getDescription));
