@@ -15,8 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.mercadolibre.fernandez_federico.util.SecurityConstants.PING_URL;
-import static com.mercadolibre.fernandez_federico.util.SecurityConstants.SIGN_UP_URL;
+import static com.mercadolibre.fernandez_federico.util.SecurityConstants.*;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -34,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, PING_URL).permitAll()
+                .antMatchers(HttpMethod.GET, SWAGGER_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager(),userService))

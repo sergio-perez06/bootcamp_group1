@@ -9,11 +9,12 @@ import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
+import org.springframework.test.context.TestPropertySource;
+
 import java.util.ArrayList;
-import java.util.List;;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PartControllerTest extends ControllerTest {
 
 
@@ -42,7 +43,7 @@ public class PartControllerTest extends ControllerTest {
             if(HttpStatus.OK.equals(loginResponse.getStatusCode())){
                 String token = loginResponse.getHeaders().getFirst("token");
 
-                if(!token.isEmpty()){
+                if(token!=null && !token.isEmpty()){
                     HttpHeaders headers = new HttpHeaders();
                     headers.add("Authorization",token);
 
@@ -51,13 +52,14 @@ public class PartControllerTest extends ControllerTest {
                             ("/api/v1/parts/list", HttpMethod.GET, entity, String.class);
 
                     assertEquals(HttpStatus.OK, response.getStatusCode());
+
                     //assertEquals( createListBill() ,response.getBody());
                 }
             }
         }
     }
 
-    private List<Bill> createListBill() throws JsonProcessingException {
+    private String createListBill() throws JsonProcessingException {
         List<Bill> resp = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         String bill = "[\n" +
@@ -132,7 +134,8 @@ public class PartControllerTest extends ControllerTest {
                 "        “last_modification”: “2020-05-25”\n" +
                 "    }\n" +
                 "]";
-        return objectMapper.readValue(bill, new TypeReference<List<Bill>>(){});
+        //return objectMapper.readValue(bill, new TypeReference<List<Bill>>(){});
+        return bill;
     }
 
 
