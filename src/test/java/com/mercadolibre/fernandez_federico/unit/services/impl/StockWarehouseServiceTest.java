@@ -1,6 +1,9 @@
 package com.mercadolibre.fernandez_federico.unit.services.impl;
 
+import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
 import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.PostBillDetailDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.CountryDealerStockResponseDTO;
 import com.mercadolibre.fernandez_federico.dtos.responses.PartDTO;
 import com.mercadolibre.fernandez_federico.exceptions.ApiException;
@@ -224,7 +227,7 @@ public class StockWarehouseServiceTest {
         when(countryDealerRepository.save(cd)).then(returnsFirstArg());
         when(modelMapper.map(any(), any())).thenReturn(partDTO);
 
-        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "0001");
+        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "Uruguay");
 
         assertThat(response.getPart().getPartCode()).isEqualTo("00000001");
         assertThat(response.getPart().getQuantity()).isEqualTo(15);
@@ -252,7 +255,7 @@ public class StockWarehouseServiceTest {
         when(countryDealerRepository.save(cd)).then(returnsFirstArg());
         when(modelMapper.map(any(), any())).thenReturn(partDTO);
 
-        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "0001");
+        CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "Uruguay");
 
         assertThat(response.getPart().getPartCode()).isEqualTo("00000001");
         assertThat(response.getPart().getQuantity()).isEqualTo(10);
@@ -273,8 +276,41 @@ public class StockWarehouseServiceTest {
         when(partRepository.findByPartCode(anyString())).thenReturn(null);
 
         assertThatThrownBy(() -> {
-            CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "00000005");
+            CountryDealerStockResponseDTO response = stockWarehouseService.addStockToCountryDealer(cdDto, "Uruguay");
         }).isInstanceOf(ApiException.class).hasMessageContaining("No existe un repuesto con el partCode '00000005'");
+    }
+
+    @Test
+    @DisplayName("Test invalido BillRequestDTO con deliveryDate anterior a la fecha actual")
+    public void addBillToCountryDealerInvalidDate() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.parse("2019-01-01"));
+
+        assertThatThrownBy(() -> {
+            BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+        }).isInstanceOf(ApiException.class).hasMessageContaining("La fecha es incorrecta, el deliveryDate no puede ser anterior a la fecha actual");
+    }
+
+    @Test
+    @DisplayName("Test invalido partList inexistente")
+    public void addBillToCountryDealerInvalidPartCodeSent() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        PostBillDetailDTO post = new PostBillDetailDTO();
+        post.setPartCode("00000001");
+        billRequestDTO.getBillDetails().add(post);
+
+        CountryDealer cd = new CountryDealer();
+        Subsidiary sub = new Subsidiary();
+        sub.setSubsidiaryNumber("0001");
+
+        cd.getSubsidiaries().add(sub);
+
+        when(countryDealerRepository.findByCountry(anyString())).thenReturn(cd);
+
+
+        assertThatThrownBy(() -> {
+            BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+        }).isInstanceOf(ApiException.class).hasMessageContaining("La fecha es incorrecta, el deliveryDate no puede ser anterior a la fecha actual");
     }
 
 }
