@@ -19,14 +19,12 @@ import java.util.List;
 public class BillService implements IBillService {
     private IBillRepository billRepository;
     private IBillDetailRepository billDetailRepository;
-    private IStockWarehouseRepository stockWarehouseRepository;
     private ModelMapper modelMapper;
 
-    public BillService(IBillRepository billRepository, IBillDetailRepository billDetailRepository, IStockWarehouseRepository stockWarehouseRepository, ModelMapper modelMapper)
+    public BillService(IBillRepository billRepository, IBillDetailRepository billDetailRepository, ModelMapper modelMapper)
     {
         this.billRepository = billRepository;
         this.billDetailRepository = billDetailRepository;
-        this.stockWarehouseRepository = stockWarehouseRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -53,6 +51,7 @@ public class BillService implements IBillService {
                     finalBill.setOrderDetails(billDetailDTOS);
                 }
             }
+
 
         return finalBill;
     }
