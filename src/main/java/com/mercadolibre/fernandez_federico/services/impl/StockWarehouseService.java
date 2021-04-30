@@ -41,7 +41,8 @@ public class StockWarehouseService implements IStockWarehouseService {
 
     @Override
     public List<PartDTO> getParts(HashMap<String, String> filters) throws Exception {
-        if (stockWarehouseRepository.findAll().isEmpty())
+        List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
+        if (stockWarehouses.isEmpty())
             throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
 
         String queryType = filters.getOrDefault("queryType", "");
@@ -49,38 +50,39 @@ public class StockWarehouseService implements IStockWarehouseService {
         Integer order = Integer.parseInt(filters.getOrDefault("order",  "0"));
 
         boolean p = queryType.equalsIgnoreCase("P") && date == null,
-                q = queryType.equalsIgnoreCase("V") && date == null;
-
+                q = queryType.equalsIgnoreCase("V") && date == null,
+                r = queryType.equalsIgnoreCase("C")
+                        || queryType.equalsIgnoreCase("P") || queryType.equalsIgnoreCase("V");
         if (p && !q
             || q && !p
+            || !queryType.isBlank() && !r
             || order > 3 || order < 0
             || date != null && date.isAfter(LocalDate.now())) {
-            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "No se puede continuar con los parámetros dados.", HttpStatus.BAD_REQUEST.value());
+                throw new ApiException(HttpStatus.BAD_REQUEST.name(), "No se puede continuar con los parámetros dados.", HttpStatus.BAD_REQUEST.value());
         }
 
-        //Se cargan los repositorios por separado trayendo lista entera
         List<PartDTO> partsDTO = new ArrayList<>();
-        List<StockWarehouse> stockWarehouses = stockWarehouseRepository.findAll();
-        for(int i=stockWarehouses.size()-1; i>=0; i--) {
-
+        for (int i = stockWarehouses.size() - 1; i >= 0; i--) {
             switch (queryType) {
                 case "P":
-                    if(stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size() - 1).getLastModification().isBefore(date))
+                    if(stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size() - 1).getLastModification().isBefore(date)) {
                         stockWarehouses.remove(stockWarehouses.get(i));
-                    break;
-                case "V":
-                   if(stockWarehouses.get(i).getPart().getRecords().size()<2
-                           || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getLastModification().isBefore(date)
-                           || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getNormalPrice()==stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-2).getNormalPrice()){
-                            stockWarehouses.remove(stockWarehouses.get(i));
-
+                        continue;
                     }
-                    break;
-                }
-
+                break;
+                case "V":
+                   if(stockWarehouses.get(i).getPart().getRecords().size() < 2
+                       || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getLastModification().isBefore(date)
+                       || stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-1).getNormalPrice() == stockWarehouses.get(i).getPart().getRecords().get(stockWarehouses.get(i).getPart().getRecords().size()-2).getNormalPrice()) {
+                            stockWarehouses.remove(stockWarehouses.get(i));
+                            continue;
+                    }
+                break;
             }
+            partsDTO.add(construct(stockWarehouses.get(i)));
+        }
+
         if (stockWarehouses.isEmpty()) throw new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value());
-        stockWarehouses.forEach(stockWarehouse -> partsDTO.add(construct(stockWarehouse)));
         switch (order) {
             case 1:
                 partsDTO.sort(Comparator.comparing(PartDTO::getDescription));
@@ -92,9 +94,6 @@ public class StockWarehouseService implements IStockWarehouseService {
                 partsDTO.sort(Comparator.comparing(PartDTO::getLastModification));
                 break;
         }
-
-        if (partsDTO.isEmpty()) throw new ApiException(NOT_FOUND.name(), "La lista no existe.", NOT_FOUND.value());
-
         return partsDTO;
     }
 

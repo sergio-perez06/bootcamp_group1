@@ -65,84 +65,181 @@ public class StockWarehouseServiceTest {
     public void getPartsListNoParamsOK() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
         List<Record> records = generateRecordsList();
+        List<Record> auxList = new ArrayList<>();
+        auxList.add(records.get(0));
+        auxList.add(records.get(2));
+        stockWarehouse.get(0).getPart().setRecords(auxList);
+        auxList.clear();
+        auxList.add(records.get(1));
+        stockWarehouse.get(1).getPart().setRecords(auxList);
         List<PartDTO> expected = generatePartDTOList();
 
         when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
+        when(modelMapper.map(any(), any())).thenReturn(expected.get(0), expected.get(1));
         HashMap<String, String> params = new HashMap<>();
         List<PartDTO> actual = stockWarehouseService.getParts(params);
+
+        verify(stockWarehouseRepository, atMostOnce()).findAll();
+        verify(modelMapper, atMost(2)).map(any(), any());
         assertEquals(expected, actual);
     }
 
     @Test
     public void getPartsListWith2ParamsOK1() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
-        List<Maker> makers = generateMakersList();
         List<DiscountType> discountTypes = generateDiscountTypeList();
+
+        // New record needed
+        Maker auxMaker = new Maker(3L, "NISSAN");
+        Part auxPart = new Part(3L, "00000003", "Tablero de Nissan March", 2500, 130, 40, 50, auxMaker);
+        Record auxRecord = new Record(3L, 235.0, 265.0, LocalDate.of(2020, 05, 25), auxPart, discountTypes.get(0));
+        StockWarehouse auxStock = new StockWarehouse(auxPart, 3);
+        stockWarehouse.add(auxStock);
+
         List<Record> records = generateRecordsList();
+        List<Record> auxList1 = new ArrayList<>();
+        auxList1.add(records.get(0));
+        auxList1.add(records.get(2));
+        stockWarehouse.get(0).getPart().setRecords(auxList1);
+
+        List<Record> auxList2 = new ArrayList<>();
+        auxList2.add(records.get(1));
+        stockWarehouse.get(1).getPart().setRecords(auxList2);
+
+        List<Record> auxList3 = new ArrayList<>();
+        auxList3.add(auxRecord);
+        stockWarehouse.get(2).getPart().setRecords(auxList3);
+
         List<PartDTO> expected = generatePartDTOList();
 
         when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
-        when(makerRepository.findAll()).thenReturn(makers);
-        when(discountTypeRepository.findAll()).thenReturn(discountTypes);
-        when(recordRepository.findAll()).thenReturn(records);
         when(modelMapper.map(any(), any())).thenReturn(expected.get(0), expected.get(1));
-
         HashMap<String, String> params = new HashMap<>();
-        params.put("date", "2021-01-22");
+        params.put("date", "2021-01-01");
         params.put("queryType", "P");
         List<PartDTO> actual = stockWarehouseService.getParts(params);
+        verify(stockWarehouseRepository, atMostOnce()).findAll();
+        verify(modelMapper, atMost(2)).map(any(), any());
         assertEquals(expected, actual);
     }
 
     @Test
     public void getPartsListWith2ParamsOK2() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
-        List<Maker> makers = generateMakersList();
-        List<DiscountType> discountTypes = generateDiscountTypeList();
         List<Record> records = generateRecordsList();
+        List<Record> auxList1 = new ArrayList<>();
+        auxList1.add(records.get(0));
+        auxList1.add(records.get(2));
+        stockWarehouse.get(0).getPart().setRecords(auxList1);
+        List<Record> auxList2 = new ArrayList<>();
+        auxList2.add(records.get(1));
+        stockWarehouse.get(1).getPart().setRecords(auxList2);
         List<PartDTO> expected = generatePartDTOList();
-        expected.remove(1);
+        expected.remove(expected.get(1));
 
         when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
-        when(makerRepository.findAll()).thenReturn(makers);
-        when(discountTypeRepository.findAll()).thenReturn(discountTypes);
-        when(recordRepository.findAll()).thenReturn(records);
         when(modelMapper.map(any(), any())).thenReturn(expected.get(0));
-
         HashMap<String, String> params = new HashMap<>();
-        params.put("date", "2021-01-22");
+        params.put("date", "2021-01-01");
         params.put("queryType", "V");
         List<PartDTO> actual = stockWarehouseService.getParts(params);
+        verify(stockWarehouseRepository, atMostOnce()).findAll();
+        verify(modelMapper, atMost(1)).map(any(), any());
         assertEquals(expected, actual);
     }
 
     @Test
-    public void getPartsListWith3ParamsOK1() throws Exception {
+    public void getPartsListParamOrder1OK() throws Exception {
         List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
-        List<Maker> makers = generateMakersList();
-        List<DiscountType> discountTypes = generateDiscountTypeList();
         List<Record> records = generateRecordsList();
+        List<Record> auxList1 = new ArrayList<>();
+        auxList1.add(records.get(0));
+        auxList1.add(records.get(2));
+        stockWarehouse.get(0).getPart().setRecords(auxList1);
+        List<Record> auxList2 = new ArrayList<>();
+        auxList2.add(records.get(1));
+        stockWarehouse.get(1).getPart().setRecords(auxList2);
         List<PartDTO> expected = generatePartDTOList();
+        Collections.reverse(expected);
 
         when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
-        when(makerRepository.findAll()).thenReturn(makers);
-        when(discountTypeRepository.findAll()).thenReturn(discountTypes);
-        when(recordRepository.findAll()).thenReturn(records);
         when(modelMapper.map(any(), any())).thenReturn(expected.get(0), expected.get(1));
-
         HashMap<String, String> params = new HashMap<>();
         params.put("order", "1");
         List<PartDTO> actual = stockWarehouseService.getParts(params);
+        verify(stockWarehouseRepository, atMostOnce()).findAll();
+        verify(modelMapper, atMost(2)).map(any(), any());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getPartsListParamOrder2OK() throws Exception {
+        List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
+        List<Record> records = generateRecordsList();
+        List<Record> auxList1 = new ArrayList<>();
+        auxList1.add(records.get(0));
+        auxList1.add(records.get(2));
+        stockWarehouse.get(0).getPart().setRecords(auxList1);
+        List<Record> auxList2 = new ArrayList<>();
+        auxList2.add(records.get(1));
+        stockWarehouse.get(1).getPart().setRecords(auxList2);
+        List<PartDTO> expected = generatePartDTOList();
+
+        when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
+        when(modelMapper.map(any(), any())).thenReturn(expected.get(0), expected.get(1));
+        HashMap<String, String> params = new HashMap<>();
+        params.put("order", "2");
+        List<PartDTO> actual = stockWarehouseService.getParts(params);
+        verify(stockWarehouseRepository, atMostOnce()).findAll();
+        verify(modelMapper, atMost(2)).map(any(), any());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getPartsListParamOrder3OK() throws Exception {
+        List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
+        List<Record> records = generateRecordsList();
+        List<Record> auxList1 = new ArrayList<>();
+        auxList1.add(records.get(0));
+        auxList1.add(records.get(2));
+        stockWarehouse.get(0).getPart().setRecords(auxList1);
+        List<Record> auxList2 = new ArrayList<>();
+        auxList2.add(records.get(1));
+        stockWarehouse.get(1).getPart().setRecords(auxList2);
+        List<PartDTO> expected = generatePartDTOList();
+        Collections.reverse(expected);
+
+        when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
+        when(modelMapper.map(any(), any())).thenReturn(expected.get(1), expected.get(0));
+        HashMap<String, String> params = new HashMap<>();
+        params.put("order", "3");
+        List<PartDTO> actual = stockWarehouseService.getParts(params);
+        verify(stockWarehouseRepository, atMostOnce()).findAll();
+        verify(modelMapper, atMost(2)).map(any(), any());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getPartsListParamOrder4BadRequest() {
+        List<StockWarehouse> stockWarehouse = generateStockWarehouseList();
+        when(stockWarehouseRepository.findAll()).thenReturn(stockWarehouse);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("order", "4");
+        ApiException expected = new ApiException(HttpStatus.BAD_REQUEST.name(), "No se puede continuar con los parámetros dados.", HttpStatus.BAD_REQUEST.value()),
+                    actual = assertThrows(ApiException.class, () -> {
+                        this.stockWarehouseService.getParts(params);
+                    });
+        assertEquals(expected.getMessage(), actual.getMessage());
+        verify(stockWarehouseRepository, atMost(1)).findAll();
     }
 
     @Test
     public void getPartsListNoParamsNotFound() {
-        HashMap<String, String> asd = new HashMap<>();
+        HashMap<String, String> params = new HashMap<>();
         ApiException expected = new ApiException(HttpStatus.NOT_FOUND.name(), "La lista no existe.", HttpStatus.NOT_FOUND.value()),
-                        actual = assertThrows(ApiException.class, () -> {
-                            this.stockWarehouseService.getParts(asd);
-                        });
+                actual = assertThrows(ApiException.class, () -> {
+                    this.stockWarehouseService.getParts(params);
+                });
         assertEquals(expected.getMessage(), actual.getMessage());
         verify(stockWarehouseRepository, atMost(1)).findAll();
     }
@@ -354,22 +451,22 @@ public class StockWarehouseServiceTest {
     private List<Part> generatePartsList() {
         List<Part> parts = new ArrayList<>();
         List<Maker> makers = generateMakersList();
-        parts.add(new Part((long) 1, "00000001", "Farol Chevrolet Spark", 1000, 30, 60, 50, makers.get(0)));
-        parts.add(new Part((long) 2, "00000002", "Paragolpe trasero Ford Fiesta", 2500, 130, 460, 50, makers.get(1)));
+        parts.add(new Part(1L, "00000001", "Farol Chevrolet Spark", 1000, 30, 60, 50, makers.get(0)));
+        parts.add(new Part(2L, "00000002", "Paragolpe trasero Ford Fiesta", 2500, 130, 460, 50, makers.get(1)));
         return parts;
     }
 
     private List<Maker> generateMakersList() {
         List<Maker> makers = new ArrayList<>();
-        makers.add(new Maker((long) 1, "CHEVROLET"));
-        makers.add(new Maker((long) 2, "FORD"));
+        makers.add(new Maker(1L, "CHEVROLET"));
+        makers.add(new Maker(2L, "FORD"));
         return makers;
     }
 
     private List<DiscountType> generateDiscountTypeList() {
         List<DiscountType> discountTypes = new ArrayList<>();
-        discountTypes.add(new DiscountType((long) 1, "CLIENTE VIP", 3));
-        discountTypes.add(new DiscountType((long)  2, "Compra al mayor", 5));
+        discountTypes.add(new DiscountType(1L, "CLIENTE VIP", 3));
+        discountTypes.add(new DiscountType(2L, "Compra al mayor", 5));
         return discountTypes;
     }
 
@@ -377,16 +474,16 @@ public class StockWarehouseServiceTest {
         List<Part> parts = generatePartsList();
         List<DiscountType> discountTypes = generateDiscountTypeList();
         List<Record> records = new ArrayList<>();
-        records.add(new Record((long) 1, 110.0, 135.0, LocalDate.of(2021, 02, 25), parts.get(0), discountTypes.get(0)));
-        records.add(new Record((long) 2, 175.0, 200.0, LocalDate.of(2021, 01, 25), parts.get(1), discountTypes.get(1)));
-        records.add(new Record((long) 3, 100.0, 120.0, LocalDate.of(2021, 01, 20), parts.get(0), discountTypes.get(0)));
+        records.add(new Record(1L, 110.0, 135.0, LocalDate.of(2021, 02, 25), parts.get(0), discountTypes.get(0)));
+        records.add(new Record(2L, 175.0, 200.0, LocalDate.of(2021, 01, 25), parts.get(1), discountTypes.get(1)));
+        records.add(new Record(3L, 100.0, 120.0, LocalDate.of(2021, 01, 20), parts.get(0), discountTypes.get(0)));
         return records;
     }
 
     private List<PartDTO> generatePartDTOList() {
         List<PartDTO> partDTOS = new ArrayList<>();
-        partDTOS.add(new PartDTO("00000001", "Farol genérico de Chevrolet Spark", "CHEVROLET", 2500, "Cliente VIP", 110.0, 135.0, 1000, 30, 60, 50, "2021-02-25"));
         partDTOS.add(new PartDTO("00000002", "Paragolpe trasero de Ford Fiesta", "FORD", 1500, "Cliente VIP", 175.0, 200.0, 2500, 130, 40, 50, "2021-01-05"));
+        partDTOS.add(new PartDTO("00000001", "Farol genérico de Chevrolet Spark", "CHEVROLET", 2500, "Cliente VIP", 110.0, 135.0, 1000, 30, 60, 50, "2021-02-25"));
         return partDTOS;
     }
 
