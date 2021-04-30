@@ -3,15 +3,13 @@ package com.mercadolibre.fernandez_federico.services.impl;
 import com.mercadolibre.fernandez_federico.models.Role;
 import com.mercadolibre.fernandez_federico.repositories.IRoleRepository;
 import com.mercadolibre.fernandez_federico.services.IRoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RoleService implements IRoleService {
-    private IRoleRepository roleRepository;
-
-    public RoleService(IRoleRepository roleRepository){
-        this.roleRepository = roleRepository;
-    }
+    private final IRoleRepository roleRepository;
 
     @Override
     public Role findByName(String name) {

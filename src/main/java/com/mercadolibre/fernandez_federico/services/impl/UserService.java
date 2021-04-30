@@ -2,6 +2,7 @@ package com.mercadolibre.fernandez_federico.services.impl;
 
 import com.mercadolibre.fernandez_federico.models.ApplicationUser;
 import com.mercadolibre.fernandez_federico.repositories.IUserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,12 +16,9 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-    private IUserRepository applicationUserRepository;
-
-    public UserService(IUserRepository applicationUserRepository) {
-        this.applicationUserRepository = applicationUserRepository;
-    }
+    private final IUserRepository applicationUserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,10 +30,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void saveUser(ApplicationUser applicationUser) {
-
-        System.out.println("Persist"+applicationUser.getCountryDealer().toString() + " ----"+applicationUser.getCountryDealer().toString());
         applicationUserRepository.save(applicationUser);
-
     }
 
     public ApplicationUser findByUsername(String username) throws UsernameNotFoundException {

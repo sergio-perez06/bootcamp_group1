@@ -31,7 +31,7 @@ public class BillService implements IBillService {
     public BillDTO getBillDetails(String orderNumberCM){
         BillDTO finalBill = new BillDTO();
         if(billRepository.findAll().isEmpty())
-            throw new ApiException("Not Found","La orden no existe",404 );
+            throw new ApiException("Not Found", "La orden no existe", 404);
         else{
             Bill bills = billRepository.findByCmOrdernumberWarehouse(orderNumberCM);
             List<BillDetail> billsDetail = billDetailRepository.findAll();

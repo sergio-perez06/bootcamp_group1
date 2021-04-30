@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BillServiceTest {
+
     @Mock
     private IBillRepository billRepository;
     @Mock
@@ -76,6 +77,7 @@ public class BillServiceTest {
         BillDTO billDTO = new BillDTO("0001-00000001", LocalDate.of(2021, 02, 03), OrderStatus.Procesando, billDetails);
         return billDTO;
     }
+
     private List<BillDetailDTO> generateBillDetailDTOList(){
         List<BillDetailDTO> billDetails = new ArrayList<>();
         billDetails.add(new BillDetailDTO("00000003", "Puerta de de un auto", 2, AccountType.Garantia, "Sin motivo", PartStatus.Demorado));
