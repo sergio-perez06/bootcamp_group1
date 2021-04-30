@@ -343,11 +343,11 @@ public class StockWarehouseServiceTest {
     }
 
     @Test
-    @DisplayName("Test valido, se agrega Bill a CountryDealer")
-    public void addBillToCountryDealerCorrect() {
+    @DisplayName("Test valido, se agrega Bill a CountryDealer. Subsidiaria con bills existentes")
+    public void addBillToCountryDealerCorrectWithBills() {
         BillRequestDTO billRequestDTO = new BillRequestDTO();
         billRequestDTO.setDeliveryDate(LocalDate.now().plusDays(1));
-        billRequestDTO.setSubsidiaryNumber("0002");
+        billRequestDTO.setSubsidiaryNumber("0001");
 
         PostBillDetailDTO postA = new PostBillDetailDTO();
         postA.setPartCode("00000001");
@@ -355,11 +355,13 @@ public class StockWarehouseServiceTest {
 
         Part part = new Part();
         part.setPartCode("00000001");
+        part.setDescription("Descripcion");
 
         Bill bill = new Bill();
         BillDetail billDetail = new BillDetail();
         billDetail.setPart(part);
         bill.setBillDetails(new ArrayList<>(List.of(billDetail)));
+        bill.setOrderNumber("00000001");
 
         Subsidiary sub = new Subsidiary();
         sub.setSubsidiaryNumber("0001");
@@ -371,6 +373,7 @@ public class StockWarehouseServiceTest {
         BillDetailDTO billDetailDTO = new BillDetailDTO();
         billDetailDTO.setPartCode("00000001");
         billDTO.setOrderDetails(new ArrayList<>(List.of(billDetailDTO)));
+        billDTO.setOrderNumber("00000002");
 
         when(partRepository.findByPartCode(anyString())).thenReturn(part);
         when(countryDealerRepository.findByCountry(anyString())).thenReturn(cd);
@@ -378,11 +381,56 @@ public class StockWarehouseServiceTest {
                 .thenReturn(billDetail)
                 .thenReturn(billDTO)
                 .thenReturn(billDetailDTO);
-        when(countryDealerRepository.save(cd)).then(any());
+        when(countryDealerRepository.save(cd)).thenReturn(any());
 
         BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
 
         assertThat(response.getOrderDetails().size()).isEqualTo(1);
+        assertThat(response.getOrderNumber()).isEqualTo("00000002");
+    }
+
+    @Test
+    @DisplayName("Test valido, se agrega Bill a CountryDealer. Subsidiaria sin bills existentes")
+    public void addBillToCountryDealerCorrectSubsidiaryWithoutBills() {
+        BillRequestDTO billRequestDTO = new BillRequestDTO();
+        billRequestDTO.setDeliveryDate(LocalDate.now().plusDays(1));
+        billRequestDTO.setSubsidiaryNumber("0001");
+
+        PostBillDetailDTO postA = new PostBillDetailDTO();
+        postA.setPartCode("00000001");
+        billRequestDTO.setBillDetails(new ArrayList<>(List.of(postA)));
+
+        Part part = new Part();
+        part.setPartCode("00000001");
+        part.setDescription("Descripcion");
+
+        BillDetail billDetail = new BillDetail();
+        billDetail.setPart(part);
+
+        Subsidiary sub = new Subsidiary();
+        sub.setSubsidiaryNumber("0001");
+        sub.setBills(new ArrayList<>());
+        CountryDealer cd = new CountryDealer();
+        cd.setSubsidiaries(new ArrayList<>(List.of(sub)));
+
+        BillDTO billDTO = new BillDTO();
+        BillDetailDTO billDetailDTO = new BillDetailDTO();
+        billDetailDTO.setPartCode("00000001");
+        billDTO.setOrderDetails(new ArrayList<>(List.of(billDetailDTO)));
+        billDTO.setOrderNumber("00000001");
+
+        when(partRepository.findByPartCode(anyString())).thenReturn(part);
+        when(countryDealerRepository.findByCountry(anyString())).thenReturn(cd);
+        when(modelMapper.map(any(), any()))
+                .thenReturn(billDetail)
+                .thenReturn(billDTO)
+                .thenReturn(billDetailDTO);
+        when(countryDealerRepository.save(cd)).thenReturn(any());
+
+        BillDTO response = stockWarehouseService.addBillToCountryDealer(billRequestDTO, "Uruguay");
+
+        assertThat(response.getOrderDetails().size()).isEqualTo(1);
+        assertThat(response.getOrderNumber()).isEqualTo("00000001");
     }
 
 }
