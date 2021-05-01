@@ -12,15 +12,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {"com.mercadolibre.fernandez_federico.repositories"})
-//@EnableTransactionManagement
+@EnableTransactionManagement
 public class DataSourceConfig {
+
     @Bean
     @Qualifier("datasource")
-    @Profile({"!local & !integration_test"})
+    @Profile("integration_test")
+    public DataSource getDataSourceTest() {
+        return DataSourceBuilder.create()
+                .url("jdbc:h2:mem:warehouse;MODE=MySQL")
+                .username("sa")
+                .build();
+    }
+
+
+    @Bean
+    @Qualifier("datasource")
+    @Profile({"!local & !integration_test & !test"})
     public DataSource getDataSource(
 //            final @Value("${spring.datasource.driver-class-name}") String driver,
             final @Value("${spring.datasource.host}") String host,
@@ -32,15 +46,15 @@ public class DataSourceConfig {
             throws FuryDecryptException, FuryNotFoundAPPException, FuryUpdateException {
         return DataSourceBuilder.create()
 //                .driverClassName(driver)
-                .url(String.format("jdbc:mysql://%s/%s?serverTimezone=UTC", FuryUtils.getEnv(host), db))
+                .url(String.format("jdbc:mysql://%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&characterEncoding=utf8", FuryUtils.getEnv(host), db))
                 .username(user)
                 .password(FuryUtils.getEnv(password))
                 .build();
     }
     @Bean
     @Qualifier("datasource")
-    @Profile("local | integration_test")
-    public DataSource getDataSourceTest(
+    @Profile("local | test")
+    public DataSource getDataSourceLocal(
 //            final @Value("${spring.datasource.driver-class-name}") String driver,
             final @Value("${spring.datasource.host}") String host,
             final @Value("${spring.datasource.db}") String db,
@@ -49,7 +63,7 @@ public class DataSourceConfig {
     ) {
         return DataSourceBuilder.create()
 //                .driverClassName(driver)
-                .url(String.format("jdbc:mysql://%s/%s?serverTimezone=UTC", host, db))
+                .url(String.format("jdbc:mysql://%s/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=true&characterEncoding=utf8", host, db))
                 .username(user)
                 .password(password)
                 .build();

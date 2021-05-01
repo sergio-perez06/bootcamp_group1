@@ -16,7 +16,7 @@ public abstract class ControllerTest extends IntegrationTest {
 	}
 
 	protected String getFullToken() {
-		ResponseEntity<Object> responseEntity = signUp("admin","test1234","Argentina","ADMIN");
+		ResponseEntity<Object> responseEntity = signUp("admin","test1234","Argentina","Admin");
 		boolean OK = responseEntity.getStatusCode() == HttpStatus.OK || responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST;
 		if (!OK)
 			return "";

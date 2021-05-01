@@ -14,7 +14,7 @@ public class UserControllerTest extends ControllerTest {
 
     @Test
     void signUp() {
-        ApplicationUserDTO user = new ApplicationUserDTO("sergio", "passs", "Argentina", "ADMIN");
+        ApplicationUserDTO user = new ApplicationUserDTO("sergio", "passs", "Argentina", "Admin");
         ResponseEntity<Object> responseEntity = this.testRestTemplate.exchange("/api/v1/users/signUp", HttpMethod.POST, new HttpEntity<>(user), Object.class);
         assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
     }
