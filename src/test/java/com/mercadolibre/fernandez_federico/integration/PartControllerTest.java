@@ -66,97 +66,17 @@ public class PartControllerTest extends ControllerTest {
                             ("/api/v1/parts/list", HttpMethod.GET, entity, String.class);
 
                     assertEquals(HttpStatus.OK, response.getStatusCode());
-
-                    //assertEquals( createListBill() ,response.getBody());
                 }
             }
         }
     }
 
-    private String createListBill() throws JsonProcessingException {
-        List<Bill> resp = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String bill = "[\n" +
-                "    {\n" +
-                "        “part_code”: “00000001\",\n" +
-                "        “description”: “Farol genérico de Chevrolet Spark”,\n" +
-                "        “maker”: “CHEVROLET”,\n" +
-                "        “quantity”: 2500,\n" +
-                "        “discount_type”: “Cliente VIP”,\n" +
-                "        “normal_price”: 110.0,\n" +
-                "        “urgent_price”: 135.0,\n" +
-                "        “net_weight”: 1000,\n" +
-                "        “long_dimension”: 30,\n" +
-                "        “width_dimension”: 60,\n" +
-                "        “tall_dimension”: 50,\n" +
-                "        “last_modification”: “2021-02-25”\n" +
-                "    },\n" +
-                "    {\n" +
-                "        “part_code”: “00000002”,\n" +
-                "        “description”: “Paragolpe trasero de Ford Fiesta”,\n" +
-                "        “maker”: “FORD”,\n" +
-                "        “quantity”: 1500,\n" +
-                "        “discount_type”: “Cliente VIP”,\n" +
-                "        “normal_price”: 175.0,\n" +
-                "        “urgent_price”: 200.0,\n" +
-                "        “net_weight”: 2500,\n" +
-                "        “long_dimension”: 130,\n" +
-                "        “width_dimension”: 40,\n" +
-                "        “tall_dimension”: 50,\n" +
-                "        “last_modification”: “2021-01-05\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        “part_code”: “00000003\",\n" +
-                "        “description”: “Paragolpe frontal de Fiat Uno”,\n" +
-                "        “maker”: “FIAT”,\n" +
-                "        “quantity”: 1750,\n" +
-                "        “discount_type”: “Cliente VIP”,\n" +
-                "        “normal_price”: 160.0,\n" +
-                "        “urgent_price”: 175.0,\n" +
-                "        “net_weight”: 2500,\n" +
-                "        “long_dimension”: 130,\n" +
-                "        “width_dimension”: 40,\n" +
-                "        “tall_dimension”: 50,\n" +
-                "        “last_modification”: “2021-02-21”\n" +
-                "    },\n" +
-                "    {\n" +
-                "        “part_code”: “00000004”,\n" +
-                "        “description”: “Volante original de Fiat 127”,\n" +
-                "        “maker”: “FIAT”,\n" +
-                "        “quantity”: 125,\n" +
-                "        “discount_type”: “Cliente VIP”,\n" +
-                "        “normal_price”: 140.0,\n" +
-                "        “urgent_price”: 160.0,\n" +
-                "        “net_weight”: 1500,\n" +
-                "        “long_dimension”: 60,\n" +
-                "        “width_dimension”: 40,\n" +
-                "        “tall_dimension”: 50,\n" +
-                "        “last_modification”: “2021-01-15\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        “part_code”: “00000005\",\n" +
-                "        “description”: “Tablero de Nissan March”,\n" +
-                "        “maker”: “NISSAN”,\n" +
-                "        “quantity”: 475,\n" +
-                "        “discount_type”: “Cliente VIP”,\n" +
-                "        “normal_price”: 235.0,\n" +
-                "        “urgent_price”: 265.0,\n" +
-                "        “net_weight”: 2500,\n" +
-                "        “long_dimension”: 130,\n" +
-                "        “width_dimension”: 40,\n" +
-                "        “tall_dimension”: 50,\n" +
-                "        “last_modification”: “2020-05-25”\n" +
-                "    }\n" +
-                "]";
-        //return objectMapper.readValue(bill, new TypeReference<List<Bill>>(){});
-        return bill;
-    }
-
-    @Test
     public void getPartsOrdersWithParamOK() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", this.getToken());
+
         HttpEntity entity = new HttpEntity(headers);
+
         ResponseEntity<Object> response = this.testRestTemplate.exchange(
                 "/api/v1/parts/orders?dealerNumber=0001",
                 HttpMethod.GET,
@@ -174,7 +94,9 @@ public class PartControllerTest extends ControllerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", this.getToken());
+
         HttpEntity entity = new HttpEntity(request, headers);
+
         ResponseEntity<Object> response = this.testRestTemplate.exchange(
                 "/api/v1/parts",
                 HttpMethod.POST,
@@ -195,15 +117,19 @@ public class PartControllerTest extends ControllerTest {
         request.setBillDetails(List.of(billDetail));
         request.setDeliveryDate(LocalDate.of(2021, 06, 01));
         request.setSubsidiaryNumber("0001");
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", this.getToken());
+
         HttpEntity entity = new HttpEntity(request, headers);
+
         ResponseEntity<Object> response = this.testRestTemplate.exchange(
                 "/api/v1/parts/orders",
                 HttpMethod.POST,
                 entity,
                 Object.class
         );
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
