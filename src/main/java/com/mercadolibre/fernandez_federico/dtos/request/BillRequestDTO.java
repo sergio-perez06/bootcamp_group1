@@ -1,7 +1,9 @@
 package com.mercadolibre.fernandez_federico.dtos.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.mercadolibre.fernandez_federico.dtos.responses.BillDetailDTO;
 import lombok.Data;
 import lombok.Getter;
@@ -19,6 +21,7 @@ public class BillRequestDTO {
     @Size(min = 4, max = 4, message = "El 'subsidiaryNumber' debe tener cuatro caracteres")
     private String subsidiaryNumber;
 
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deliveryDate;
 
