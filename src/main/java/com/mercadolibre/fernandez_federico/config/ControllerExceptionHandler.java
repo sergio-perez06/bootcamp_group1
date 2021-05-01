@@ -72,7 +72,7 @@ public class ControllerExceptionHandler {
 		LOGGER.error("Internal error", e);
 		NewRelic.noticeError(e);
 
-		ApiError apiError = new ApiError("internal_error", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value());
+		ApiError apiError = new ApiError("internal_error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
 		return ResponseEntity.status(apiError.getStatus())
 				.body(apiError);
 	}

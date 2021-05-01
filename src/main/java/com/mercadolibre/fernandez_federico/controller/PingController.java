@@ -11,9 +11,6 @@ import java.util.Map;
 @RestController
 public class PingController {
 
-	@Autowired
-	private TokenUtils tokenUtils;
-
 	@GetMapping("/ping")
 	public String ping() {
 		NewRelic.ignoreTransaction();

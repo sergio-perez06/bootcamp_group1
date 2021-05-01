@@ -1,9 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,11 +10,15 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name="role")
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Role {
+    @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     private String name;
 
     @OneToMany(mappedBy = "role")

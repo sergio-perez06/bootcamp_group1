@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mercadolibre.fernandez_federico.util.enums.AccountType;
 import com.mercadolibre.fernandez_federico.util.enums.PartStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

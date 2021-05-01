@@ -1,10 +1,10 @@
 package com.mercadolibre.fernandez_federico.dtos.responses;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.mercadolibre.fernandez_federico.util.CodeNumberSerializator;
 import com.mercadolibre.fernandez_federico.util.enums.OrderStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class BillDTO {
     @NonNull
     @JsonSerialize(using = CodeNumberSerializator.class)

@@ -17,8 +17,9 @@ public abstract class ControllerTest extends IntegrationTest {
 
 	protected String getToken() {
 		ResponseEntity<Object> responseEntity = signUp("admin","test1234","Argentina","ADMIN");
-		boolean OK = responseEntity.getStatusCode() == HttpStatus.OK;
-		if (!OK) return "";
+		boolean OK = responseEntity.getStatusCode() == HttpStatus.OK || responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST;
+		if (!OK)
+			return "";
 		responseEntity = login("admin", "test1234");
 		OK = responseEntity.getStatusCode() == HttpStatus.OK;
 		if (!OK) return "";
@@ -27,7 +28,7 @@ public abstract class ControllerTest extends IntegrationTest {
 
 	protected ResponseEntity<Object> signUp(String username, String password, String country, String role) {
 		ApplicationUserDTO user = new ApplicationUserDTO(username, password, country, role);
-		ResponseEntity<Object> responseEntity = testRestTemplate.exchange("/users/signUp", HttpMethod.POST, new HttpEntity<>(user), Object.class);
+		ResponseEntity<Object> responseEntity = this.testRestTemplate.exchange("/api/v1/users/signUp", HttpMethod.POST, new HttpEntity<>(user), Object.class);
 		return responseEntity;
 	}
 

@@ -2,7 +2,7 @@ package com.mercadolibre.fernandez_federico.util;
 
 public class SecurityConstants {
 
-    public static final String SIGN_UP_URL = "/users/signUp";
+    public static final String SIGN_UP_URL = "/api/v1/users/signUp";
     public static final String PING_URL = "/ping";
 
     public static final String SWAGGER_URL = "/v3/api-docs";

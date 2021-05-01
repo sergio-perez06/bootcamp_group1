@@ -1,18 +1,24 @@
 package com.mercadolibre.fernandez_federico.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.mercadolibre.fernandez_federico.dtos.request.ApplicationUserDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.BillRequestDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.CountryDealerStockDTO;
+import com.mercadolibre.fernandez_federico.dtos.request.PostBillDetailDTO;
+import com.mercadolibre.fernandez_federico.dtos.responses.BillDetailDTO;
 import com.mercadolibre.fernandez_federico.models.Bill;
+import com.mercadolibre.fernandez_federico.models.BillDetail;
+import com.mercadolibre.fernandez_federico.util.enums.AccountType;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
-import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PartControllerTest extends ControllerTest {
@@ -23,7 +29,7 @@ public class PartControllerTest extends ControllerTest {
         ApplicationUserDTO user = new ApplicationUserDTO("janet","1234","Uruguay","admin");
 
         ResponseEntity<String> signUpResponse = this.testRestTemplate.exchange(
-                "/users/signUp",
+                "/api/v1/users/signUp",
                 HttpMethod.POST,
                 new HttpEntity<>(user),
                 String.class);
@@ -138,5 +144,58 @@ public class PartControllerTest extends ControllerTest {
         return bill;
     }
 
+    @Test
+    public void getPartsOrdersWithParamOK() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders?dealerNumber=0001",
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 
+    @Test
+    public void postPartsOK() {
+        CountryDealerStockDTO request = new CountryDealerStockDTO();
+        request.setPartCode("00000005");
+        request.setQuantity(10);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(request, headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts",
+                HttpMethod.POST,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void postPartsOrdersOK() {
+        PostBillDetailDTO billDetail = new PostBillDetailDTO();
+        billDetail.setPartCode("00000001");
+        billDetail.setQuantity(1);
+        billDetail.setAccountType(AccountType.Repuesto);
+
+        BillRequestDTO request = new BillRequestDTO();
+        request.setBillDetails(List.of(billDetail));
+        request.setDeliveryDate(LocalDate.of(2021, 06, 01));
+        request.setSubsidiaryNumber("0001");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(request, headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders",
+                HttpMethod.POST,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
