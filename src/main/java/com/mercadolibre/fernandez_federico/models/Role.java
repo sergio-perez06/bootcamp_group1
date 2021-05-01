@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,7 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@ToString
 @Table(name="role")
 public class Role {
     @Id
@@ -18,7 +18,9 @@ public class Role {
     private Long id;
 
     private String name;
+
     @OneToMany(mappedBy = "role")
+    @JsonManagedReference(value="user-role")
     private List<ApplicationUser> applicationUsers;
 
 }

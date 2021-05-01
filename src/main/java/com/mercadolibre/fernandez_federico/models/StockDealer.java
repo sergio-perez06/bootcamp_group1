@@ -1,5 +1,7 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +18,7 @@ public class StockDealer {
     private Part part;
 
     @Id
+    @JsonBackReference(value="stockDealer-countrydealer")
     private CountryDealer countryDealer;
 
     @Column(nullable = false)

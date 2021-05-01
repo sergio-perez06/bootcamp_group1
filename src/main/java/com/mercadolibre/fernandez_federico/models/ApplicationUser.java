@@ -10,7 +10,6 @@ import lombok.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name="application_user")
 public class ApplicationUser
 {
@@ -32,10 +31,11 @@ public class ApplicationUser
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idRole", referencedColumnName = "id",nullable = false)
+    @JsonBackReference(value="user-role")
     private Role role;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idCountryDealer", referencedColumnName = "id",nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value="user-countrydealer")
     private CountryDealer countryDealer;
 }

@@ -1,9 +1,9 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,7 +13,6 @@ import java.util.List;
 
 @Getter @Setter
 @Entity
-@ToString
 @Table(name="country_dealer")
 public class CountryDealer
 {
@@ -39,13 +38,14 @@ public class CountryDealer
     private String country;
 
     @OneToMany(mappedBy = "countryDealer", cascade = CascadeType.ALL)
+    @JsonManagedReference(value="stockDealer-countrydealer")
     private List<StockDealer> stockDealers;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="subsidiary-countrydealer")
     @OneToMany(mappedBy = "countryDealer")
     private List<Subsidiary> subsidiaries;
 
     @OneToMany(mappedBy = "countryDealer")
-    @JsonManagedReference
+    @JsonManagedReference(value="user-countrydealer")
     private List<ApplicationUser> applicationUsers;
 }

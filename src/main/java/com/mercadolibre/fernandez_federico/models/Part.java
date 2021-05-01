@@ -1,13 +1,11 @@
 package com.mercadolibre.fernandez_federico.models;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -18,7 +16,6 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Part
 {
     @NonNull
@@ -69,14 +66,14 @@ public class Part
     private Integer tallDimension;
 
     @NonNull
-    @JsonBackReference
+    @JsonBackReference(value="part-maker")
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idMaker", referencedColumnName = "id", nullable = false)
     private Maker maker;
 
     @NotNull
-    @JsonManagedReference
+    @JsonManagedReference(value = "record-part" )
     @OneToMany(mappedBy = "part")
     private List<Record> records;
 }

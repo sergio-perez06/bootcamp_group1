@@ -1,5 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,5 +30,6 @@ public class DiscountType {
     private Integer rate;
 
     @OneToMany(mappedBy = "discountType")
+    @JsonManagedReference(value = "record-discounttype" )
     private List<Record> records;
 }

@@ -38,12 +38,13 @@ public class Record {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastModification;
 
-    @JsonBackReference
+    @JsonBackReference(value="record-part")
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
     private Part part;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference(value = "record-discounttype")
     @JoinColumn(name = "idDiscountType", referencedColumnName = "id")
     private DiscountType discountType;
 }

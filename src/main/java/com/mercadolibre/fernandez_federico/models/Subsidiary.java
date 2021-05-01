@@ -27,6 +27,7 @@ public class Subsidiary {
     private String name;
 
     @OneToMany(mappedBy = "subsidiary")
+    @JsonManagedReference(value = "stocksubsidiaries-subsidiary")
     private List<StockSubsidiary> stockSubsidiaries;
 
     @Column(nullable = false,length = 4)
@@ -35,11 +36,11 @@ public class Subsidiary {
     private String subsidiaryNumber;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value="subsidiary-countrydealer")
     @JoinColumn(name="idCountryDealer", referencedColumnName = "id", nullable = false)
     private CountryDealer countryDealer;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="bill-subsidiary")
     @OneToMany(mappedBy = "subsidiary", cascade = CascadeType.ALL)
     private List<Bill> bills;
 }

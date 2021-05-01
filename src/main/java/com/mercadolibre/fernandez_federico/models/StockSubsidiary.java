@@ -1,6 +1,8 @@
 package com.mercadolibre.fernandez_federico.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +19,7 @@ public class StockSubsidiary {
     private Part part;
 
     @Id
+    @JsonBackReference(value = "stocksubsidiaries-subsidiary")
     private Subsidiary subsidiary;
 
     @Column(nullable = false)

@@ -23,11 +23,10 @@ import java.util.List;
 @Table(name="bill")
 @NoArgsConstructor
 @RequiredArgsConstructor
-@ToString
 public class Bill {
     @Id
-    @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NonNull
     private Long id;
 
     @NotNull
@@ -51,10 +50,11 @@ public class Bill {
 
     @Column(nullable = false)
     @NotNull(message = "Fecha de envío no puede ser Nula")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
     @NonNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:MM")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate deliveryDate;
+
 
     private Integer daysDelayed;
 
@@ -64,14 +64,12 @@ public class Bill {
     @Enumerated(EnumType.STRING)
     private OrderStatus deliveryStatus;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="billDetails-bill")
     @OneToMany(mappedBy="bill", cascade = CascadeType.ALL)
     private List<BillDetail> billDetails;
 
-    @JsonBackReference
+    @JsonBackReference(value="bill-subsidiary")
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idSubsidiary", referencedColumnName = "id", nullable = false)
     private Subsidiary subsidiary;
-
-
 }

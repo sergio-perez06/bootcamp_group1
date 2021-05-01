@@ -2,6 +2,7 @@ package com.mercadolibre.fernandez_federico.controller;
 
 
 import com.mercadolibre.fernandez_federico.dtos.request.ApplicationUserDTO;
+import com.mercadolibre.fernandez_federico.exceptions.ApiException;
 import com.mercadolibre.fernandez_federico.models.ApplicationUser;
 import com.mercadolibre.fernandez_federico.models.CountryDealer;
 import com.mercadolibre.fernandez_federico.models.Role;
@@ -9,6 +10,7 @@ import com.mercadolibre.fernandez_federico.services.IRoleService;
 import com.mercadolibre.fernandez_federico.services.impl.UserService;
 import com.mercadolibre.fernandez_federico.services.ICountryDealerService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,16 +45,23 @@ public class UserController {
     // FALTA INTEGRATION TEST
     @PostMapping("/signUp")
     public void signUp(@RequestBody ApplicationUserDTO applicationUser) {
-        applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
 
-        ApplicationUser toSave = modelMapper.map(applicationUser,ApplicationUser.class);
+        try {
+            applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
 
-        CountryDealer foundCountryD = countryDealerService.findByCountry(applicationUser.getCountry());
-        Role foundRole = roleService.findByName(applicationUser.getRole());
+            ApplicationUser toSave = modelMapper.map(applicationUser,ApplicationUser.class);
 
-        toSave.setCountryDealer(foundCountryD);
-        toSave.setRole(foundRole);
+            CountryDealer foundCountryD = countryDealerService.findByCountry(applicationUser.getCountry());
+            Role foundRole = roleService.findByName(applicationUser.getRole());
 
-        this.userService.saveUser(toSave);
+            toSave.setCountryDealer(foundCountryD);
+            toSave.setRole(foundRole);
+            this.userService.saveUser(toSave);
+        }
+        catch(Exception e) {
+            // how to find out the reason for the rollback exception?
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "El usuario no pudo ser registrado ", HttpStatus.BAD_REQUEST.value());
+
+        }
     }
 }

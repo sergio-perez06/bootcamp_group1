@@ -1,7 +1,6 @@
 package com.mercadolibre.fernandez_federico.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mercadolibre.fernandez_federico.util.enums.AccountType;
 import com.mercadolibre.fernandez_federico.util.enums.PartStatus;
 import lombok.*;
@@ -14,7 +13,6 @@ import javax.persistence.*;
 @Table(name="bill_detail")
 @NoArgsConstructor
 @RequiredArgsConstructor
-@ToString
 public class BillDetail {
     @Id
     @NonNull
@@ -27,28 +25,28 @@ public class BillDetail {
     @NonNull
     private Integer quantity;
 
-    @NonNull
     @Column(length = 50)
     @Enumerated(EnumType.STRING)
+    @NonNull
     private AccountType accountType;
 
     @NonNull
     private String reason;
 
-    @NonNull
     @Column(length = 50)
     @Enumerated(EnumType.STRING)
+    @NonNull
     private PartStatus partStatus;
 
-    @NonNull
-    @JsonBackReference
+    @JsonBackReference(value="billDetails-bill")
     @ManyToOne
     @JoinColumn(name = "idBill", referencedColumnName = "id", nullable = false)
+    @NonNull
     private Bill bill;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idPart", referencedColumnName = "id", nullable = false)
+    @JsonBackReference(value="billDetails-part")
     private Part part;
-
 
 }
