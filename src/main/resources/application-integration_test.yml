@@ -3,10 +3,10 @@
 
 spring:
   datasource:
-    host: proxysql.master.meliseginf.com:6612
-    db: whousefede
-    username: ${FURY_DB_USER}
-    password: ${FURY_DB_PASS}
+    host: localhost:3306
+    db: warehouse
+    username: ${LOCAL_DB_USER}
+    password: ${LOCAL_DB_PASS}
     initialization-mode: always
   jpa:
     show-sql: true

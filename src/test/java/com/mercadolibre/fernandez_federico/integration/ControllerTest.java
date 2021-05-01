@@ -15,13 +15,20 @@ public abstract class ControllerTest extends IntegrationTest {
 		return new RequestEntity<>(headers, HttpMethod.GET, null);
 	}
 
-	protected String getToken() {
+	protected String getFullToken() {
 		ResponseEntity<Object> responseEntity = signUp("admin","test1234","Argentina","ADMIN");
 		boolean OK = responseEntity.getStatusCode() == HttpStatus.OK || responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST;
 		if (!OK)
 			return "";
 		responseEntity = login("admin", "test1234");
 		OK = responseEntity.getStatusCode() == HttpStatus.OK;
+		if (!OK) return "";
+		return responseEntity.getHeaders().get("token").get(0);
+	}
+
+	protected String getToken() {
+		ResponseEntity<Object> responseEntity = login("admin", "test1234");
+		boolean OK = responseEntity.getStatusCode() == HttpStatus.OK;
 		if (!OK) return "";
 		return responseEntity.getHeaders().get("token").get(0);
 	}

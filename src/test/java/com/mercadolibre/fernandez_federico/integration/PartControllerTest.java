@@ -12,7 +12,10 @@ import com.mercadolibre.fernandez_federico.models.Bill;
 import com.mercadolibre.fernandez_federico.models.BillDetail;
 import com.mercadolibre.fernandez_federico.util.enums.AccountType;
 import net.minidev.json.JSONObject;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.http.*;
 
 import java.time.LocalDate;
@@ -21,8 +24,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PartControllerTest extends ControllerTest {
 
+    @BeforeAll
+    void register (){
+        this.getFullToken();
+    }
 
     @Test
     void getOrderDetailsTest() throws JsonProcessingException {
