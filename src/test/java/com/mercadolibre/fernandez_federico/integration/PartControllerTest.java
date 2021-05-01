@@ -34,7 +34,7 @@ public class PartControllerTest extends ControllerTest {
 
     @Test
     void getOrderDetailsTest() throws JsonProcessingException {
-        ApplicationUserDTO user = new ApplicationUserDTO("janet","1234","Uruguay","admin");
+        ApplicationUserDTO user = new ApplicationUserDTO("janet", "1234", "Uruguay", "admin");
 
         ResponseEntity<String> signUpResponse = this.testRestTemplate.exchange(
                 "/api/v1/users/signUp",
@@ -42,7 +42,7 @@ public class PartControllerTest extends ControllerTest {
                 new HttpEntity<>(user),
                 String.class);
 
-        if (HttpStatus.OK.equals(signUpResponse.getStatusCode())){
+        if (HttpStatus.OK.equals(signUpResponse.getStatusCode())) {
 
             JSONObject personJsonObject = new JSONObject();
             personJsonObject.put("username", "janet");
@@ -54,20 +54,18 @@ public class PartControllerTest extends ControllerTest {
                     new HttpEntity<>(personJsonObject),
                     String.class);
 
-            if(HttpStatus.OK.equals(loginResponse.getStatusCode())){
+            if (HttpStatus.OK.equals(loginResponse.getStatusCode())) {
                 String token = loginResponse.getHeaders().getFirst("token");
 
                 if(token!=null && !token.isEmpty()){
                     HttpHeaders headers = new HttpHeaders();
-                    headers.add("Authorization",token);
+                    headers.add("Authorization", token);
 
                     HttpEntity entity = new HttpEntity(headers);
                     ResponseEntity<String> response = this.testRestTemplate.exchange
                             ("/api/v1/parts/list", HttpMethod.GET, entity, String.class);
 
                     assertEquals(HttpStatus.OK, response.getStatusCode());
-
-                    //assertEquals( createListBill() ,response.getBody());
                 }
             }
         }
@@ -164,6 +162,76 @@ public class PartControllerTest extends ControllerTest {
                 Object.class
         );
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getPartsOrdersWithParamDeliveryStatusOK() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders?dealerNumber=0001&deliveryStatus=D",
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getPartsOrdersWithParamDeliveryStatusAndOrderOK() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders?dealerNumber=0001&deliveryStatus=D&order=1",
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getPartsOrdersWithParamOrderOK() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders?dealerNumber=0001&order=1",
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getPartsOrdersShouldThrowSubsidiaryNotFound() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders?dealerNumber=0348&deliveryStatus=D&order=1",
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getPartsOrdersShouldThrowBadRequestDeliveryStatus() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<Object> response = this.testRestTemplate.exchange(
+                "/api/v1/parts/orders?dealerNumber=0001&deliveryStatus=Demorado&order=1",
+                HttpMethod.GET,
+                entity,
+                Object.class
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
