@@ -71,6 +71,7 @@ public class PartControllerTest extends ControllerTest {
         }
     }
 
+    @Test
     public void getPartsOrdersWithParamOK() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", this.getToken());
@@ -83,6 +84,7 @@ public class PartControllerTest extends ControllerTest {
                 entity,
                 Object.class
         );
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
